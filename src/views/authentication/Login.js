@@ -102,12 +102,15 @@ const Login = () => {
 
   const submitLogin = async () => {
     try {
+      console.log("SDASDA")
       const result = await UserModels.login(email,password)
+      console.log("SDASDA2")
       if (!email || !password) {
         toast(t =>(
             <ToastDanger t={t} />
         ))
       } else {
+        console.log("SDASDA")
         if (result.token) {
           localStorage.token = result.token
           localStorage.email = result.email
@@ -251,7 +254,7 @@ const Login = () => {
                 <Label className='form-label' for='login-email'>
                   Email
                 </Label>
-                <Input type='email' placeholder='john@example.com' onChange={(e) => { setEmail(e.target.value) }} invalid={errors.email && true} autoFocus />
+                <Input type='email' placeholder='john@example.com' onChange={(e) => { setEmail(e.target.value) }} invalid={errors.email && true} autoFocus required />
               </div>
               <div className='mb-1'>
                 <div className='d-flex justify-content-between'>
@@ -262,7 +265,7 @@ const Login = () => {
                     <small>Lupa Password?</small>
                   </Link>
                 </div>
-                <InputPasswordToggle className='input-group-merge' onChange={(e) => { setPassword(e.target.value) }} invalid={errors.password && true} />
+                <InputPasswordToggle className='input-group-merge' onChange={(e) => { setPassword(e.target.value) }} invalid={errors.password && true} required />
               </div>
               <div className='form-check mb-1'>
                 <Input type='checkbox' id='remember-me' />

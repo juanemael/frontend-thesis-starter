@@ -34,6 +34,9 @@ export const authSlice = createSlice({
             localStorage.removeItem('userData')
             localStorage.removeItem(config.storageTokenKeyName)
             localStorage.removeItem(config.storageRefreshTokenKeyName)
+            sessionStorage.removeItem('id')
+            sessionStorage.removeItem('username')
+            sessionStorage.removeItem('token')
         }
     }
 })

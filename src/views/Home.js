@@ -1,8 +1,14 @@
-import { Card, CardHeader, CardBody, CardTitle, CardText, CardLink } from 'reactstrap'
+import {Card, CardHeader, CardBody, CardTitle, CardText, CardLink, Col, Row} from 'reactstrap'
+import CardWelcome from "./ui-elements/cards/advance/CardWelcome";
 
 const Home = () => {
   return (
     <div>
+      <Row className='match-height'>
+        <Col lg='6' sm='12'>
+          <CardWelcome />
+        </Col>
+      </Row>
       <Card>
         <CardHeader>
           <CardTitle>Kick start your project 🚀</CardTitle>

@@ -12,6 +12,7 @@ import PublicRoute from '@components/routes/PublicRoute'
 
 // ** Utils
 import { isObjEmpty } from '@utils'
+import SJPHPage from "../../views/SJPHPage";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -26,7 +27,7 @@ const TemplateTitle = '%s - PasporUMKM'
 const DefaultRoute = '/login'
 
 const Home = lazy(() => import('../../views/Home'))
-const SecondPage = lazy(() => import('../../views/SecondPage'))
+const SecondPage = lazy(() => import('../../views/SJPHPage'))
 const Login = lazy(() => import('../../views/authentication/Login'))
 const Register = lazy(() => import('../../views/Register'))
 const ForgotPassword = lazy(() => import('../../views/ForgotPassword'))
@@ -44,8 +45,8 @@ const Routes = [
     element: <Home />
   },
   {
-    path: '/second-page',
-    element: <SecondPage />
+    path: '/sjph-page',
+    element: <SJPHPage />
   },
   {
     path: '/login',

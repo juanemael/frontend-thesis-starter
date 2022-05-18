@@ -1,4 +1,5 @@
 import { Mail, Home } from 'react-feather'
+import {FaDochub} from "react-icons/all";
 
 export default [
   {
@@ -8,9 +9,9 @@ export default [
     navLink: '/home'
   },
   {
-    id: 'secondPage',
-    title: 'Second Page',
-    icon: <Mail size={20} />,
-    navLink: '/second-page'
+    id: 'sjphPage',
+    title: 'SJPH Page',
+    icon: <FaDochub size={20} />,
+    navLink: '/sjph-page'
   }
 ]
