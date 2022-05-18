@@ -13,6 +13,15 @@ import { UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from
 // ** Default Avatar Image
 import defaultAvatar from '@src/assets/images/portrait/small/avatar-s-11.jpg'
 
+const logout = () => {
+  sessionStorage.removeItem("token");
+  localStorage.removeItem("token");
+  sessionStorage.removeItem("username");
+  localStorage.removeItem("username");
+  sessionStorage.removeItem("id");
+  localStorage.removeItem("id");
+}
+
 const UserDropdown = () => {
   return (
     <UncontrolledDropdown tag='li' className='dropdown-user nav-item'>
@@ -54,7 +63,7 @@ const UserDropdown = () => {
           <HelpCircle size={14} className='me-75' />
           <span className='align-middle'>FAQ</span>
         </DropdownItem>
-        <DropdownItem tag={Link} to='/login'>
+        <DropdownItem tag={Link} to='/login' onClick={logout}>
           <Power size={14} className='me-75' />
           <span className='align-middle'>Logout</span>
         </DropdownItem>

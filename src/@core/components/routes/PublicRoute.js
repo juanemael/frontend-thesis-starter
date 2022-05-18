@@ -3,13 +3,15 @@ import { Suspense } from 'react'
 import { Navigate } from 'react-router-dom'
 
 // ** Utils
-import { getUserData, getHomeRouteForLoggedInUser } from '@utils'
+import { isUserLoggedIn, getHomeRouteForLoggedInUser } from '@utils'
+import {NavItem} from "reactstrap";
 
 const PublicRoute = ({ children, route }) => {
   if (route) {
-    const user = getUserData()
+    const user = isUserLoggedIn()
 
     const restrictedRoute = route.meta && route.meta.restricted
+    console.log(user)
 
     if (user && restrictedRoute) {
       return <Navigate to={getHomeRouteForLoggedInUser(user.role)} />

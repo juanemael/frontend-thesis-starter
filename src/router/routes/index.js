@@ -9,10 +9,10 @@ import LayoutWrapper from '@src/@core/layouts/components/layout-wrapper'
 
 // ** Route Components
 import PublicRoute from '@components/routes/PublicRoute'
+import PrivateRoute from '@components/routes/PrivateRoute'
 
 // ** Utils
 import { isObjEmpty } from '@utils'
-import SJPHPage from "../../views/SJPHPage";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -27,11 +27,12 @@ const TemplateTitle = '%s - PasporUMKM'
 const DefaultRoute = '/login'
 
 const Home = lazy(() => import('../../views/Home'))
-const SecondPage = lazy(() => import('../../views/SJPHPage'))
+const SJPHPage = lazy(() => import('../../views/SJPHPage'))
 const Login = lazy(() => import('../../views/authentication/Login'))
 const Register = lazy(() => import('../../views/Register'))
 const ForgotPassword = lazy(() => import('../../views/ForgotPassword'))
 const Error = lazy(() => import('../../views/Error'))
+const NotAuthorized = lazy(() => import('../../views/pages/misc/NotAuthorized'))
 
 // ** Merge Routes
 const Routes = [
@@ -42,31 +43,37 @@ const Routes = [
   },
   {
     path: '/home',
-    element: <Home />
+    element: <Home />,
   },
   {
     path: '/sjph-page',
-    element: <SJPHPage />
+    element: <SJPHPage />,
   },
   {
     path: '/login',
     element: <Login />,
     meta: {
-      layout: 'blank'
+      layout: 'blank',
+      publicRoute: true,
+      restricted: true
     }
   },
   {
     path: '/register',
     element: <Register />,
     meta: {
-      layout: 'blank'
+      layout: 'blank',
+      publicRoute: true,
+      restricted: true
     }
   },
   {
     path: '/forgot-password',
     element: <ForgotPassword />,
     meta: {
-      layout: 'blank'
+      layout: 'blank',
+      publicRoute: true,
+      restricted: true
     }
   },
   {
@@ -75,7 +82,15 @@ const Routes = [
     meta: {
       layout: 'blank'
     }
-  }
+  },
+  {
+    path: '/misc/not-authorized',
+    element: <NotAuthorized />,
+    meta: {
+      publicRoute: true,
+      layout: 'blank'
+    }
+  },
 ]
 
 const getRouteMeta = route => {
@@ -100,11 +115,12 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
         (route.meta && route.meta.layout && route.meta.layout === layout) ||
         ((route.meta === undefined || route.meta.layout === undefined) && defaultLayout === layout)
       ) {
-        const RouteTag = PublicRoute
+        let RouteTag = PrivateRoute
 
         // ** Check for public or private route
         if (route.meta) {
           route.meta.layout === 'blank' ? (isBlank = true) : (isBlank = false)
+          RouteTag = route.meta.publicRoute ? PublicRoute : PrivateRoute
         }
         if (route.element) {
           const Wrapper =
