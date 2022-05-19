@@ -45,7 +45,7 @@ const ToastContent = ({ t, name, role }) => {
             <h6>{name}</h6>
             <X size={12} className='cursor-pointer' onClick={() => toast.dismiss(t.id)} />
           </div>
-          <span>You have successfully logged in as an {role} user to PasporUMKM. Now you can start to explore. Enjoy!</span>
+          <span>Kamu telah berhasi login sebagai {role} user di PasporUMKM. Sekarang kamu bisa mulai eksplorasimu.</span>
         </div>
       </div>
   )
@@ -61,7 +61,7 @@ const ToastDanger = () =>{
           <div className='d-flex justify-content-between'>
             <X size={12} className='cursor-pointer' onClick={() => toast.dismiss(t.id)} />
           </div>
-          <span>Your email or password is incorrect. Please try again.</span>
+          <span>Email atau passwordmu salah. Tolong coba lagi.</span>
         </div>
       </div>
 )
@@ -102,15 +102,14 @@ const Login = () => {
 
   const submitLogin = async () => {
     try {
-      console.log("SDASDA")
       const result = await UserModels.login(email,password)
-      console.log("SDASDA2")
       if (!email || !password) {
         toast(t =>(
             <ToastDanger t={t} />
         ))
+      } else if (!result) {
+        console.log("error")
       } else {
-        console.log("SDASDA")
         if (result.token) {
           localStorage.token = result.token
           localStorage.email = result.email
@@ -131,6 +130,9 @@ const Login = () => {
         }
       }
     } catch (e) {
+      toast(t =>(
+          <ToastDanger t={t} />
+      ))
       console.error(e)
     }
   }
@@ -175,7 +177,7 @@ const Login = () => {
                 <stop stopColor='#EEEEEE' stopOpacity='0' offset='0%'></stop>
                 <stop stopColor='#FFFFFF' offset='100%'></stop>
               </linearGradient>
-            </defs>
+            </defs>k
             <g id='Page-1' stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
               <g id='Artboard' transform='translate(-400.000000, -178.000000)'>
                 <g id='Group' transform='translate(400.000000, 178.000000)'>

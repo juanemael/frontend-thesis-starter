@@ -31,8 +31,9 @@ const SJPHPage = lazy(() => import('../../views/SJPHPage'))
 const Login = lazy(() => import('../../views/authentication/Login'))
 const Register = lazy(() => import('../../views/Register'))
 const ForgotPassword = lazy(() => import('../../views/ForgotPassword'))
-const Error = lazy(() => import('../../views/Error'))
+// const Error = lazy(() => import('../../views/Error'))
 const NotAuthorized = lazy(() => import('../../views/pages/misc/NotAuthorized'))
+const Error = lazy(() => import('../../views/pages/misc/Error'))
 
 // ** Merge Routes
 const Routes = [
@@ -80,6 +81,7 @@ const Routes = [
     path: '/error',
     element: <Error />,
     meta: {
+      publicRoute: true,
       layout: 'blank'
     }
   },
