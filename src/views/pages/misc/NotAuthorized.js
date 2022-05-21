@@ -24,7 +24,7 @@ const NotAuthorized = () => {
         source = require(`@src/assets/images/pages/${illustration}`).default
     return (
         <div className='misc-wrapper'>
-            <Link className='brand-logo' to='/'>
+            <Link className='brand-logo' to='/home'>
                 <svg viewBox='0 0 139 95' version='1.1' height='28'>
                     <defs>
                         <linearGradient x1='100%' y1='10.5120544%' x2='50%' y2='89.4879456%' id='linearGradient-1'>
