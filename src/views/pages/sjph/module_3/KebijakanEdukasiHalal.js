@@ -5,6 +5,8 @@ import MediaKomunikasiTable from "../../../tables/sjph/module_2/MediaKomunikasiT
 import {FileText, Link, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
 import {useRef, useState} from "react";
+import SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable
+    from "../../../tables/sjph/module_3/SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable";
 
 const KebijakanEdukasiHalal = () => {
     const ref = useRef(null)
@@ -13,9 +15,9 @@ const KebijakanEdukasiHalal = () => {
         {
             id: 'hal1',
             title: 'Halaman 1',
-            subtitle: 'Keterangan Kriteria',
+            subtitle: 'Surat Keputusan',
             icon: <FileText size={18} />,
-            content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper} type='wizard-modern' />
+            content: <SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'hal2',

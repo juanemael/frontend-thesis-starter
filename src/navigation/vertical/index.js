@@ -1,4 +1,4 @@
-import {Mail, Home, Menu, Circle, Briefcase, Layout} from 'react-feather'
+import {Mail, Home, Menu, Circle, Briefcase, Layout, BookOpen} from 'react-feather'
 import {FaDochub} from "react-icons/all";
 
 export default [
@@ -31,8 +31,8 @@ export default [
       {
         id: 'kebijakanEdukasiHalal',
         title: 'Kebijakan dan Edukasi Halal',
-        icon: <Layout size={20} />,
-        navLink: '/coming_soon',
+        icon: <BookOpen size={20} />,
+        navLink: '/sjph/kebijakan_dan_edukasi_halal',
       },
       {
         id: 'bahanKepentinganHalal',
