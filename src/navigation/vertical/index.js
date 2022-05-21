@@ -18,15 +18,38 @@ export default [
     children: [
       {
         id: 'companyProfile',
-        title: 'Company Profile',
+        title: 'Informasi Umum Perusahaan',
         icon: <Briefcase size={20} />,
         navLink: '/sjph/company_profile',
       },
       {
         id: 'surKepPTMPHalal',
-        title: 'Surat Keputusan PTMP Halal',
+        title: 'Kriteria Sistem Jaminan Produk Halal',
         icon: <Layout size={20} />,
-        navLink: '/sjph/company_profile',
+        navLink: '/sjph/kriteria_sistem_jaminan_produk_halal',
+      },
+      {
+        id: 'kebijakanEdukasiHalal',
+        title: 'Kebijakan dan Edukasi Halal',
+        icon: <Layout size={20} />,
+        navLink: '/coming_soon',
+      },
+      {
+        id: 'bahanKepentinganHalal',
+        title: 'Bahan untuk Kepentingan Halal',
+        icon: <Layout size={20} />,
+        navLink: '/coming_soon',
+      },
+      {
+        id: 'kepentinganProduksiPemusnahanProduk',
+        title: 'Kepentingan Produksi dan Pemusnahan Produk',
+        icon: <Layout size={20} />,
+        navLink: '/coming_soon',
+      },      {
+        id: 'auditKajiUlangManajemen',
+        title: 'Audit dan Kaji Ulang Manajemen',
+        icon: <Layout size={20} />,
+        navLink: '/coming_soon',
       },
     ]
   },

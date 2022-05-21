@@ -5,7 +5,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import '@styles/react/libs/editor/editor.scss'
 import classnames from "classnames";
 import {useState} from "react";
-import CompanyProfileModels from "../../models/CompanyProfile";
+import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 

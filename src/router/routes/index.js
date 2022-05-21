@@ -15,6 +15,10 @@ import PrivateRoute from '@components/routes/PrivateRoute'
 import { isObjEmpty } from '@utils'
 import {Circle, Menu} from "react-feather";
 
+// Route Imports
+import SJPHRoutes from "./SJPH";
+import AuthenticationRoutes from "./Authentication";
+
 const getLayout = {
   blank: <BlankLayout />,
   vertical: <VerticalLayout />,
@@ -28,13 +32,14 @@ const TemplateTitle = '%s - PasporUMKM'
 const DefaultRoute = '/login'
 
 const Home = lazy(() => import('../../views/Home'))
-const CompanyProfilePage = lazy(() => import('../../views/CompanyProfilePage'))
-const Login = lazy(() => import('../../views/authentication/Login'))
-const Register = lazy(() => import('../../views/Register'))
-const ForgotPassword = lazy(() => import('../../views/ForgotPassword'))
+const CompanyProfilePage = lazy(() => import('../../views/pages/sjph/module_1/CompanyProfilePage'))
+const Login = lazy(() => import('../../views/pages/authentication/Login'))
+const Register = lazy(() => import('../../views/pages/authentication/Register'))
+const ForgotPassword = lazy(() => import('../../views/pages/authentication/ForgotPassword'))
 // const Error = lazy(() => import('../../views/Error'))
 const NotAuthorized = lazy(() => import('../../views/pages/misc/NotAuthorized'))
 const Error = lazy(() => import('../../views/pages/misc/Error'))
+const ComingSoon = lazy(() => import('../../views/pages/misc/ComingSoon'))
 
 // ** Merge Routes
 const Routes = [
@@ -47,37 +52,39 @@ const Routes = [
     path: '/home',
     element: <Home />,
   },
-  {
-    path: '/sjph/company_profile',
-    element: <CompanyProfilePage />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-    meta: {
-      layout: 'blank',
-      publicRoute: true,
-      restricted: true
-    }
-  },
-  {
-    path: '/register',
-    element: <Register />,
-    meta: {
-      layout: 'blank',
-      publicRoute: true,
-      restricted: true
-    }
-  },
-  {
-    path: '/forgot-password',
-    element: <ForgotPassword />,
-    meta: {
-      layout: 'blank',
-      publicRoute: true,
-      restricted: true
-    }
-  },
+  // {
+  //   path: '/sjph/company_profile',
+  //   element: <CompanyProfilePage />,
+  // },
+    ...SJPHRoutes,
+    ...AuthenticationRoutes,
+  // {
+  //   path: '/login',
+  //   element: <Login />,
+  //   meta: {
+  //     layout: 'blank',
+  //     publicRoute: true,
+  //     restricted: true
+  //   }
+  // },
+  // {
+  //   path: '/register',
+  //   element: <Register />,
+  //   meta: {
+  //     layout: 'blank',
+  //     publicRoute: true,
+  //     restricted: true
+  //   }
+  // },
+  // {
+  //   path: '/forgot-password',
+  //   element: <ForgotPassword />,
+  //   meta: {
+  //     layout: 'blank',
+  //     publicRoute: true,
+  //     restricted: true
+  //   }
+  // },
   {
     path: '/error',
     element: <Error />,
@@ -87,8 +94,16 @@ const Routes = [
     }
   },
   {
-    path: '/misc/not-authorized',
+    path: '/not_authorized',
     element: <NotAuthorized />,
+    meta: {
+      publicRoute: true,
+      layout: 'blank'
+    }
+  },
+  {
+    path: '/coming_soon',
+    element: <ComingSoon />,
     meta: {
       publicRoute: true,
       layout: 'blank'

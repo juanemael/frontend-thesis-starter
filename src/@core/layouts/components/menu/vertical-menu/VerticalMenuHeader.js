@@ -9,14 +9,14 @@ import { Disc, X, Circle } from 'react-feather'
 import themeConfig from '@configs/themeConfig'
 
 // ** Utils
-import { getUserData, getHomeRouteForLoggedInUser } from '@utils'
+import { isUserLoggedIn, getHomeRouteForLoggedInUser } from '@utils'
 
 const VerticalMenuHeader = props => {
   // ** Props
   const { menuCollapsed, setMenuCollapsed, setMenuVisibility, setGroupOpen, menuHover } = props
 
   // ** Vars
-  const user = getUserData()
+  const user = isUserLoggedIn()
 
   // ** Reset open group
   useEffect(() => {
@@ -50,7 +50,7 @@ const VerticalMenuHeader = props => {
     <div className='navbar-header'>
       <ul className='nav navbar-nav flex-row'>
         <li className='nav-item me-auto'>
-          <NavLink to={user ? getHomeRouteForLoggedInUser(user.role) : '/'} className='navbar-brand'>
+          <NavLink to={user ? '/home' : '/login'} className='navbar-brand'>
             <span className='brand-logo'>
               <img src={themeConfig.app.appLogoImage} alt='logo' />
             </span>

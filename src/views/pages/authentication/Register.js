@@ -5,7 +5,7 @@ import {Link, useNavigate} from 'react-router-dom'
 // import { useSkin } from '@hooks/useSkin'
 
 // ** Icons Imports
-import {Facebook, Twitter, Mail, GitHub, X} from 'react-feather'
+import {Facebook, Twitter, Mail, GitHub, X, User} from 'react-feather'
 
 // ** Custom Components
 import InputPasswordToggle from '@components/input-password-toggle'
@@ -15,15 +15,27 @@ import swal from 'sweetalert2'
 import * as yup from 'yup'
 
 // ** Reactstrap Imports
-import {Row, Col, CardTitle, CardText, Form, Label, Input, Button, FormFeedback} from 'reactstrap'
+import {
+  Row,
+  Col,
+  CardTitle,
+  CardText,
+  Form,
+  Label,
+  Input,
+  Button,
+  FormFeedback,
+  InputGroupText,
+  InputGroup
+} from 'reactstrap'
 
 // ** Styles
 import '@styles/react/pages/page-authentication.scss'
 import {useState} from "react"
-import UserModels from '../models/User'
+import UserModels from '../../../models/User'
 import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
-import Avatar from "../@core/components/avatar"
+import Avatar from "../../../@core/components/avatar"
 import {FaInfo} from "react-icons/fa"
 import toast from "react-hot-toast"
 import isEmail from "validator/es/lib/isEmail";
@@ -203,13 +215,23 @@ const Register = () => {
                 <Label className='form-label' for='register-username'>
                   Username
                 </Label>
+                <InputGroup className='input-group-merge'>
+                  <InputGroupText>
+                    <User size={15} />
+                  </InputGroupText>
                 <Input type='text' id='register-username' placeholder='username' onChange={(e) => { setUsername(e.target.value) }} autoFocus required />
+                </InputGroup>
               </div>
               <div className='mb-1'>
                 <Label className='form-label' for='register-email'>
                   Email
                 </Label>
+                <InputGroup className='input-group-merge'>
+                  <InputGroupText>
+                    <Mail size={15} />
+                  </InputGroupText>
                 <Input type='email' id='register-email' onChange={(e) => { setEmail(e.target.value) }} placeholder='email (contoh@email.com)' required/>
+                </InputGroup>
               </div>
               <div className='mb-1'>
                 <Label className='form-label' for='register-password'>
@@ -227,7 +249,7 @@ const Register = () => {
                 <Input type='checkbox' id='terms' />
                 <Label className='form-check-label' for='terms'>
                   Saya mengerti
-                  <a className='ms-25' href='/' onClick={e => e.preventDefault()}>
+                  <a className='ms-25' href='/src/views/pages' onClick={e => e.preventDefault()}>
                     tentang kebijakan dan ketentuan.
                   </a>
                 </Label>

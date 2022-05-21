@@ -1,6 +1,6 @@
 import { useSkin } from '@hooks/useSkin'
 import {Link, useNavigate} from 'react-router-dom'
-import {Facebook, Twitter, Mail, GitHub, Coffee, X, HelpCircle} from 'react-feather'
+import {Facebook, Twitter, Mail, GitHub, Coffee, X, HelpCircle, Lock} from 'react-feather'
 import InputPasswordToggle from '@components/input-password-toggle'
 import {
   Row,
@@ -14,19 +14,19 @@ import {
   UncontrolledTooltip,
   Alert,
   Toast,
-  ToastHeader, ToastBody
+  ToastHeader, ToastBody, InputGroupText, InputGroup
 } from 'reactstrap'
 import '@styles/react/pages/page-authentication.scss'
 import {useDispatch} from "react-redux"
 import {AbilityContext} from "@src/utility/context/Can"
 import {useContext, useState} from "react"
-import Avatar from "../../@core/components/avatar"
+import Avatar from "../../../@core/components/avatar"
 import toast from "react-hot-toast"
 import {getHomeRouteForLoggedInUser} from "@utils"
 import useJwt from '@src/auth/jwt/useJwt'
 import {useForm, Controller} from "react-hook-form"
 import { handleLogin } from '@store/authentication'
-import UserModels from '../../models/User'
+import UserModels from '../../../models/User'
 import {FaBeer, FaCross, FaInfo} from 'react-icons/fa'
 
 const defaultValues = {
@@ -177,7 +177,7 @@ const Login = () => {
                 <stop stopColor='#EEEEEE' stopOpacity='0' offset='0%'></stop>
                 <stop stopColor='#FFFFFF' offset='100%'></stop>
               </linearGradient>
-            </defs>k
+            </defs>
             <g id='Page-1' stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
               <g id='Artboard' transform='translate(-400.000000, -178.000000)'>
                 <g id='Group' transform='translate(400.000000, 178.000000)'>
@@ -256,7 +256,12 @@ const Login = () => {
                 <Label className='form-label' for='login-email'>
                   Email
                 </Label>
-                <Input type='email' placeholder='john@example.com' onChange={(e) => { setEmail(e.target.value) }} invalid={errors.email && true} autoFocus required />
+                <InputGroup className='input-group-merge'>
+                <InputGroupText>
+                  <Mail size={15} />
+                </InputGroupText>
+                  <Input type='email' placeholder='john@example.com' onChange={(e) => { setEmail(e.target.value) }} invalid={errors.email && true} autoFocus required />
+                </InputGroup>
               </div>
               <div className='mb-1'>
                 <div className='d-flex justify-content-between'>

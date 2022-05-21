@@ -4,7 +4,7 @@ import { Fragment, useState, forwardRef } from 'react'
 // ** Third Party Components
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { Eye, EyeOff } from 'react-feather'
+import {Eye, EyeOff, Lock} from 'react-feather'
 
 // ** Reactstrap Imports
 import { InputGroup, Input, InputGroupText, Label } from 'reactstrap'
@@ -47,11 +47,11 @@ const InputPasswordToggle = forwardRef((props, ref) => {
         </Label>
       ) : null}
       <InputGroup
-        className={classnames({
-          [className]: className,
-          'is-invalid': invalid
-        })}
+        className={ 'input-group-merge'}
       >
+          <InputGroupText>
+            <Lock size={15} />
+          </InputGroupText>
         <Input
           ref={ref}
           invalid={invalid}

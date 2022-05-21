@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardBody, CardTitle, CardText } from 'reactstrap'
-import CompanyForm from "./forms/CompanyForm";
+import CompanyForm from "../../../forms/sjph/module_1/CompanyForm";
+import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/KriteriaSistemJaminanProdukHalalForm";
 
 const CompanyProfilePage = () => {
   return (

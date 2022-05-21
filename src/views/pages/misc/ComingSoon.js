@@ -16,7 +16,7 @@ const ComingSoon = () => {
 
   return (
     <div className='misc-wrapper'>
-      <a className='brand-logo' href='/'>
+      <a className='brand-logo' href='/home'>
         <svg viewBox='0 0 139 95' version='1.1' height='28'>
           <defs>
             <linearGradient x1='100%' y1='10.5120544%' x2='50%' y2='89.4879456%' id='linearGradient-1'>
@@ -65,12 +65,12 @@ const ComingSoon = () => {
             </g>
           </g>
         </svg>
-        <h2 className='brand-text text-primary ms-1'>Vuexy</h2>
+        <h2 className='brand-text text-primary ms-1'>PasporUMKM</h2>
       </a>
       <div className='misc-inner p-2 p-sm-3'>
         <div className='w-100 text-center'>
-          <h2 className='mb-1'>We are launching soon 🚀</h2>
-          <p className='mb-3'>We're creating something awesome. Please subscribe to get notified when it's ready!</p>
+          <h2 className='mb-1'>Masih dalam pengembangan kami 🚀</h2>
+          <p className='mb-3'>Maaf! Fitur ini masih dalam pengembangan. Kami akan kirim info secepatnya!</p>
           <Form
             tag={Row}
             onSubmit={e => e.preventDefault()}
