@@ -13,6 +13,7 @@ import PrivateRoute from '@components/routes/PrivateRoute'
 
 // ** Utils
 import { isObjEmpty } from '@utils'
+import {Circle, Menu} from "react-feather";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -47,7 +48,7 @@ const Routes = [
     element: <Home />,
   },
   {
-    path: '/sjph-page',
+    path: '/sjph/company_profile',
     element: <CompanyProfilePage />,
   },
   {
@@ -114,8 +115,8 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
       let isBlank = false
       // ** Checks if Route layout or Default layout matches current layout
       if (
-        (route.meta && route.meta.layout && route.meta.layout === layout) ||
-        ((route.meta === undefined || route.meta.layout === undefined) && defaultLayout === layout)
+          (route.meta && route.meta.layout && route.meta.layout === layout) ||
+          ((route.meta === undefined || route.meta.layout === undefined) && defaultLayout === layout)
       ) {
         let RouteTag = PrivateRoute
 
@@ -126,16 +127,16 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
         }
         if (route.element) {
           const Wrapper =
-            // eslint-disable-next-line multiline-ternary
-            isObjEmpty(route.element.props) && isBlank === false
-              ? // eslint-disable-next-line multiline-ternary
-                LayoutWrapper
-              : Fragment
+              // eslint-disable-next-line multiline-ternary
+              isObjEmpty(route.element.props) && isBlank === false
+                  ? // eslint-disable-next-line multiline-ternary
+                  LayoutWrapper
+                  : Fragment
 
           route.element = (
-            <Wrapper {...(isBlank === false ? getRouteMeta(route) : {})}>
-              <RouteTag route={route}>{route.element}</RouteTag>
-            </Wrapper>
+              <Wrapper {...(isBlank === false ? getRouteMeta(route) : {})}>
+                <RouteTag route={route}>{route.element}</RouteTag>
+              </Wrapper>
           )
         }
 
@@ -150,7 +151,6 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
 
 const getRoutes = layout => {
   const defaultLayout = layout || 'vertical'
-
   const layouts = ['vertical', 'horizontal', 'blank']
 
   const AllRoutes = []

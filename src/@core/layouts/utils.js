@@ -27,8 +27,8 @@ export const resolveHorizontalNavMenuItemComponent = item => {
  */
 export const isNavLinkActive = (link, currentURL, routerProps) => {
   return (
-    currentURL === link ||
-    (routerProps && routerProps.meta && routerProps.meta.navLink && routerProps.meta.navLink === link)
+      currentURL === link ||
+      (routerProps && routerProps.meta && routerProps.meta.navLink && routerProps.meta.navLink === link)
   )
   // return currentURL === link
 }
