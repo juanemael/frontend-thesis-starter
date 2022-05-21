@@ -34,7 +34,7 @@ const CompanyForm = () => {
 
     const submit = async () => {
         const body = {
-            name_perusahaan: namaPerusahaan,
+            nama_perusahaan: namaPerusahaan,
             nomor_induk_berusaha: nib,
             skala_usaha: skalaUsaha,
             nama_pimpinan: namaPimpinan,
