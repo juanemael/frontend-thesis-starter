@@ -235,7 +235,7 @@ const CompanyForm = () => {
                         </Col>
                         <Col sm='12'>
                             <div className='d-flex justify-content-end'>
-                                <Button className='me-1' color='primary' type='submit' onClick={submit}>
+                                <Button className='me-1' color='primary' onClick={submit}>
                                     Submit
                                 </Button>
                             </div>
