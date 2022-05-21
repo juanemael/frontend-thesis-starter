@@ -34,21 +34,21 @@ const CompanyForm = () => {
 
     const submit = async () => {
         const body = {
-            namaPerusahaan,
-            nib,
-            skalaUsaha,
-            namaPimpinan,
-            alamatPerusahaan,
-            telpFaxPerusahaan,
-            alamatFasilitasProduksi,
-            telpFaxFasilitasProduksi,
-            contactPersonEmail,
-            nomorIzinEdar,
-            jenisProduk,
-            daerahPemasaran,
-            sistemPemasaran,
+            name_perusahaan: namaPerusahaan,
+            nomor_induk_berusaha: nib,
+            skala_usaha: skalaUsaha,
+            nama_pimpinan: namaPimpinan,
+            alamat_perusahaan: alamatPerusahaan,
+            telp_fax_perusahaan: telpFaxPerusahaan,
+            alamat_fasilitas_produksi: alamatFasilitasProduksi,
+            telp_fax_fasilitas_produksi: telpFaxFasilitasProduksi,
+            contact_person_email: contactPersonEmail,
+            nomor_izin_edar: nomorIzinEdar,
+            jenis_produk: jenisProduk,
+            daerah_pemasaran: daerahPemasaran,
+            sistem_pemasaran: sistemPemasaran,
             tujuan,
-            ruangLingkup
+            ruang_lingkup: ruangLingkup
         }
         try {
             const result = await companyProfileModel.createCompanyProfile(body)
