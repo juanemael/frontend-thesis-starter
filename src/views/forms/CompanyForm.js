@@ -5,6 +5,9 @@ import { Editor } from 'react-draft-wysiwyg'
 import '@styles/react/libs/editor/editor.scss'
 import classnames from "classnames";
 import {useState} from "react";
+import CompanyProfileModels from "../../models/CompanyProfile";
+import swal from 'sweetalert2'
+import {useNavigate} from "react-router-dom";
 
 const CompanyForm = () => {
 
@@ -24,6 +27,44 @@ const CompanyForm = () => {
     const [jenisProduk, setJenisProduk] = useState("")
     const [daerahPemasaran, setDaerahPemasaran] = useState("")
     const [sistemPemasaran, setSistemPemasaran] = useState("")
+
+    const companyProfileModel = new CompanyProfileModels()
+
+    const navigate = useNavigate()
+
+    const submit = async () => {
+        const body = {
+            namaPerusahaan,
+            nib,
+            skalaUsaha,
+            namaPimpinan,
+            alamatPerusahaan,
+            telpFaxPerusahaan,
+            alamatFasilitasProduksi,
+            telpFaxFasilitasProduksi,
+            contactPersonEmail,
+            nomorIzinEdar,
+            jenisProduk,
+            daerahPemasaran,
+            sistemPemasaran,
+            tujuan,
+            ruangLingkup
+        }
+        try {
+            const result = await companyProfileModel.createCompanyProfile(body)
+            if ((result.id)||(result.success)) {
+                await swal.fire('','Data berhasil di simpan','success')
+                    .then(()=>{
+                        navigate('/sjph/company_profile')
+                    })
+            } else {
+                await swal.fire('','Data gagal disimpan', 'error')
+            }
+        } catch (e) {
+            console.error(e)
+            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        }
+    }
 
     return (
         <Card>
@@ -194,7 +235,7 @@ const CompanyForm = () => {
                         </Col>
                         <Col sm='12'>
                             <div className='d-flex justify-content-end'>
-                                <Button className='me-1' color='primary' type='submit' onClick={e => e.preventDefault()}>
+                                <Button className='me-1' color='primary' type='submit' onClick={submit}>
                                     Submit
                                 </Button>
                             </div>

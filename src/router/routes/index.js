@@ -27,7 +27,7 @@ const TemplateTitle = '%s - PasporUMKM'
 const DefaultRoute = '/login'
 
 const Home = lazy(() => import('../../views/Home'))
-const SJPHPage = lazy(() => import('../../views/SJPHPage'))
+const CompanyProfilePage = lazy(() => import('../../views/CompanyProfilePage'))
 const Login = lazy(() => import('../../views/authentication/Login'))
 const Register = lazy(() => import('../../views/Register'))
 const ForgotPassword = lazy(() => import('../../views/ForgotPassword'))
@@ -48,7 +48,7 @@ const Routes = [
   },
   {
     path: '/sjph-page',
-    element: <SJPHPage />,
+    element: <CompanyProfilePage />,
   },
   {
     path: '/login',

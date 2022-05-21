@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardBody, CardTitle, CardText } from 'reactstrap'
 import CompanyForm from "./forms/CompanyForm";
 
-const SJPHPage = () => {
+const CompanyProfilePage = () => {
   return (
       <div>
         <Card>
@@ -22,4 +22,4 @@ const SJPHPage = () => {
   )
 }
 
-export default SJPHPage
+export default CompanyProfilePage

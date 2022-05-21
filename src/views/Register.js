@@ -126,7 +126,7 @@ const Register = () => {
               }
             } catch (e) {
               console.error(e)
-              await swal.fire('Error', e.error_message ? e.error_message : "Error Occured. ", "error")
+              await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin. ", "error")
             }
           }
         }
