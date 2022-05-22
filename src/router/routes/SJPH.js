@@ -5,6 +5,7 @@ const CompanyProfilePage = lazy(() => import('../../views/pages/sjph/module_1/Co
 const KriteriaSistemJaminanProdukHalalPage = lazy(() => import('../../views/pages/sjph/module_2/KriteriaSistemJaminanProdukHalalPage'))
 const KebijakanEdukasiHalalPage = lazy(() => import('../../views/pages/sjph/module_3/KebijakanEdukasiHalalPage'))
 const BahanKepentinganHalalPage = lazy(() => import('../../views/pages/sjph/module_4/BahanKepentinganHalalPage'))
+const KepentinganProduksiDistribusiProdukPage = lazy(() => import('../../views/pages/sjph/module_5/KepentinganProduksiDistribusiProdukPage'))
 
 const SJPHRoutes = [
     {
@@ -22,6 +23,10 @@ const SJPHRoutes = [
     {
         path: '/sjph/bahan_untuk_kepentingan_halal',
         element: <BahanKepentinganHalalPage />
+    },
+    {
+        path: '/sjph/kepentingan_produksi_dan_distribusi_produk',
+        element: <KepentinganProduksiDistribusiProdukPage />
     }
 ]
 

@@ -44,10 +44,10 @@ export default [
         navLink: '/sjph/bahan_untuk_kepentingan_halal',
       },
       {
-        id: 'kepentinganProduksiPemusnahanProduk',
-        title: 'Kepentingan Produksi dan Pemusnahan Produk',
+        id: 'kepentinganProduksiDistribusiProduk',
+        title: 'Kepentingan Produksi dan Distribusi Produk',
         icon: <Layout size={20} />,
-        navLink: '/coming_soon',
+        navLink: '/sjph/kepentingan_produksi_dan_distribusi_produk',
       },
       {
         id: 'auditKajiUlangManajemen',
