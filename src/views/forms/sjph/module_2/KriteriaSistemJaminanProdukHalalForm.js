@@ -9,7 +9,7 @@ import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 
-const CompanyForm = () => {
+const KriteriaSistemJaminanProdukHalalForm = () => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
@@ -85,4 +85,4 @@ const CompanyForm = () => {
     )
 
 }
-export default CompanyForm
+export default KriteriaSistemJaminanProdukHalalForm

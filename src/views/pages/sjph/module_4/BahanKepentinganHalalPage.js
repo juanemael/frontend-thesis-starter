@@ -1,12 +1,12 @@
-import { Card, CardHeader, CardBody, CardTitle, CardText } from 'reactstrap'
-import CompanyForm from "../../../forms/sjph/module_1/CompanyForm";
 import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/KriteriaSistemJaminanProdukHalalForm";
 import MediaKomunikasiTable from "../../../tables/sjph/module_2/MediaKomunikasiTable";
 import {FileText, Link, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
 import {useRef, useState} from "react";
-import SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable
-    from "../../../tables/sjph/module_3/SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable";
+import SuratPernyataanBebasBabiForm from "../../../forms/sjph/module_4/SuratPernyataanBebasBabiForm";
+import DaftarBahanTable from "../../../tables/sjph/module_4/DaftarBahanTable";
+import DaftarBahanDigunakanSetiapProdukForm from "../../../forms/sjph/module_4/DaftarBahanDigunakanSetiapProdukForm";
+
 
 const BahanKepentinganHalalPage = () => {
     const ref = useRef(null)
@@ -15,28 +15,41 @@ const BahanKepentinganHalalPage = () => {
         {
             id: 'hal1',
             title: 'Halaman 1',
-            subtitle: 'Surat Keputusan',
+            subtitle: 'Daftar Bahan',
             icon: <FileText size={18} />,
-            content: <SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable stepper={stepper} type='wizard-modern' />
+            content: <DaftarBahanTable stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'hal2',
             title: 'Halaman 2',
-            subtitle: 'Media Komunikasi Table',
+            subtitle: 'Daftar Bahan Setiap Produk',
+            icon: <User size={18} />,
+            content: <DaftarBahanDigunakanSetiapProdukForm stepper={stepper} type='wizard-modern' />
+        },        {
+            id: 'hal3',
+            title: 'Halaman 3',
+            subtitle: 'Catatan Pembelian Bahan',
             icon: <User size={18} />,
             content: <MediaKomunikasiTable stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'step-address',
             title: 'Halaman 3',
-            subtitle: 'Add Address',
+            subtitle: 'Form Pemeriksaan Bahan',
             icon: <MapPin size={18} />,
             content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper} type='wizard-modern' />
         },
         {
-            id: 'social-links',
+            id: 'suratPernyataanBebasBabi',
             title: 'Halaman 4',
-            subtitle: 'Add Social Links',
+            subtitle: 'Surat Pernyataan Bebas Babi',
+            icon: <Link size={18}/>,
+            content: <SuratPernyataanBebasBabiForm stepper={stepper} type='wizard-modern'/>
+        },
+        {
+            id: 'suratPermohonanPersetujuanPenggunaanBahanBaru',
+            title: 'Halaman 4',
+            subtitle: 'Surat Permohonan Persetujuan Penggunaaan Bahan Baru',
             icon: <Link size={18} />,
             content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper} type='wizard-modern' />
         }
@@ -44,7 +57,7 @@ const BahanKepentinganHalalPage = () => {
     return (
         <div>
             <Wizard
-                type='modern-vertical'
+                type='modern-horizontal'
                 ref={ref}
                 steps={steps}
                 options={{
@@ -52,14 +65,6 @@ const BahanKepentinganHalalPage = () => {
                 }}
                 instance={el => setStepper(el)}
             />
-            {/*<Card>*/}
-            {/*    <CardHeader>*/}
-            {/*        <CardTitle> Form SJPH </CardTitle>*/}
-            {/*    </CardHeader>*/}
-            {/*    <CardBody>*/}
-            {/*        <KriteriaSistemJaminanProdukHalalForm />*/}
-            {/*    </CardBody>*/}
-            {/*</Card>*/}
         </div>
     )
 }

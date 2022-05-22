@@ -9,11 +9,12 @@ import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 
-const DaftarHadirPelatihanInternalForm = () => {
+const SuratPernyataanBebasBabiForm = () => {
 
-    const [hariTanggal, setHariTanggal] = useState("")
-    const [pematri, setPematri] = useState("")
-    const [materi, setMateri] = useState("")
+    const [nama, setNama] = useState("")
+    const [jabatan, setJabatan] = useState("")
+    const [ktp, setKTP] = useState("")
+    const [perusahaan, setPerusahaan] = useState("")
 
 
     const companyProfileModel = new CompanyProfileModels()
@@ -22,9 +23,10 @@ const DaftarHadirPelatihanInternalForm = () => {
 
     const submit = async () => {
         const body = {
-            hari_tanggal: hariTanggal,
-            pematri,
-            materi
+            nama,
+            jabatan,
+            ktp,
+            perusahaan
         }
         try {
             const result = await companyProfileModel.createCompanyProfile(body)
@@ -45,35 +47,43 @@ const DaftarHadirPelatihanInternalForm = () => {
     return (
         <Fragment>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 1</h3>
-                <small className='text-muted'>Cari tahu tentang kebijakan halal</small>
+                <h3 className='mb-0'>Halaman 4</h3>
+                <small className='text-muted'>Surat Pernyataan Bebas Babi</small>
             </div>
             <Form>
                 <Row>
                     <Col md='6' sm='12' className='mb-1'>
                         <Label className='form-label' for='nameMulti'>
-                            Hari/Tanggal
+                            Nama
                         </Label>
-                        <Input type='text' name='namaPerusahaan' id='namaPerusahaan' onChange={(e)=>{
-                            setHariTanggal(
+                        <Input type='text' name='nama' id='nama' onChange={(e)=>{
+                            setNama(
                                 e.target.value)
-                        }} placeholder='Nama Perusahaan' />
+                        }} placeholder='Nama' />
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
                         <Label className='form-label' for='lastNameMulti'>
-                           Pematri
+                            Jabatan
                         </Label>
-                        <Input type='text' name='nib' id='nib' onChange={(e)=>{
-                            setPematri(e.target.value)
-                        }} placeholder='Nomor Induk Berusaha' />
+                        <Input type='text' name='jabatan' id='jabatan' onChange={(e)=>{
+                            setJabatan(e.target.value)
+                        }} placeholder='Jabatan' />
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
                         <Label className='form-label' for='lastNameMulti'>
-                            Materi yang disampaikan
+                            No. KTP
                         </Label>
-                        <Input type='text' name='nib' id='nib' onChange={(e)=>{
-                            setMateri(e.target.value)
-                        }} placeholder='Nomor Induk Berusaha' />
+                        <Input type='text' name='ktp' id='ktp' onChange={(e)=>{
+                            setKTP(e.target.value)
+                        }} placeholder='Nomor KTP' />
+                    </Col>
+                    <Col md='6' sm='12' className='mb-1'>
+                        <Label className='form-label' for='lastNameMulti'>
+                            Perusahaan
+                        </Label>
+                        <Input type='text' name='perusahaan' id='perusahaan' onChange={(e)=>{
+                            setPerusahaan(e.target.value)
+                        }} placeholder='Perusahaan' />
                     </Col>
                     <Col sm='12'>
                         <div className='d-flex justify-content-end'>
@@ -88,4 +98,4 @@ const DaftarHadirPelatihanInternalForm = () => {
     )
 
 }
-export default DaftarHadirPelatihanInternalForm
+export default SuratPernyataanBebasBabiForm

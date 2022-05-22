@@ -1,5 +1,6 @@
 // ** Reactstrap Imports
 import { Button, Form, Input, Row, Col } from 'reactstrap'
+import { useNavigate } from "react-router-dom";
 
 // ** Custom Hooks
 import { useSkin } from '@hooks/useSkin'
@@ -10,6 +11,7 @@ import '@styles/base/pages/page-misc.scss'
 const ComingSoon = () => {
   // ** Hooks
   const { skin } = useSkin()
+  const navigate = useNavigate()
 
   const illustration = skin === 'dark' ? 'coming-soon-dark.svg' : 'coming-soon.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
@@ -69,19 +71,18 @@ const ComingSoon = () => {
       </a>
       <div className='misc-inner p-2 p-sm-3'>
         <div className='w-100 text-center'>
-          <h2 className='mb-1'>Masih dalam pengembangan kami 🚀</h2>
+          <h2 className='mb-1'>Masih dalam pengembangan 🚀</h2>
           <p className='mb-3'>Maaf! Fitur ini masih dalam pengembangan. Kami akan kirim info secepatnya!</p>
           <Form
             tag={Row}
-            onSubmit={e => e.preventDefault()}
             className='row-cols-md-auto justify-content-center align-items-center m-0 mb-2 gx-3'
           >
-            <Col sm='12' className='m-0 mb-1'>
-              <Input placeholder='john@example.com' />
-            </Col>
+            {/*<Col sm='12' className='m-0 mb-1'>*/}
+            {/*  <Input placeholder='john@example.com' />*/}
+            {/*</Col>*/}
             <Col sm='12' className='d-md-block d-grid ps-md-0 ps-auto'>
-              <Button className='mb-1 btn-sm-block' color='primary'>
-                Notify
+              <Button className='mb-1 btn-sm-block' color='primary' onClick={()=>navigate('/home')}>
+                Home
               </Button>
             </Col>
           </Form>

@@ -23,20 +23,6 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
             subtitle: 'Media Komunikasi Table',
             icon: <User size={18} />,
             content: <MediaKomunikasiTable stepper={stepper} type='wizard-modern' />
-        },
-        {
-            id: 'step-address',
-            title: 'Halaman 3',
-            subtitle: 'Add Address',
-            icon: <MapPin size={18} />,
-            content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper} type='wizard-modern' />
-        },
-        {
-            id: 'social-links',
-            title: 'Halaman 4',
-            subtitle: 'Add Social Links',
-            icon: <Link size={18} />,
-            content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper} type='wizard-modern' />
         }
     ]
     return (
@@ -50,14 +36,6 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
                 }}
                 instance={el => setStepper(el)}
             />
-            {/*<Card>*/}
-            {/*    <CardHeader>*/}
-            {/*        <CardTitle> Form SJPH </CardTitle>*/}
-            {/*    </CardHeader>*/}
-            {/*    <CardBody>*/}
-            {/*        <KriteriaSistemJaminanProdukHalalForm />*/}
-            {/*    </CardBody>*/}
-            {/*</Card>*/}
         </div>
     )
 }

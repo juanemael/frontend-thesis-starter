@@ -32,11 +32,6 @@ const TemplateTitle = '%s - PasporUMKM'
 const DefaultRoute = '/login'
 
 const Home = lazy(() => import('../../views/Home'))
-const CompanyProfilePage = lazy(() => import('../../views/pages/sjph/module_1/CompanyProfilePage'))
-const Login = lazy(() => import('../../views/pages/authentication/Login'))
-const Register = lazy(() => import('../../views/pages/authentication/Register'))
-const ForgotPassword = lazy(() => import('../../views/pages/authentication/ForgotPassword'))
-// const Error = lazy(() => import('../../views/Error'))
 const NotAuthorized = lazy(() => import('../../views/pages/misc/NotAuthorized'))
 const Error = lazy(() => import('../../views/pages/misc/Error'))
 const ComingSoon = lazy(() => import('../../views/pages/misc/ComingSoon'))
@@ -47,46 +42,16 @@ const Routes = [
     path: '/',
     index: true,
     element: <Navigate replace to={DefaultRoute} />
+    // element: <Login />
   },
   {
     path: '/home',
     element: <Home />,
   },
-  // {
-  //   path: '/sjph/company_profile',
-  //   element: <CompanyProfilePage />,
-  // },
     ...SJPHRoutes,
     ...AuthenticationRoutes,
-  // {
-  //   path: '/login',
-  //   element: <Login />,
-  //   meta: {
-  //     layout: 'blank',
-  //     publicRoute: true,
-  //     restricted: true
-  //   }
-  // },
-  // {
-  //   path: '/register',
-  //   element: <Register />,
-  //   meta: {
-  //     layout: 'blank',
-  //     publicRoute: true,
-  //     restricted: true
-  //   }
-  // },
-  // {
-  //   path: '/forgot-password',
-  //   element: <ForgotPassword />,
-  //   meta: {
-  //     layout: 'blank',
-  //     publicRoute: true,
-  //     restricted: true
-  //   }
-  // },
   {
-    path: '*',
+    path: '/*',
     element: <Error />,
     meta: {
       publicRoute: true,
