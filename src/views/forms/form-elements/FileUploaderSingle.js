@@ -63,20 +63,20 @@ const FileUploaderSingle = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle tag='h4'>Single</CardTitle>
+        <CardTitle tag='h4'>Single Upload</CardTitle>
       </CardHeader>
       <CardBody>
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
           <div className='d-flex align-items-center justify-content-center flex-column'>
             <DownloadCloud size={64} />
-            <h5>Drop Files here or click to upload</h5>
+            <h5>Tarik dan lepas atau upload langsung dengan klik tombol ini</h5>
             <p className='text-secondary'>
-              Drop files here or click{' '}
+              Tarik file kamu disini atau klik{' '}
               <a href='/' onClick={e => e.preventDefault()}>
-                browse
+                jelajahi
               </a>{' '}
-              thorough your machine
+              melalui komputer anda
             </p>
           </div>
         </div>
