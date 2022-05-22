@@ -304,8 +304,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = () => {
                 </tr>
                 <tr>
                     <td>
-                        <img className='me-75' src={react} alt='react' height='20' width='20' />
-                        <span className='align-middle fw-bold'>React Project</span>
+                        <span className='align-middle fw-bold'>2.</span>
                     </td>
                     <td>Ronald</td>
                     <td>
@@ -332,8 +331,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = () => {
                 </tr>
                 <tr>
                     <td>
-                        <img className='me-75' src={vuejs} alt='vuejs' height='20' width='20' />
-                        <span className='align-middle fw-bold'>Vuejs Project</span>
+                        <span className='align-middle fw-bold'>3.</span>
                     </td>
                     <td>Jack</td>
                     <td>
@@ -360,8 +358,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = () => {
                 </tr>
                 <tr>
                     <td>
-                        <img className='me-75' src={bootstrap} alt='bootstrap' height='20' width='20' />
-                        <span className='align-middle fw-bold'>Bootstrap Project</span>
+                        <span className='align-middle fw-bold'>4.</span>
                     </td>
                     <td>Jerry</td>
                     <td>

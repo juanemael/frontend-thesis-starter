@@ -17,10 +17,6 @@ import {useState, Fragment} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import react from '@src/assets/images/icons/react.svg'
-import vuejs from '@src/assets/images/icons/vuejs.svg'
-import angular from '@src/assets/images/icons/angular.svg'
-import bootstrap from '@src/assets/images/icons/bootstrap.svg'
 import {Check, Edit, MoreVertical, Trash, X} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
@@ -58,7 +54,7 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
-const DaftarHadirPelatihanInternalTable = () => {
+const CatatanPembelianBahan = () => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
@@ -262,15 +258,15 @@ const DaftarHadirPelatihanInternalTable = () => {
             </Modal>
             <div className='content-header'>
                 <h3 className='mb-0'>Halaman 3</h3>
-                <small className='text-muted'>Daftar Hadir Pelatihan Internal</small>
+                <small className='text-muted'>Catatan Pembelian Bahan</small>
             </div>
             <Table responsive>
                 <thead>
                 <tr>
                     <th>No.</th>
-                    <th>Nama Peserta</th>
-                    <th>Jabatan</th>
-                    <th>Nilai Pelatihan</th>
+                    <th>Nama Bahan - Merk Bahan</th>
+                    <th>Jumlah (KG)</th>
+                    <th>Waktu Pembelian</th>
                     <th>Menu</th>
                 </tr>
                 </thead>
@@ -279,13 +275,11 @@ const DaftarHadirPelatihanInternalTable = () => {
                     <td>
                         <span className='align-middle fw-bold'>1.</span>
                     </td>
-                    <td>Rudi</td>
+                    <td>Tepung - Segitiga Biru</td>
                     <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            CEO
-                        </Badge>
+                        15
                     </td>
-                    <td>50</td>
+                    <td>19-09-2022</td>
                     <td>
                         <UncontrolledDropdown>
                             <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
@@ -306,13 +300,11 @@ const DaftarHadirPelatihanInternalTable = () => {
                     <td>
                         <span className='align-middle fw-bold'>2.</span>
                     </td>
-                    <td>Ronald</td>
+                    <td>Tepung - Segitiga Biru</td>
                     <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            CEO
-                        </Badge>
+                        15
                     </td>
-                    <td>50</td>
+                    <td>19-09-2022</td>
                     <td>
                         <UncontrolledDropdown>
                             <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
@@ -333,13 +325,11 @@ const DaftarHadirPelatihanInternalTable = () => {
                     <td>
                         <span className='align-middle fw-bold'>3.</span>
                     </td>
-                    <td>Jack</td>
+                    <td>Tepung - Segitiga Biru</td>
                     <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            CEO
-                        </Badge>
+                        15
                     </td>
-                    <td>50</td>
+                    <td>19-09-2022</td>
                     <td>
                         <UncontrolledDropdown>
                             <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
@@ -360,13 +350,11 @@ const DaftarHadirPelatihanInternalTable = () => {
                     <td>
                         <span className='align-middle fw-bold'>4.</span>
                     </td>
-                    <td>Jerry</td>
+                    <td>Tepung - Segitiga Biru</td>
                     <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            CEO
-                        </Badge>
+                        15
                     </td>
-                    <td>50</td>
+                    <td>19-09-2022</td>
                     <td>
                         <UncontrolledDropdown>
                             <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
@@ -396,4 +384,4 @@ const DaftarHadirPelatihanInternalTable = () => {
     )
 
 }
-export default DaftarHadirPelatihanInternalTable
+export default CatatanPembelianBahan
