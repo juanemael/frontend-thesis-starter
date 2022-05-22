@@ -6,6 +6,9 @@ import {useRef, useState} from "react";
 import SuratPernyataanBebasBabiForm from "../../../forms/sjph/module_4/SuratPernyataanBebasBabiForm";
 import DaftarBahanTable from "../../../tables/sjph/module_4/DaftarBahanTable";
 import DaftarBahanDigunakanSetiapProdukForm from "../../../forms/sjph/module_4/DaftarBahanDigunakanSetiapProdukForm";
+import CatatanPembelianBahanTable from "../../../tables/sjph/module_4/CatatanPembelianBahanTable";
+import FormPemeriksaanBahanTable from "../../../tables/sjph/module_4/FormPemeriksaanBahanTable";
+import CatatanPenyimpananBahanProdukTable from "../../../tables/sjph/module_4/CatatanPenyimpananBahanProdukTable";
 
 
 const BahanKepentinganHalalPage = () => {
@@ -30,14 +33,14 @@ const BahanKepentinganHalalPage = () => {
             title: 'Halaman 3',
             subtitle: 'Catatan Pembelian Bahan',
             icon: <User size={18} />,
-            content: <MediaKomunikasiTable stepper={stepper} type='wizard-modern' />
+            content: <CatatanPembelianBahanTable stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'step-address',
             title: 'Halaman 3',
             subtitle: 'Form Pemeriksaan Bahan',
             icon: <MapPin size={18} />,
-            content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper} type='wizard-modern' />
+            content: <FormPemeriksaanBahanTable stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'suratPernyataanBebasBabi',
@@ -51,7 +54,7 @@ const BahanKepentinganHalalPage = () => {
             title: 'Halaman 4',
             subtitle: 'Surat Permohonan Persetujuan Penggunaaan Bahan Baru',
             icon: <Link size={18} />,
-            content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper} type='wizard-modern' />
+            content: <CatatanPenyimpananBahanProdukTable stepper={stepper} type='wizard-modern' />
         }
     ]
     return (

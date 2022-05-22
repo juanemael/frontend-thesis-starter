@@ -54,7 +54,7 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
-const CatatanPembelianBahan = () => {
+const FormPemeriksaanBahanTable = () => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
@@ -258,7 +258,7 @@ const CatatanPembelianBahan = () => {
             </Modal>
             <div className='content-header'>
                 <h3 className='mb-0'>Halaman 3</h3>
-                <small className='text-muted'>Catatan Pembelian Bahan</small>
+                <small className='text-muted'>Form Pemeriksaan Bahan</small>
             </div>
             <Table responsive>
                 <thead>
@@ -384,4 +384,4 @@ const CatatanPembelianBahan = () => {
     )
 
 }
-export default CatatanPembelianBahan
+export default FormPemeriksaanBahanTable
