@@ -54,7 +54,7 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
-const CatatanPenyimpananBahanProdukTable = () => {
+const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = () => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
@@ -257,8 +257,8 @@ const CatatanPenyimpananBahanProdukTable = () => {
                 </ModalBody>
             </Modal>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 5</h3>
-                <small className='text-muted'>Catatan Penyimpanan Bahan Produk</small>
+                <h3 className='mb-0'>Halaman 6</h3>
+                <small className='text-muted'>Surat Permohonan Persetujuan Penggunaan Bahan Baru</small>
             </div>
             <Table responsive>
                 <thead>
@@ -384,4 +384,4 @@ const CatatanPenyimpananBahanProdukTable = () => {
     )
 
 }
-export default CatatanPenyimpananBahanProdukTable
+export default SuratPermohonanPersetujuanPenggunaanBahanBaruTable
