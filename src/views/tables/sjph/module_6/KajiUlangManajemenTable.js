@@ -257,8 +257,8 @@ const KajiUlangManajemenTable = () => {
                 </ModalBody>
             </Modal>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 3</h3>
-                <small className='text-muted'>Catatan Hasil Produksi</small>
+                <h3 className='mb-0'>Halaman 1</h3>
+                <small className='text-muted'>Risalah Kaji Ulang Manajemen</small>
             </div>
             <Table responsive>
                 <thead>

@@ -1,5 +1,5 @@
 // ** React Imports
-import { Link } from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
 // ** Custom Components
 import Avatar from '@components/avatar'
@@ -23,6 +23,8 @@ const logout = () => {
 }
 
 const UserDropdown = () => {
+  const navigate = useNavigate()
+
   return (
     <UncontrolledDropdown tag='li' className='dropdown-user nav-item'>
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>
@@ -33,7 +35,7 @@ const UserDropdown = () => {
         <Avatar img={defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
       <DropdownMenu end>
-        <DropdownItem tag={Link} to='/coming_soon' onClick={e => e.preventDefault()}>
+        <DropdownItem tag={Link} to='/' onClick={e => e.preventDefault()}>
           <User size={14} className='me-75' />
           <span className='align-middle'>Profile</span>
         </DropdownItem>
@@ -41,10 +43,6 @@ const UserDropdown = () => {
         <DropdownItem tag={Link} to='/pages/' onClick={e => e.preventDefault()}>
           <Settings size={14} className='me-75' />
           <span className='align-middle'>Settings</span>
-        </DropdownItem>
-        <DropdownItem tag={Link} to='/coming_soon' onClick={e => e.preventDefault()}>
-          <HelpCircle size={14} className='me-75' />
-          <span className='align-middle'>FAQ</span>
         </DropdownItem>
         <DropdownItem tag={Link} to='/login' onClick={logout}>
           <Power size={14} className='me-75' />
