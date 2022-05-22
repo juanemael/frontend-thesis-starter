@@ -53,7 +53,7 @@ export default [
         id: 'auditKajiUlangManajemen',
         title: 'Audit dan Kaji Ulang Manajemen',
         icon: <Layout size={20} />,
-        navLink: '/coming_soon',
+        navLink: '/sjph/kaji_ulang_manajemen',
       },
     ]
   },

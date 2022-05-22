@@ -1,4 +1,5 @@
 import { lazy } from 'react'
+import KajiUlangManajemenPage from "../../views/pages/sjph/module_6/KajiUlangManajemenPage";
 // import KebijakanEdukasiHalalPage from "../../views/pages/sjph/module_3/KebijakanEdukasiHalalPage";
 
 const CompanyProfilePage = lazy(() => import('../../views/pages/sjph/module_1/CompanyProfilePage'))
@@ -27,6 +28,10 @@ const SJPHRoutes = [
     {
         path: '/sjph/kepentingan_produksi_dan_distribusi_produk',
         element: <KepentinganProduksiDistribusiProdukPage />
+    },
+    {
+        path: '/sjph/kaji_ulang_manajemen',
+        element: <KajiUlangManajemenPage />
     }
 ]
 

@@ -33,33 +33,16 @@ const UserDropdown = () => {
         <Avatar img={defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
       <DropdownMenu end>
-        <DropdownItem tag={Link} to='/' onClick={e => e.preventDefault()}>
+        <DropdownItem tag={Link} to='/coming_soon' onClick={e => e.preventDefault()}>
           <User size={14} className='me-75' />
           <span className='align-middle'>Profile</span>
-        </DropdownItem>
-        <DropdownItem tag={Link} to='/' onClick={e => e.preventDefault()}>
-          <Mail size={14} className='me-75' />
-          <span className='align-middle'>Inbox</span>
-
-        </DropdownItem>
-        <DropdownItem tag={Link} to='/' onClick={e => e.preventDefault()}>
-          <CheckSquare size={14} className='me-75' />
-          <span className='align-middle'>Tasks</span>
-        </DropdownItem>
-        <DropdownItem tag={Link} to='/' onClick={e => e.preventDefault()}>
-          <MessageSquare size={14} className='me-75' />
-          <span className='align-middle'>Chats</span>
         </DropdownItem>
         <DropdownItem divider />
         <DropdownItem tag={Link} to='/pages/' onClick={e => e.preventDefault()}>
           <Settings size={14} className='me-75' />
           <span className='align-middle'>Settings</span>
         </DropdownItem>
-        <DropdownItem tag={Link} to='/' onClick={e => e.preventDefault()}>
-          <CreditCard size={14} className='me-75' />
-          <span className='align-middle'>Pricing</span>
-        </DropdownItem>
-        <DropdownItem tag={Link} to='/' onClick={e => e.preventDefault()}>
+        <DropdownItem tag={Link} to='/coming_soon' onClick={e => e.preventDefault()}>
           <HelpCircle size={14} className='me-75' />
           <span className='align-middle'>FAQ</span>
         </DropdownItem>
