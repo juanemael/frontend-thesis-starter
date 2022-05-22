@@ -1,4 +1,4 @@
-import {Mail, Home, Menu, Circle, Briefcase, Layout, BookOpen} from 'react-feather'
+import {Mail, Home, Menu, Circle, Briefcase, Layout, BookOpen, ShoppingBag, Target, Smile, Repeat} from 'react-feather'
 import {FaDochub} from "react-icons/all";
 
 export default [
@@ -7,23 +7,23 @@ export default [
   },
   {
     id: 'home',
-    title: 'Home',
+    title: 'Beranda',
     icon: <Home size={20} />,
-    navLink: '/home'
+    navLink: '/beranda'
   },
   {
     header: 'Sertifikasi Halal'
   },
   {
-    id: 'sjphPage',
-    title: 'SJPH Page',
+    id: 'sjphDoc',
+    title: 'Dokumen SJPH',
     icon: <FaDochub size={20} />,
     children: [
       {
         id: 'companyProfile',
         title: 'Informasi Umum Perusahaan',
         icon: <Briefcase size={20} />,
-        navLink: '/sjph/company_profile',
+        navLink: '/sjph/informasi_umum_perusahaan',
       },
       {
         id: 'surKepPTMPHalal',
@@ -40,19 +40,19 @@ export default [
       {
         id: 'bahanKepentinganHalal',
         title: 'Bahan untuk Kepentingan Halal',
-        icon: <Layout size={20} />,
+        icon: <ShoppingBag size={20} />,
         navLink: '/sjph/bahan_untuk_kepentingan_halal',
       },
       {
         id: 'kepentinganProduksiDistribusiProduk',
         title: 'Kepentingan Produksi dan Distribusi Produk',
-        icon: <Layout size={20} />,
+        icon: <Repeat size={20} />,
         navLink: '/sjph/kepentingan_produksi_dan_distribusi_produk',
       },
       {
         id: 'auditKajiUlangManajemen',
         title: 'Audit dan Kaji Ulang Manajemen',
-        icon: <Layout size={20} />,
+        icon: <Smile size={20} />,
         navLink: '/sjph/kaji_ulang_manajemen',
       },
     ]
@@ -72,3 +72,8 @@ export default [
   // },
 
 ]
+// Kami berkomitmen dan bertanggung jawab untuk menghasilkan produk halal secara konsisten dan berkesinambungan dengan melakukan tindakan:
+//     1.	Mematuhi peraturan perundangan terkait jaminan produk halal
+// 2.	Menggunakan bahan halal dan melaksanakan proses produk halal (PPH)
+// 3.	Menyiapkan sumber daya manusia yang mendukung pelaksanaan PPH di perusahaan
+// 4.	Mensosialisasikan dan mengkomunikasikan kebijakan halal pada seluruh pihak terkait untuk memastikan semua personel menjaga integritas halal di perusahaan.

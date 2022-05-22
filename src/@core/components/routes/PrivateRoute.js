@@ -28,7 +28,7 @@ const PrivateRoute = ({ children, route }) => {
       return <Navigate to='/login' />
     }
     if (user && restrictedRoute) {
-      return <Navigate to='/home' />
+      return <Navigate to='/beranda' />
     }
     if (user && restrictedRoute && user.role === 'client') {
       return <Navigate to='/access-control' />

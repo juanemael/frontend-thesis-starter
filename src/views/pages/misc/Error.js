@@ -18,7 +18,7 @@ const Error = () => {
     source = require(`@src/assets/images/pages/${illustration}`).default
   return (
     <div className='misc-wrapper'>
-      <a className='brand-logo' href='/home'>
+      <a className='brand-logo' href='/beranda'>
         <svg viewBox='0 0 139 95' version='1.1' height='28'>
           <defs>
             <linearGradient x1='100%' y1='10.5120544%' x2='50%' y2='89.4879456%' id='linearGradient-1'>
@@ -73,7 +73,7 @@ const Error = () => {
         <div className='w-100 text-center'>
           <h2 className='mb-1'>404 Halaman Tidak Ditemukan 🕵🏻‍♀️</h2>
           <p className='mb-2'>Oops! 😖 The URL yang diinginkan tidak ditemukan di server ini.</p>
-          <Button tag={Link} to='/home' color='primary' className='btn-sm-block mb-2'>
+          <Button tag={Link} to='/beranda' color='primary' className='btn-sm-block mb-2'>
             Back to home
           </Button>
           <img className='img-fluid' src={source} alt='Not authorized page' />

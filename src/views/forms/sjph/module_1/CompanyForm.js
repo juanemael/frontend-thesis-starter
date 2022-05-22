@@ -1,5 +1,5 @@
 // ** Reactstrap Imports
-import { Card, CardHeader, CardTitle, CardBody, Row, Col, Input, Form, Button, Label } from 'reactstrap'
+import {Card, CardHeader, CardTitle, CardBody, Row, Col, Input, Form, Button, Label, Progress} from 'reactstrap'
 import { EditorState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import '@styles/react/libs/editor/editor.scss'
@@ -27,6 +27,9 @@ const CompanyForm = () => {
     const [jenisProduk, setJenisProduk] = useState("")
     const [daerahPemasaran, setDaerahPemasaran] = useState("")
     const [sistemPemasaran, setSistemPemasaran] = useState("")
+
+    const [progressValue, setProgressValue] = useState(10)
+    const value = 10
 
     const companyProfileModel = new CompanyProfileModels()
 
@@ -65,9 +68,13 @@ const CompanyForm = () => {
             await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
         }
     }
+    const handlePageChange = page => {
+        console.log(page);
+    };
 
     return (
         <Card>
+            {/*<Progress striped animated value={progressValue} max={100} />*/}
             <CardHeader>
                 <CardTitle tag='h4'>Informasi Perusahaan</CardTitle>
             </CardHeader>
@@ -236,6 +243,7 @@ const CompanyForm = () => {
                         <Col sm='12'>
                             <div className='d-flex justify-content-end'>
                                 <Button className='me-1' color='primary' onClick={submit}>
+                                {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
                                     Submit
                                 </Button>
                             </div>

@@ -84,7 +84,7 @@ const ProgressOverview = props => {
   return data !== null ? (
     <Card>
       <CardHeader>
-        <CardTitle tag='h4'>Progress Overview</CardTitle>
+        <CardTitle tag='h4'>Perkembangan Kamu</CardTitle>
         <HelpCircle size={18} className='text-muted cursor-pointer' />
       </CardHeader>
       <CardBody className='p-0'>
@@ -92,12 +92,12 @@ const ProgressOverview = props => {
       </CardBody>
       <Row className='border-top text-center mx-0'>
         <Col xs='6' className='border-end py-1'>
-          <CardText className='text-muted mb-0'>Completed</CardText>
-          <h3 className='fw-bolder mb-0'>4 Modules</h3>
+          <CardText className='text-muted mb-0'>Selesai</CardText>
+          <h3 className='fw-bolder mb-0'>4 Modul</h3>
         </Col>
         <Col xs='6' className='py-1'>
-          <CardText className='text-muted mb-0'>In Progress</CardText>
-          <h3 className='fw-bolder mb-0'>2 Modules</h3>
+          <CardText className='text-muted mb-0'>Dalam pengerjaan</CardText>
+          <h3 className='fw-bolder mb-0'>2 Modul</h3>
         </Col>
       </Row>
     </Card>

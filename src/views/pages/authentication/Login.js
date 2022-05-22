@@ -122,7 +122,7 @@ const Login = () => {
               <ToastContent t={t} role={'user'} name={result.email || 'Unknown'}/>
           ))
 
-          await navigate('/home')
+          await navigate('/beranda')
         } else {
           toast(t =>(
               <ToastDanger t={t} />

@@ -45,7 +45,7 @@ const Routes = [
     // element: <Login />
   },
   {
-    path: '/home',
+    path: '/beranda',
     element: <Home />,
   },
     ...SJPHRoutes,

@@ -1,24 +1,37 @@
 // ** Reactstrap Imports
-import { Card, CardHeader, CardTitle, CardBody, Row, Col, Input, Form, Button, Label } from 'reactstrap'
-import { EditorState } from 'draft-js'
-import { Editor } from 'react-draft-wysiwyg'
+import {
+    Row,
+    Col,
+    Input,
+    Form,
+    Button,
+    Label,
+    ModalHeader,
+    ModalBody, Modal
+} from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import classnames from "classnames";
 import {useState, Fragment} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
+import Flatpickr from 'react-flatpickr'
+import '@styles/react/libs/flatpickr/flatpickr.scss'
+
+import { selectThemeColors } from '@utils'
 
 const KriteriaSistemJaminanProdukHalalForm = () => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
-    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [tanggalPersetujuan, setTanggalPersetujuan] = useState(new Date())
 
 
     const companyProfileModel = new CompanyProfileModels()
 
     const navigate = useNavigate()
+
+    const [show, setShow] = useState(false)
 
     const submit = async () => {
         const body = {
@@ -48,6 +61,48 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
             </div>
                 <Form>
                     <Row>
+                        <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
+                            <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+                            <ModalBody className='px-sm-5 mx-50 pb-5'>
+                                <div className='text-center mb-2'>
+                                    <h1 className='mb-1'>Tambah Data Tabel</h1>
+                                    <p> KEBIJAKAN HALAL <br/>
+                                        [NAMA PERUSAHAAN]<br/>
+                                        Kami berkomitmen dan bertanggung jawab untuk menghasilkan produk halal
+                                        secara konsisten dan berkesinambungan dengan melakukan tindakan: <br/>
+                                        1.	Mematuhi peraturan perundangan terkait jaminan produk halal <br/>
+                                        2.	Menggunakan bahan halal dan melaksanakan proses produk halal (PPH)<br/>
+                                        3.	Menyiapkan sumber daya manusia yang mendukung pelaksanaan PPH di perusahaan<br/>
+                                        4.	Mensosialisasikan dan mengkomunikasikan kebijakan halal pada seluruh
+                                        pihak terkait untuk memastikan semua personel menjaga integritas halal di perusahaan.<br/>
+
+                                        …................, .........................................<br/>
+                                        Pimpinan Perusahaan,<br/>
+
+                                        ( ........................................................)
+                                    </p>
+                                </div>
+                                <Row className='gy-1 pt-75' >
+                                    <Col xs={12} className='text-center mt-2 pt-50'>
+                                        <Button color='secondary' outline onClick={() => setShow(false)}>
+                                            Tutup
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </ModalBody>
+                        </Modal>
+                    <Col md='6' sm='6' className='mb-1'>
+                        <Label className='form-label' for='nameMulti'>
+                            Surat Kebijakan Halal
+                        </Label>
+                    </Col>
+                    </Row>
+                    <Row>
+                        <Col md='6' sm='12' className='mb-1'>
+                            <Button color='primary' onClick={() => setShow(true)}>Kebijakan Halal</Button>
+                        </Col>
+                    </Row>
+                    <Row>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='nameMulti'>
                                 Nama Perusahaan
@@ -65,12 +120,24 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
                             }} placeholder='Nomor Induk Berusaha' />
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
-                            <Label className='form-label' for='lastNameMulti'>
+                            <Label className='form-label' for='hf-picker'>
                                 Tanggal Persetujuan
                             </Label>
-                            <Input type='text' name='nib' id='nib' onChange={(e)=>{
-                                setTanggalPersetujuan(e.target.value)
-                            }} placeholder='Nomor Induk Berusaha' />
+                            {/*<Input type='text' name='nib' id='nib' onChange={(e)=>{*/}
+                            {/*    setTanggalPersetujuan(e.target.value)*/}
+                            {/*}} placeholder='Nomor Induk Berusaha' />*/}
+                            {/*<Flatpickr*/}
+                            {/*    value={tanggalPersetujuan}*/}
+                            {/*    id='hf-picker'*/}
+                            {/*    className='form-control'*/}
+                            {/*    onChange={date => setTanggalPersetujuan(date)}*/}
+                            {/*    options={{*/}
+                            {/*        altInput: true,*/}
+                            {/*        altFormat: 'F j, Y',*/}
+                            {/*        dateFormat: 'Y-m-d'*/}
+                            {/*    }}*/}
+                            {/*/>*/}
+                            <Flatpickr className='form-control' value={tanggalPersetujuan} onChange={date => setTanggalPersetujuan(date)} id='default-picker' />
                         </Col>
                         <Col sm='12'>
                             <div className='d-flex justify-content-end'>

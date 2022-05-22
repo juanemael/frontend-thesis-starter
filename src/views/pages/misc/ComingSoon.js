@@ -18,7 +18,7 @@ const ComingSoon = () => {
 
   return (
     <div className='misc-wrapper'>
-      <a className='brand-logo' href='/home'>
+      <a className='brand-logo' href='/beranda'>
         <svg viewBox='0 0 139 95' version='1.1' height='28'>
           <defs>
             <linearGradient x1='100%' y1='10.5120544%' x2='50%' y2='89.4879456%' id='linearGradient-1'>
@@ -81,7 +81,7 @@ const ComingSoon = () => {
             {/*  <Input placeholder='john@example.com' />*/}
             {/*</Col>*/}
             <Col sm='12' className='d-md-block d-grid ps-md-0 ps-auto'>
-              <Button className='mb-1 btn-sm-block' color='primary' onClick={()=>navigate('/home')}>
+              <Button className='mb-1 btn-sm-block' color='primary' onClick={()=>navigate('/beranda')}>
                 Home
               </Button>
             </Col>

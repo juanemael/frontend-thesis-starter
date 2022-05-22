@@ -42,14 +42,14 @@ const KepentinganProduksiDistribusiProdukPage = () => {
         },
         {
             id: 'step-address',
-            title: 'Halaman 3',
+            title: 'Halaman 4',
             subtitle: 'Catatan Hasil Produksi',
             icon: <MapPin size={18} />,
             content: <CatatanHasilProduksiTable stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'catatanDistribusiPenjualanProduk',
-            title: 'Halaman 4',
+            title: 'Halaman 5',
             subtitle: 'Catatan Distribusi Penjualan Produk',
             icon: <Link size={18}/>,
             content: <CatatanDistribusiPenjualanProdukTable stepper={stepper} type='wizard-modern'/>

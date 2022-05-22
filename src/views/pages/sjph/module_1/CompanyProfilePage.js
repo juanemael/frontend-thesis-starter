@@ -1,15 +1,16 @@
-import { Card, CardHeader, CardBody, CardTitle, CardText } from 'reactstrap'
+import {Card, CardHeader, CardBody, CardTitle, CardText, Progress} from 'reactstrap'
 import CompanyForm from "../../../forms/sjph/module_1/CompanyForm";
-import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/KriteriaSistemJaminanProdukHalalForm";
 
 const CompanyProfilePage = () => {
-  return (
+
+    return (
       <div>
         <Card>
           <CardHeader>
             {/*<CardTitle> Form SJPH 🙌 </CardTitle>*/}
             <CardTitle> Form SJPH </CardTitle>
           </CardHeader>
+
           <CardBody>
             {/*<CardText>This is your second page.</CardText>*/}
             {/*<CardText>*/}
@@ -20,7 +21,7 @@ const CompanyProfilePage = () => {
           </CardBody>
         </Card>
       </div>
-  )
+    )
 }
 
 export default CompanyProfilePage

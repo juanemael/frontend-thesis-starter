@@ -10,7 +10,7 @@ const KepentinganProduksiDistribusiProdukPage = lazy(() => import('../../views/p
 
 const SJPHRoutes = [
     {
-        path: '/sjph/company_profile',
+        path: '/sjph/informasi_umum_perusahaan',
         element: <CompanyProfilePage />,
     },
     {
