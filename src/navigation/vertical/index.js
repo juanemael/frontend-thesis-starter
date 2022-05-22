@@ -1,4 +1,17 @@
-import {Mail, Home, Menu, Circle, Briefcase, Layout, BookOpen, ShoppingBag, Target, Smile, Repeat} from 'react-feather'
+import {
+  Mail,
+  Home,
+  Menu,
+  Circle,
+  Briefcase,
+  Layout,
+  BookOpen,
+  ShoppingBag,
+  Target,
+  Smile,
+  Repeat,
+  Book, Bookmark
+} from 'react-feather'
 import {FaDochub} from "react-icons/all";
 
 export default [
@@ -19,6 +32,12 @@ export default [
     title: 'Dokumen SJPH',
     icon: <FaDochub size={20} />,
     children: [
+      {
+        id: 'sjphKu',
+        title: 'SJPH-ku',
+        icon: <Bookmark size={20} />,
+        navLink: '/sjph/sjph_ku',
+      },
       {
         id: 'companyProfile',
         title: 'Informasi Umum Perusahaan',

@@ -1,12 +1,12 @@
 import ApiRequest from "../utility/ApiRequest"
 
-export default class CompanyProfile {
+export default class KriteriaSJPHKebijakanHalal {
     getAll = async () => {
         return await ApiRequest.set("/sjph/company_profiles", "GET")
     }
 
-    getById = async (company_profile_id) => {
-        return await ApiRequest.set(`/sjph/company_profile/${company_profile_id}`, "GET")
+    getNamaPerusahaan = async (id) => {
+        return await ApiRequest.set(`/sjph/nama_perusahaan/${id}`, "GET")
     }
 
     createKebijakanHalal = async (body) => {

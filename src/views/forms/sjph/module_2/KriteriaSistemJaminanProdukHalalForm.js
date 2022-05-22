@@ -34,6 +34,10 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
 
     const [show, setShow] = useState(false)
 
+    const getNamaPerusahaan = async () =>{
+
+    }
+
     const submit = async () => {
         const body = {
             nama_perusahaan: namaPerusahaan,
