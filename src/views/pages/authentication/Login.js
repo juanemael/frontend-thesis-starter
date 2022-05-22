@@ -137,6 +137,12 @@ const Login = () => {
     }
   }
 
+  const handleKeyPress = e =>{
+    if (e.key === "Enter") {
+      submitLogin()
+    }
+  }
+
   const onSubmit = data => {
     if (Object.values(data).every(field => field.length > 0)) {
       useJwt
@@ -272,7 +278,7 @@ const Login = () => {
                     <small>Lupa Password?</small>
                   </Link>
                 </div>
-                <InputPasswordToggle className='input-group-merge' onChange={(e) => { setPassword(e.target.value) }} invalid={errors.password && true} required />
+                <InputPasswordToggle className='input-group-merge' onChange={(e) => { setPassword(e.target.value) }} onKeyPress={handleKeyPress} invalid={errors.password && true} required />
               </div>
               <div className='form-check mb-1'>
                 <Input type='checkbox' id='remember-me' />

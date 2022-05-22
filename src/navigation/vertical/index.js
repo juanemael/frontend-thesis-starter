@@ -3,13 +3,16 @@ import {FaDochub} from "react-icons/all";
 
 export default [
   {
-    header: 'Misc'
+    header: 'User'
   },
   {
     id: 'home',
     title: 'Home',
     icon: <Home size={20} />,
     navLink: '/home'
+  },
+  {
+    header: 'Sertifikasi Halal'
   },
   {
     id: 'sjphPage',

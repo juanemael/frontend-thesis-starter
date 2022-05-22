@@ -8,7 +8,7 @@ import { Button } from 'reactstrap'
 import { useSkin } from '@hooks/useSkin'
 
 // ** Utils
-import { getUserData, getHomeRouteForLoggedInUser } from '@utils'
+import { getUserData, getHomeRouteForLoggedInUser, isUserLoggedIn } from '@utils'
 
 // ** Styles
 import '@styles/base/pages/page-misc.scss'
@@ -18,7 +18,7 @@ const NotAuthorized = () => {
     const { skin } = useSkin()
 
     // ** Vars
-    const user = getUserData()
+    const user = isUserLoggedIn()
 
     const illustration = skin === 'dark' ? 'not-authorized-dark.svg' : 'not-authorized.svg',
         source = require(`@src/assets/images/pages/${illustration}`).default
@@ -85,7 +85,7 @@ const NotAuthorized = () => {
                         tag={Link}
                         color='primary'
                         className='btn-sm-block mb-1'
-                        to={user ? getHomeRouteForLoggedInUser(user.role) : '/'}
+                        to={user ? '/home' : '/'}
                     >
                         Kembali ke beranda
                     </Button>
