@@ -41,14 +41,15 @@ export default [
         id: 'bahanKepentinganHalal',
         title: 'Bahan untuk Kepentingan Halal',
         icon: <Layout size={20} />,
-        navLink: '/coming_soon',
+        navLink: '/sjph/bahan_untuk_kepentingan_halal',
       },
       {
         id: 'kepentinganProduksiPemusnahanProduk',
         title: 'Kepentingan Produksi dan Pemusnahan Produk',
         icon: <Layout size={20} />,
         navLink: '/coming_soon',
-      },      {
+      },
+      {
         id: 'auditKajiUlangManajemen',
         title: 'Audit dan Kaji Ulang Manajemen',
         icon: <Layout size={20} />,

@@ -1,9 +1,10 @@
 import { lazy } from 'react'
-// import KebijakanEdukasiHalal from "../../views/pages/sjph/module_3/KebijakanEdukasiHalal";
+// import KebijakanEdukasiHalalPage from "../../views/pages/sjph/module_3/KebijakanEdukasiHalalPage";
 
 const CompanyProfilePage = lazy(() => import('../../views/pages/sjph/module_1/CompanyProfilePage'))
 const KriteriaSistemJaminanProdukHalalPage = lazy(() => import('../../views/pages/sjph/module_2/KriteriaSistemJaminanProdukHalalPage'))
-const KebijakanEdukasiHalal = lazy(() => import('../../views/pages/sjph/module_3/KebijakanEdukasiHalal'))
+const KebijakanEdukasiHalalPage = lazy(() => import('../../views/pages/sjph/module_3/KebijakanEdukasiHalalPage'))
+const BahanKepentinganHalalPage = lazy(() => import('../../views/pages/sjph/module_4/BahanKepentinganHalalPage'))
 
 const SJPHRoutes = [
     {
@@ -16,7 +17,11 @@ const SJPHRoutes = [
     },
     {
         path: '/sjph/kebijakan_dan_edukasi_halal',
-        element: <KebijakanEdukasiHalal />
+        element: <KebijakanEdukasiHalalPage />
+    },
+    {
+        path: '/sjph/bahan_untuk_kepentingan_halal',
+        element: <BahanKepentinganHalalPage />
     }
 ]
 

@@ -8,7 +8,7 @@ import {useRef, useState} from "react";
 import SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable
     from "../../../tables/sjph/module_3/SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable";
 
-const KebijakanEdukasiHalal = () => {
+const BahanKepentinganHalalPage = () => {
     const ref = useRef(null)
     const [stepper, setStepper] = useState(null)
     const steps = [
@@ -64,4 +64,4 @@ const KebijakanEdukasiHalal = () => {
     )
 }
 
-export default KebijakanEdukasiHalal
+export default BahanKepentinganHalalPage
