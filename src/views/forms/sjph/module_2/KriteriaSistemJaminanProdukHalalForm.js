@@ -12,10 +12,11 @@ import {
 import '@styles/react/libs/editor/editor.scss'
 import classnames from "classnames";
 import {useState, Fragment} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import KriteriaSJPHKebijakanHalalModels from "../../../../models/KriteriaSJPHKebijakanHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import Flatpickr from 'react-flatpickr'
+
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 
 import { selectThemeColors } from '@utils'
@@ -27,7 +28,7 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState(new Date())
 
 
-    const companyProfileModel = new CompanyProfileModels()
+    const kriteriaSJPHKebijakanHalalModel = new KriteriaSJPHKebijakanHalalModels()
 
     const navigate = useNavigate()
 
@@ -36,13 +37,15 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
     const submit = async () => {
         const body = {
             nama_perusahaan: namaPerusahaan,
+            tempat_persetujuan: tempatPersetujuan,
+            tanggal_persetujuan: tanggalPersetujuan
         }
         try {
-            const result = await companyProfileModel.createCompanyProfile(body)
+            const result = await kriteriaSJPHKebijakanHalalModel.createKebijakanHalal(body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        navigate('/sjph/company_profile')
+                        navigate('/sjph/kriteria_sistem_jaminan_produk_halal')
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
@@ -117,7 +120,7 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
                             </Label>
                             <Input type='text' name='nib' id='nib' onChange={(e)=>{
                                 setTempatPersetujuan(e.target.value)
-                            }} placeholder='Nomor Induk Berusaha' />
+                            }} placeholder='Tempat Persetujuan' />
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='hf-picker'>
@@ -126,18 +129,17 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
                             {/*<Input type='text' name='nib' id='nib' onChange={(e)=>{*/}
                             {/*    setTanggalPersetujuan(e.target.value)*/}
                             {/*}} placeholder='Nomor Induk Berusaha' />*/}
-                            {/*<Flatpickr*/}
-                            {/*    value={tanggalPersetujuan}*/}
-                            {/*    id='hf-picker'*/}
-                            {/*    className='form-control'*/}
-                            {/*    onChange={date => setTanggalPersetujuan(date)}*/}
-                            {/*    options={{*/}
-                            {/*        altInput: true,*/}
-                            {/*        altFormat: 'F j, Y',*/}
-                            {/*        dateFormat: 'Y-m-d'*/}
-                            {/*    }}*/}
-                            {/*/>*/}
-                            <Flatpickr className='form-control' value={tanggalPersetujuan} onChange={date => setTanggalPersetujuan(date)} id='default-picker' />
+                            <Flatpickr
+                                value={tanggalPersetujuan}
+                                id='hf-picker'
+                                className='form-control'
+                                onChange={date => setTanggalPersetujuan(date)}
+                                options={{
+                                    altInput: true,
+                                    altFormat: 'F j, Y',
+                                    dateFormat: 'Y-m-d'
+                                }}
+                            />
                         </Col>
                         <Col sm='12'>
                             <div className='d-flex justify-content-end'>
