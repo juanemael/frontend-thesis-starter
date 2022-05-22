@@ -9,6 +9,10 @@ import DaftarBahanDigunakanSetiapProdukForm from "../../../forms/sjph/module_4/D
 import CatatanPembelianBahanTable from "../../../tables/sjph/module_4/CatatanPembelianBahanTable";
 import FormPemeriksaanBahanTable from "../../../tables/sjph/module_4/FormPemeriksaanBahanTable";
 import CatatanPenyimpananBahanProdukTable from "../../../tables/sjph/module_4/CatatanPenyimpananBahanProdukTable";
+import LayoutDenahRuangProduksiForm from "../../../forms/sjph/module_5/LayoutDenahRuangProduksiForm";
+import DiagramAlirProsesProduksiForm from "../../../forms/sjph/module_5/DiagramAlirProsesProduksiForm";
+import CatatanDistribusiPenjualanProdukTable from "../../../tables/sjph/module_5/CatatanDistribusiPenjualanProdukTable";
+import CatatanHasilProduksiTable from "../../../tables/sjph/module_5/CatatanHasilProduksiTable";
 
 
 const KepentinganProduksiDistribusiProdukPage = () => {
@@ -18,17 +22,18 @@ const KepentinganProduksiDistribusiProdukPage = () => {
         {
             id: 'hal1',
             title: 'Halaman 1',
-            subtitle: 'Daftar Bahan',
+            subtitle: 'Layout Ruang Produksi',
             icon: <FileText size={18} />,
-            content: <DaftarBahanTable stepper={stepper} type='wizard-modern' />
+            content: <LayoutDenahRuangProduksiForm stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'hal2',
             title: 'Halaman 2',
-            subtitle: 'Daftar Bahan Setiap Produk',
+            subtitle: 'Diagram Alir Proses Produksi',
             icon: <User size={18} />,
-            content: <DaftarBahanDigunakanSetiapProdukForm stepper={stepper} type='wizard-modern' />
-        },        {
+            content: <DiagramAlirProsesProduksiForm stepper={stepper} type='wizard-modern' />
+        },
+        {
             id: 'hal3',
             title: 'Halaman 3',
             subtitle: 'Catatan Pembelian Bahan',
@@ -38,24 +43,17 @@ const KepentinganProduksiDistribusiProdukPage = () => {
         {
             id: 'step-address',
             title: 'Halaman 3',
-            subtitle: 'Form Pemeriksaan Bahan',
+            subtitle: 'Catatan Hasil Produksi',
             icon: <MapPin size={18} />,
-            content: <FormPemeriksaanBahanTable stepper={stepper} type='wizard-modern' />
+            content: <CatatanHasilProduksiTable stepper={stepper} type='wizard-modern' />
         },
         {
-            id: 'suratPernyataanBebasBabi',
+            id: 'catatanDistribusiPenjualanProduk',
             title: 'Halaman 4',
-            subtitle: 'Surat Pernyataan Bebas Babi',
+            subtitle: 'Catatan Distribusi Penjualan Produk',
             icon: <Link size={18}/>,
-            content: <SuratPernyataanBebasBabiForm stepper={stepper} type='wizard-modern'/>
+            content: <CatatanDistribusiPenjualanProdukTable stepper={stepper} type='wizard-modern'/>
         },
-        {
-            id: 'suratPermohonanPersetujuanPenggunaanBahanBaru',
-            title: 'Halaman 4',
-            subtitle: 'Surat Permohonan Persetujuan Penggunaaan Bahan Baru',
-            icon: <Link size={18} />,
-            content: <CatatanPenyimpananBahanProdukTable stepper={stepper} type='wizard-modern' />
-        }
     ]
     return (
         <div>
