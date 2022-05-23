@@ -54,7 +54,7 @@ const CompanyForm = () => {
             ruang_lingkup: ruangLingkup
         }
         try {
-            const result = await companyProfileModel.createCompanyProfile(body)
+            const result = await companyProfileModel.createCompanyProfile(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
