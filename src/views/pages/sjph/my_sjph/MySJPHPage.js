@@ -5,14 +5,7 @@ const MySJPHPage = () => {
 
     return (
       <div>
-        <Card>
-          <CardHeader>
-            <CardTitle> SJPH-Ku </CardTitle>
-          </CardHeader>
-          <CardBody>
-              <MySJPHTable />
-          </CardBody>
-        </Card>
+          <MySJPHTable />
       </div>
     )
 }

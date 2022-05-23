@@ -13,4 +13,8 @@ export default class SJPHKu {
         return await ApiRequest.set(`/sjph`, 'POST', body)
     }
 
+    deleteSJPH = async (id) => {
+        return await ApiRequest.set(`/sjph/${id}`, 'DELETE')
+    }
+
 }

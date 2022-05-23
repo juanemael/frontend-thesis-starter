@@ -21,8 +21,8 @@ export default class CompanyProfile {
         return await ApiRequest.set(`/sjph/company_profile/${company_profile_id}`, "POST", body)
     }
 
-    createCompanyProfile = async (body) => {
-        return await ApiRequest.set(`/sjph/company_profile`, 'POST', body)
+    createCompanyProfile = async (sjph_id,body) => {
+        return await ApiRequest.set(`/sjph/company_profile/${sjph_id}`, 'POST', body)
     }
 
 }
