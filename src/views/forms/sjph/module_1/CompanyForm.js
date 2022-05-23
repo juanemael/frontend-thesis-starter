@@ -58,7 +58,7 @@ const CompanyForm = () => {
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        navigate('/sjph/company_profile')
+                        navigate('/sjph/informasi_umum_perusahaan')
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
