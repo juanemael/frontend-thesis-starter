@@ -38,8 +38,13 @@ const CompanyForm = () => {
 
     const getCompanyProfile = async (id) => {
         try {
-            const result = await companyProfileModel.getById(id)
-            setDetails(result)
+            if (!sessionStorage.perusahaan_id || sessionStorage.perusahaan_id === 'null') {
+
+            } else {
+                console.log("TES ID COMP", sessionStorage.perusahaan_id)
+                const result = await companyProfileModel.getById(id)
+                setDetails(result)
+            }
         } catch (e) {
             console.error(e)
         }

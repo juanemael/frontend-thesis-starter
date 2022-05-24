@@ -116,7 +116,7 @@ const Login = () => {
           // localStorage.role = result.role
           sessionStorage.token = result.token
           sessionStorage.username = result.username
-          sessionStorage.id = result.id
+          sessionStorage.user_id = result.id
 
           toast(t => (
               <ToastContent t={t} role={'user'} name={result.email || 'Unknown'}/>

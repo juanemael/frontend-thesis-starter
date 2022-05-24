@@ -14,12 +14,11 @@ import { UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from
 import defaultAvatar from '@src/assets/images/portrait/small/avatar-s-11.jpg'
 
 const logout = () => {
-  sessionStorage.removeItem("token");
+  sessionStorage.clear();
   localStorage.removeItem("token");
-  sessionStorage.removeItem("username");
   localStorage.removeItem("username");
-  sessionStorage.removeItem("id");
-  localStorage.removeItem("id");
+  localStorage.removeItem("sjph_id");
+  localStorage.removeItem("sjph_id");
 }
 
 const UserDropdown = () => {

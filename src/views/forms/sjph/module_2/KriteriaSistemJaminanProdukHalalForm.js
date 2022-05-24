@@ -11,8 +11,9 @@ import {
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import classnames from "classnames";
-import {useState, Fragment} from "react";
+import {useState, Fragment, useEffect} from "react";
 import KriteriaSJPHKebijakanHalalModels from "../../../../models/KriteriaSJPHKebijakanHalal";
+import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import Flatpickr from 'react-flatpickr'
@@ -26,17 +27,40 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState(new Date())
+    const [details, setDetails] = useState([])
 
 
     const kriteriaSJPHKebijakanHalalModel = new KriteriaSJPHKebijakanHalalModels()
+    const companyProfileModel = new CompanyProfileModels()
 
     const navigate = useNavigate()
 
     const [show, setShow] = useState(false)
 
-    const getNamaPerusahaan = async () =>{
+    const getCompanyProfile = async (id) => {
+        try {
+            if (!sessionStorage.perusahaan_id || sessionStorage.perusahaan_id === 'null') {
+                console.log("NO DATA FOUND")
 
+            } else {
+                console.log("TEST ID",id)
+                const result = await companyProfileModel.getById(id)
+                setDetails(result)
+            }
+        } catch (e) {
+            console.error(e)
+        }
     }
+
+    useEffect(()=>{
+        if (sessionStorage.perusahaan_id) {
+            if (sessionStorage.perusahaan_id !== "" || sessionStorage.perusahaan_id !==null) {
+                getCompanyProfile(sessionStorage.perusahaan_id)
+            }
+        } else {
+            setNamaPerusahaan("")
+        }
+    },[])
 
     const submit = async () => {
         const body = {
@@ -114,7 +138,7 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
                             <Label className='form-label' for='nameMulti'>
                                 Nama Perusahaan
                             </Label>
-                            <Input type='text' name='namaPerusahaan' id='namaPerusahaan' onChange={(e)=>{
+                            <Input type='text' name='namaPerusahaan' defaultValue={details.id && details.nama_perusahaan} id='namaPerusahaan' onChange={(e)=>{
                                 setNamaPerusahaan(e.target.value)
                             }} placeholder='Nama Perusahaan' />
                         </Col>

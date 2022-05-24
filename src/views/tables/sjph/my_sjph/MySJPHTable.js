@@ -163,7 +163,8 @@ const MySJPHTable = () => {
 
     const submit = async () => {
         const body = {
-            nama_sjph: sjphName
+            nama_sjph: sjphName,
+            user_id: sessionStorage.user_id
         }
         try {
             const result = await sjphModel.createSJPH(body)
