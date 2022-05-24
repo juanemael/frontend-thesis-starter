@@ -9,20 +9,16 @@ export default class CompanyProfile {
         return await ApiRequest.set(`/sjph/company_profile/${company_profile_id}`, "GET")
     }
 
-    deleteUser = async (company_profile_id) => {
-        return await ApiRequest.set(`/sjph/company_profile/${company_profile_id}`, "DELETE")
-    }
-
-    updateUser = async (company_profile_id, body) => {
-        return await ApiRequest.set(`/sjph/company_profile/${company_profile_id}`, "PUT", body)
-    }
-
     changePassword = async (company_profile_id, body) => {
         return await ApiRequest.set(`/sjph/company_profile/${company_profile_id}`, "POST", body)
     }
 
     createCompanyProfile = async (sjph_id,body) => {
         return await ApiRequest.set(`/sjph/company_profile/${sjph_id}`, 'POST', body)
+    }
+
+    editCompanyProfile = async (sjph_id,company_profile_id,body) => {
+        return await ApiRequest.set(`/sjph/company_profile/${sjph_id}/${company_profile_id}`, 'PUT', body)
     }
 
 }

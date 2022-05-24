@@ -13,15 +13,15 @@ import {
     Row, Label, Input, FormFeedback, Modal
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
-import {useState, Fragment} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import {useState, Fragment, forwardRef, useEffect} from "react";
+import KriteriaSJPHKebijakanHalalModels from "../../../../models/KriteriaSJPHKebijakanHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import react from '@src/assets/images/icons/react.svg'
 import vuejs from '@src/assets/images/icons/vuejs.svg'
 import angular from '@src/assets/images/icons/angular.svg'
 import bootstrap from '@src/assets/images/icons/bootstrap.svg'
-import {Check, Edit, MoreVertical, Trash, X} from "react-feather";
+import {Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 
@@ -29,6 +29,9 @@ import { selectThemeColors } from '@utils'
 
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
+import DataTable from "react-data-table-component";
+import ReactPaginate from "react-paginate";
 
 const statusOptions = [
     { value: 'active', label: 'Active' },
@@ -59,12 +62,16 @@ const defaultValues = {
 }
 const MediaKomunikasiTable = () => {
 
+    const [currentPage, setCurrentPage] = useState(0)
+    const [searchValue, setSearchValue] = useState('')
+    const [filteredData, setFilteredData] = useState([])
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [mediaKomunikasi, setMediaKomunikasi] = useState([])
 
 
-    const companyProfileModel = new CompanyProfileModels()
+    const kriteriaSJPHKebijakanHalalModel = new KriteriaSJPHKebijakanHalalModels()
 
     const navigate = useNavigate()
 
@@ -78,6 +85,153 @@ const MediaKomunikasiTable = () => {
         handleSubmit,
         formState: { errors }
     } = useForm({ defaultValues })
+
+    const getMediaKomunikasi = async () => {
+        try {
+            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiAll()
+            setMediaKomunikasi(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    useEffect(()=>{
+        getMediaKomunikasi()
+    },[])
+
+
+    const handlePagination = page => {
+        setCurrentPage(page.selected)
+    }
+
+    const handleFilter = e => {
+        const value = e.target.value
+        let updatedData = []
+        setSearchValue(value)
+
+        const status = {
+            1: { title: 'Current', color: 'light-primary' },
+            2: { title: 'Professional', color: 'light-success' },
+            3: { title: 'Rejected', color: 'light-danger' },
+            4: { title: 'Resigned', color: 'light-warning' },
+            5: { title: 'Applied', color: 'light-info' }
+        }
+
+        if (value.length) {
+            updatedData = sjph.filter(item => {
+                const startsWith =
+                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                const includes =
+                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                if (startsWith) {
+                    return startsWith
+                } else if (!startsWith && includes) {
+                    return includes
+                } else return null
+            })
+            setFilteredData(updatedData)
+            setSearchValue(value)
+        }
+    }
+
+    const CustomPagination = () => (
+        <ReactPaginate
+            previousLabel=''
+            nextLabel=''
+            forcePage={currentPage}
+            onPageChange={page => handlePagination(page)}
+            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(sjph.length / 7) || 1}
+            breakLabel='...'
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={2}
+            activeClassName='active'
+            pageClassName='page-item'
+            breakClassName='page-item'
+            nextLinkClassName='page-link'
+            pageLinkClassName='page-link'
+            breakLinkClassName='page-link'
+            previousLinkClassName='page-link'
+            nextClassName='page-item next-item'
+            previousClassName='page-item prev-item'
+            containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1'
+        />
+    )
+
+    const BootstrapCheckbox = forwardRef((props, ref) => (
+        <div className='form-check'>
+            <Input type='checkbox' ref={ref} {...props} />
+        </div>
+    ))
+
+    const columns = [
+        {
+            name: 'ID',
+            // minWidth: '150px',
+            selector: row => row.sjph_id,
+            sortable: row => row.sjph_id
+        },
+        {
+            name: 'Nama SJPH',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.nama_sjph
+        },
+        {
+            name: 'Dibuat pada',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.created_at
+        },
+
+        {
+            name: 'Diubah pada',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.modified_at
+        },
+        {
+            name:  'Pilihan',
+            cell:  (row) => {
+                return (
+                    <Button className='me-1' color='primary' onClick={()=>{ selectSJPH(row.sjph_id,row.perusahaan_id,row.nama_sjph) }}>
+                        Pilih
+                    </Button>
+                )
+            }
+        },
+        {
+            name: 'Tindakan',
+            allowOverflow: false,
+            cell: (row) => {
+                return (
+                    <div className='d-flex'>
+                        <UncontrolledDropdown>
+                            <DropdownToggle className='pe-1' tag='span' >
+                                <MoreVertical size={15} />
+                            </DropdownToggle>
+                            <DropdownMenu end>
+                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                    <FileText size={15} />
+                                    <span className='align-middle ms-50'>Details</span>
+                                </DropdownItem>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.sjph_id) }}>
+                                    <Trash size={15} />
+                                    <span className='align-middle ms-50'>Delete</span>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <Edit size={15} />
+                    </div>
+                )
+            }
+        }
+    ]
 
     const onSubmitModal = data => {
         if (Object.values(data).every(field => field.length > 0)) {
@@ -264,132 +418,37 @@ const MediaKomunikasiTable = () => {
                 <h3 className='mb-0'>Halaman 2</h3>
                 <small className='text-muted'>Cari tahu tentang kebijakan halal</small>
             </div>
-            <Table responsive>
-                <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Tanggal Sosialisasi</th>
-                    <th>Judul Kegiatan</th>
-                    <th>Peserta</th>
-                    <th>Bukti Hasil Sosialisasi</th>
-                    <th>Menu</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>1.</span>
-                    </td>
-                    <td>11-09-2022</td>
-                    <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            Melakukan Halal
-                        </Badge>
-                    </td>
-                    <td>5</td>
-                    <td>Bukti</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>2.</span>
-                    </td>
-                    <td>Ronald Frest</td>
-                    <td>
-                        <Badge pill color='light-success' className='me-1'>
-                            Completed
-                        </Badge>
-                    </td>
-                    <td>5</td>
-                    <td>Bukti</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>3.</span>
-                    </td>
-                    <td>Jack Obes</td>
-                    <td>
-                        <Badge pill color='light-info' className='me-1'>
-                            Scheduled
-                        </Badge>
-                    </td>
-                    <td>5</td>
-                    <td>Bukti</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>4.</span>
-                    </td>
-                    <td>Jerry Milton</td>
-                    <td>
-                        <Badge pill color='light-warning' className='me-1'>
-                            Pending
-                        </Badge>
-                    </td>
-                    <td>5</td>
-                    <td>Bukti</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                </tbody>
-            </Table>
+            <Row className='justify-content-end mx-0'>
+                <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
+                    <Label className='me-1' for='search-input'>
+                        Search
+                    </Label>
+                    <Input
+                        className='dataTable-filter mb-50'
+                        type='text'
+                        bsSize='sm'
+                        id='search-input'
+                        value={searchValue}
+                        onChange={handleFilter}
+                    />
+                </Col>
+            </Row>
+            <div className='react-dataTable'>
+                <DataTable
+                    noHeader
+                    pagination
+                    selectableRows
+                    columns={columns}
+                    paginationPerPage={7}
+                    className='react-dataTable'
+                    sortIcon={<ChevronDown size={10} />}
+                    paginationDefaultPage={currentPage + 1}
+                    paginationComponent={CustomPagination}
+                    data={searchValue.length ? filteredData : mediaKomunikasi}
+                    selectableRowsComponent={BootstrapCheckbox}
+                />
+            </div>
+            &nbsp;
             <Col sm='12'>
                 <div className='d-flex justify-content-end'>
                     <Button className='me-1' color='primary' onClick={()=> setShow(true)}>

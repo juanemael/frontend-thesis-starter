@@ -44,12 +44,6 @@ import '@styles/react/libs/tables/react-dataTable-component.scss'
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 
-const defaultValues = {
-    firstName: 'Bob',
-    lastName: 'Barton',
-    username: 'bob.dev'
-}
-
 const MySJPHTable = () => {
 
     const [sjphName, setSJPHName] = useState("")
@@ -73,13 +67,12 @@ const MySJPHTable = () => {
         setError,
         handleSubmit,
         formState: { errors }
-    } = useForm({ defaultValues })
+    } = useForm()
 
     const getSJPH = async () => {
         try {
             const result = await sjphModel.getAll()
             setSJPH(result)
-
         } catch (e) {
             console.error(e)
         }
@@ -236,9 +229,10 @@ const MySJPHTable = () => {
         })
     }
 
-    const selectSJPH = async (id,name) =>{
+    const selectSJPH = async (id,perusahaan_id,name) =>{
         try {
             sessionStorage.sjph_id = id
+            sessionStorage.perusahaan_id = perusahaan_id
             toast.success(`Anda telah memilih SJPH ${name}`)
         } catch (e) {
             console.error(e)
@@ -281,7 +275,7 @@ const MySJPHTable = () => {
             name:  'Pilihan',
             cell:  (row) => {
                 return (
-                    <Button className='me-1' color='primary' onClick={()=>{ selectSJPH(row.sjph_id,row.nama_sjph) }}>
+                    <Button className='me-1' color='primary' onClick={()=>{ selectSJPH(row.sjph_id,row.perusahaan_id,row.nama_sjph) }}>
                         Pilih
                     </Button>
                 )
@@ -373,21 +367,21 @@ const MySJPHTable = () => {
                 <h3 className='mb-0'>Daftar SJPH</h3>
                 <small className='text-muted'>Berikut adalah tabel daftar SJPH yang dibuat oleh kamu</small>
             </div>
-                    <Row className='justify-content-end mx-0'>
-                        <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
-                            <Label className='me-1' for='search-input'>
-                                Search
-                            </Label>
-                            <Input
-                                className='dataTable-filter mb-50'
-                                type='text'
-                                bsSize='sm'
-                                id='search-input'
-                                value={searchValue}
-                                onChange={handleFilter}
-                            />
-                        </Col>
-                    </Row>
+                <Row className='justify-content-end mx-0'>
+                    <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
+                        <Label className='me-1' for='search-input'>
+                            Search
+                        </Label>
+                        <Input
+                            className='dataTable-filter mb-50'
+                            type='text'
+                            bsSize='sm'
+                            id='search-input'
+                            value={searchValue}
+                            onChange={handleFilter}
+                        />
+                    </Col>
+                </Row>
             <div className='react-dataTable'>
                 <DataTable
                     noHeader
