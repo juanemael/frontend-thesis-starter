@@ -71,7 +71,7 @@ const MySJPHTable = () => {
 
     const getSJPH = async () => {
         try {
-            const result = await sjphModel.getAll()
+            const result = await sjphModel.getAllByUserID(sessionStorage.user_id)
             setSJPH(result)
         } catch (e) {
             console.error(e)

@@ -1,8 +1,8 @@
 import ApiRequest from "../utility/ApiRequest"
 
 export default class SJPHKu {
-    getAll = async () => {
-        return await ApiRequest.set("/sjph", "GET")
+    getAllByUserID = async (user_id) => {
+        return await ApiRequest.set(`/sjph/user/${user_id}`, "GET")
     }
 
     getNamaPerusahaan = async (id) => {

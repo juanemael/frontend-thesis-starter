@@ -27,15 +27,22 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
     ]
     return (
         <div>
-            <Wizard
-                type='modern-vertical'
-                ref={ref}
-                steps={steps}
-                options={{
-                    linear: false
-                }}
-                instance={el => setStepper(el)}
-            />
+            <Card>
+                <CardHeader>
+                    <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
+                </CardHeader>
+                <CardBody>
+                <Wizard
+                    type='modern-vertical'
+                    ref={ref}
+                    steps={steps}
+                    options={{
+                        linear: false
+                    }}
+                    instance={el => setStepper(el)}
+                />
+                </CardBody>
+            </Card>
         </div>
     )
 }
