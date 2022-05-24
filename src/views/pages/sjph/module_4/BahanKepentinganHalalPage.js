@@ -9,6 +9,7 @@ import DaftarBahanDigunakanSetiapProdukForm from "../../../forms/sjph/module_4/D
 import CatatanPembelianBahanTable from "../../../tables/sjph/module_4/CatatanPembelianBahanTable";
 import FormPemeriksaanBahanTable from "../../../tables/sjph/module_4/FormPemeriksaanBahanTable";
 import CatatanPenyimpananBahanProdukTable from "../../../tables/sjph/module_4/CatatanPenyimpananBahanProdukTable";
+import {Card, CardBody, CardHeader, CardTitle} from "reactstrap";
 
 
 const BahanKepentinganHalalPage = () => {
@@ -59,15 +60,22 @@ const BahanKepentinganHalalPage = () => {
     ]
     return (
         <div>
-            <Wizard
-                type='modern-horizontal'
-                ref={ref}
-                steps={steps}
-                options={{
-                    linear: false
-                }}
-                instance={el => setStepper(el)}
-            />
+            <Card>
+                <CardHeader>
+                    <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
+                </CardHeader>
+                <CardBody>
+                <Wizard
+                    type='modern-horizontal'
+                    ref={ref}
+                    steps={steps}
+                    options={{
+                        linear: false
+                    }}
+                    instance={el => setStepper(el)}
+                />
+                </CardBody>
+            </Card>
         </div>
     )
 }

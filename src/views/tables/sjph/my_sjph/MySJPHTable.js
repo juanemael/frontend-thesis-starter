@@ -233,7 +233,9 @@ const MySJPHTable = () => {
     const selectSJPH = async (id,perusahaan_id,name) =>{
         try {
             sessionStorage.sjph_id = id
+            sessionStorage.nama_sjph = name
             sessionStorage.perusahaan_id = perusahaan_id
+            window.location.reload()
             toast.success(`Anda telah memilih SJPH ${name}`)
         } catch (e) {
             console.error(e)

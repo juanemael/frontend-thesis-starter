@@ -13,6 +13,7 @@ import LayoutDenahRuangProduksiForm from "../../../forms/sjph/module_5/LayoutDen
 import DiagramAlirProsesProduksiForm from "../../../forms/sjph/module_5/DiagramAlirProsesProduksiForm";
 import CatatanDistribusiPenjualanProdukTable from "../../../tables/sjph/module_5/CatatanDistribusiPenjualanProdukTable";
 import CatatanHasilProduksiTable from "../../../tables/sjph/module_5/CatatanHasilProduksiTable";
+import {Card, CardBody, CardHeader, CardTitle} from "reactstrap";
 
 
 const KepentinganProduksiDistribusiProdukPage = () => {
@@ -57,6 +58,11 @@ const KepentinganProduksiDistribusiProdukPage = () => {
     ]
     return (
         <div>
+            <Card>
+            <CardHeader>
+                <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
+            </CardHeader>
+            <CardBody>
             <Wizard
                 type='modern-horizontal'
                 ref={ref}
@@ -66,6 +72,8 @@ const KepentinganProduksiDistribusiProdukPage = () => {
                 }}
                 instance={el => setStepper(el)}
             />
+            </CardBody>
+            </Card>
         </div>
     )
 }

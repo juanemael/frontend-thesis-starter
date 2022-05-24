@@ -7,8 +7,7 @@ const CompanyProfilePage = () => {
       <div>
         <Card>
           <CardHeader>
-            {/*<CardTitle> Form SJPH 🙌 </CardTitle>*/}
-            <CardTitle> Form SJPH </CardTitle>
+            <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
           </CardHeader>
           <CardBody>
               <CompanyForm />

@@ -2,6 +2,7 @@ import {FileText, Link, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
 import {useRef, useState} from "react";
 import KajiUlangManajemenTable from "../../../tables/sjph/module_6/KajiUlangManajemenTable";
+import {Card, CardBody, CardHeader, CardTitle} from "reactstrap";
 
 
 const KajiUlangManajemenPage = () => {
@@ -18,15 +19,22 @@ const KajiUlangManajemenPage = () => {
     ]
     return (
         <div>
-            <Wizard
-                type='modern-horizontal'
-                ref={ref}
-                steps={steps}
-                options={{
-                    linear: false
-                }}
-                instance={el => setStepper(el)}
-            />
+            <Card>
+                <CardHeader>
+                    <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
+                </CardHeader>
+                <CardBody>
+                <Wizard
+                    type='modern-horizontal'
+                    ref={ref}
+                    steps={steps}
+                    options={{
+                        linear: false
+                    }}
+                    instance={el => setStepper(el)}
+                />
+                </CardBody>
+            </Card>
         </div>
     )
 }
