@@ -35,7 +35,6 @@ import Select from "react-select";
 import DataTable from 'react-data-table-component'
 import ReactPaginate from 'react-paginate'
 
-
 import { selectThemeColors } from '@utils'
 
 // ** Styles
@@ -46,6 +45,10 @@ import '@styles/react/libs/shepherd-tour/shepherd-tour.scss'
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import {ShepherdTour, ShepherdTourContext} from "react-shepherd";
+import navigation from '@src/navigation/vertical'
+import ReactDOM from "react-dom";
+// import VerticalLayout from "../../../../layouts/VerticalLayout";
+import VerticalLayout from "../../../../layouts/VerticalLayout";
 
 const MySJPHTable = () => {
 
@@ -55,6 +58,7 @@ const MySJPHTable = () => {
     const [filteredData, setFilteredData] = useState([])
     const [details, setDetails] = useState([])
     const [sjph, setSJPH] = useState([])
+    const [disable, setDisable] = useState(false)
 
 
     const sjphModel = new SJPHModels()
@@ -92,10 +96,31 @@ const MySJPHTable = () => {
 
     const steps = [
         {
+            id: 'tambahData',
+            title: 'Tambah SJPH',
+            text: 'Klik tombol ini untuk membuat SJPH terlebih dahulu',
+            attachTo: { element: '#buttonTambah', on: 'top' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    text: 'Kembali',
+                    classes: backBtnClass,
+                    action: () => instance.back()
+                },
+                {
+                    text: 'Selanjutnya',
+                    classes: nextBtnClass,
+                    action: () => instance.next()
+                }
+            ]
+        },
+        {
             id: 'dataTable',
             title: 'Data Table',
-            text: 'This is your data table',
-            attachTo: { element: '.dataTable', on: 'bottom' },
+            text: 'Ini table SJPH-Mu setelah membuat SJPH, klik tombol pilih di SJPH yang anda ingin isi.',
+            attachTo: { element: '#dataTable', on: 'bottom' },
             cancelIcon: {
                 enabled: true
             },
@@ -103,10 +128,10 @@ const MySJPHTable = () => {
                 {
                     action: () => instance.cancel(),
                     classes: backBtnClass,
-                    text: 'Skip'
+                    text: 'Lewati'
                 },
                 {
-                    text: 'Next',
+                    text: 'Selanjutnya',
                     classes: nextBtnClass,
                     action: () => instance.next()
                 }
@@ -114,55 +139,26 @@ const MySJPHTable = () => {
         },
         {
             id: 'card',
-            title: 'Card',
-            text: 'This is a card',
-            attachTo: { element: '#basic-tour .card', on: 'top' },
+            title: 'Tur Selesai',
+            text: 'Tur Selesai. Semoga Berhasil!',
+            attachTo: { element: '', on: 'top' },
             cancelIcon: {
                 enabled: true
             },
             buttons: [
                 {
-                    text: 'Skip',
-                    classes: backBtnClass,
-                    action: () => instance.cancel()
-                },
-                {
-                    text: 'Back',
+                    text: 'Kembali',
                     classes: backBtnClass,
                     action: () => instance.back()
                 },
                 {
-                    text: 'Next',
+                    text: 'Selesai',
                     classes: nextBtnClass,
-                    action: () => instance.next()
+                    action: () => instance.cancel()
                 }
             ]
         },
-        {
-            id: 'footer',
-            title: 'Footer',
-            text: 'This is the footer',
-            attachTo: { element: '.footer', on: 'top' },
-            cancelIcon: {
-                enabled: true
-            },
-            buttons: [
-                {
-                    text: 'Back',
-                    classes: backBtnClass,
-                    action: () => instance.back()
-                },
-                {
-                    text: 'Finish',
-                    classes: nextBtnClass,
-                    action: () => instance.cancel()
-                }
-            ]
-        }
     ]
-
-    const tour = useContext(ShepherdTourContext)
-    instance = tour
 
 
     const handlePagination = page => {
@@ -312,13 +308,18 @@ const MySJPHTable = () => {
         })
     }
 
+    const reload = async () => {
+        window.location.reload()
+    }
+
     const selectSJPH = async (id,perusahaan_id,name) =>{
         try {
+            setDisable(false)
             sessionStorage.sjph_id = id
             sessionStorage.nama_sjph = name
             sessionStorage.perusahaan_id = perusahaan_id
-            window.location.reload()
-            toast.success(`Anda telah memilih SJPH ${name}`)
+            await reload()
+            setTimeout(toast.success(`Anda telah memilih SJPH ${name}`),5000)
         } catch (e) {
             console.error(e)
         }
@@ -359,8 +360,15 @@ const MySJPHTable = () => {
         {
             name:  'Pilihan',
             cell:  (row) => {
+                // if (sessionStorage.sjph_id === row.sjph_id) {
+                //     return (
+                //         <Button className='me-1' color='primary' id='buttonPilihan' outline disabled >
+                //             Dipilih
+                //         </Button>
+                //     )
+                // }
                 return (
-                    <Button className='me-1' color='primary' onClick={()=>{ selectSJPH(row.sjph_id,row.perusahaan_id,row.nama_sjph) }}>
+                    <Button className='me-1' disabled={sessionStorage.sjph_id === row.sjph_id? disable: false} color='primary' id='buttonPilihan' onClick={()=>{ selectSJPH(row.sjph_id,row.perusahaan_id,row.nama_sjph) }}>
                         Pilih
                     </Button>
                 )
@@ -405,6 +413,7 @@ const MySJPHTable = () => {
         )
     }
 
+
     return (
         <Fragment>
             <ShepherdTour
@@ -416,22 +425,22 @@ const MySJPHTable = () => {
                 <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     <div className='text-center mb-2'>
-                        <h1 className='mb-1'>Tambah Data Tabel</h1>
-                        <p>Tambah data tabelmu sekarang</p>
+                        <h1 className='mb-1'>Tambah SJPH</h1>
+                        <p>Tambah SJPH-mu untuk mulai mengisi modul</p>
                     </div>
                     <Row tag='form' className='gy-1 pt-75'>
                         <Col xs={12}>
                             <Label className='form-label' for='sjphName'>
-                                SJPH Name
+                                Nama SJPH
                             </Label>
                             <Input id='sjphName' placeholder='SJPH Tahun 2022' value={sjphName} onChange={(e)=> setSJPHName(e.target.value)} invalid={errors.sjphName && true} />
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
                             <Button onClick={submit} className='me-1' color='primary'>
-                                Submit
+                                Kirim
                             </Button>
                             <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                                Discard
+                                Batal
                             </Button>
                         </Col>
                     </Row>
@@ -451,7 +460,7 @@ const MySJPHTable = () => {
                                     <Printer size={15} />
                                     <span className='align-middle ms-50'>Print</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={(e) => e.preventDefault()}>
+                                <DropdownItem className='w-100' onClick={() => navigate('/sjph/export/PDF')}>
                                     <File size={15} />
                                     <span className='align-middle ms-50'>PDF</span>
                                 </DropdownItem>
@@ -484,10 +493,9 @@ const MySJPHTable = () => {
                         />
                     </Col>
                 </Row>
-            <div className='react-dataTable' >
+            <div className='react-dataTable' id= 'dataTable'  >
                 <DataTable
                     noHeader
-                    id= 'dataTable'
                     pagination
                     selectableRows
                     columns={columns}
@@ -503,7 +511,7 @@ const MySJPHTable = () => {
             &nbsp;
             <Col sm='12'>
                 <div className='d-flex justify-content-end'>
-                    <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
+                    <Button className='me-1' color='primary' id='buttonTambah' onClick={()=> setShow(true)}>
                         Tambah
                     </Button>
                 </div>

@@ -39,10 +39,11 @@ const CompanyForm = () => {
     const getCompanyProfile = async (id) => {
         try {
             if (!sessionStorage.perusahaan_id || sessionStorage.perusahaan_id === 'null') {
-
+                const result = await companyProfileModel.getById(sessionStorage.perusahaan_id)
+                setDetails(result)
             } else {
                 console.log("TES ID COMP", sessionStorage.perusahaan_id)
-                const result = await companyProfileModel.getById(id)
+                const result = await companyProfileModel.getById(sessionStorage.perusahaan_id)
                 setDetails(result)
             }
         } catch (e) {
@@ -72,11 +73,14 @@ const CompanyForm = () => {
             sistem_pemasaran: sistemPemasaran? sistemPemasaran : details.sistem_pemasaran,
             tujuan: tujuan? tujuan : details.tujuan,
             ruang_lingkup: ruangLingkup? ruangLingkup : details.ruang_lingkup,
-            id: sessionStorage.perusahaan_id
         }
-        if (sessionStorage.perusahaan_id !== null) {
+        if (sessionStorage.perusahaan_id !== 'null') {
             try {
-                const result = await companyProfileModel.editCompanyProfile(sessionStorage.sjph_id,sessionStorage.perusahaan_id,body)
+                const editBody ={
+                    ...body,
+                    id: sessionStorage.perusahaan_id
+                }
+                const result = await companyProfileModel.editCompanyProfile(sessionStorage.sjph_id,sessionStorage.perusahaan_id,editBody)
                 if ((result.id)||(result.success)) {
                     await swal.fire('','Data berhasil di-edit','success')
                         .then(()=>{
@@ -92,10 +96,12 @@ const CompanyForm = () => {
         } else {
             try {
                 const result = await companyProfileModel.createCompanyProfile(sessionStorage.sjph_id,body)
-                if ((result.id)||(result.success)) {
+                console.log(result)
+                if ((result.perusahaan_id)||(result.success)) {
+                    sessionStorage.perusahaan_id = result.perusahaan_id
                     await swal.fire('','Data berhasil di simpan','success')
                         .then(()=>{
-                            navigate('/sjph/informasi_umum_perusahaan')
+                            getCompanyProfile(sessionStorage.perusahaan_id)
                         })
                 } else {
                     await swal.fire('','Data gagal disimpan', 'error')

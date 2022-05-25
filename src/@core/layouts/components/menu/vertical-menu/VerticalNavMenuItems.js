@@ -9,6 +9,7 @@ import {
   canViewMenuItem,
   resolveVerticalNavMenuItemComponent as resolveNavItemComponent
 } from '@layouts/utils'
+import {useState} from "react";
 
 const VerticalMenuNavItems = props => {
   // ** Components Object
@@ -17,6 +18,7 @@ const VerticalMenuNavItems = props => {
     VerticalNavMenuGroup,
     VerticalNavMenuSectionHeader
   }
+  const [isSJPH, setIsSJPH] = useState(false)
 
   // ** Render Nav Menu Items
   return props.items.map((item, index) => {

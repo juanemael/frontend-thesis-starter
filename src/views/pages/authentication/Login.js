@@ -115,6 +115,7 @@ const Login = () => {
           localStorage.email = result.email
           // localStorage.role = result.role
           sessionStorage.token = result.token
+          sessionStorage.sjph_id = 'null'
           sessionStorage.username = result.username
           sessionStorage.user_id = result.id
 
