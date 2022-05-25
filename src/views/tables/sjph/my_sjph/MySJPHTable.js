@@ -13,7 +13,7 @@ import {
     Row, Label, Input, FormFeedback, Modal, CardHeader, CardTitle, Card, CardBody, UncontrolledButtonDropdown
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
-import {useState, Fragment, forwardRef, useEffect} from "react";
+import {useState, Fragment, forwardRef, useEffect, useContext} from "react";
 import SJPHModels from "../../../../models/SJPHKu";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
@@ -41,8 +41,11 @@ import { selectThemeColors } from '@utils'
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
 import '@styles/react/libs/tables/react-dataTable-component.scss'
+import 'shepherd.js/dist/css/shepherd.css'
+import '@styles/react/libs/shepherd-tour/shepherd-tour.scss'
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
+import {ShepherdTour, ShepherdTourContext} from "react-shepherd";
 
 const MySJPHTable = () => {
 
@@ -81,6 +84,85 @@ const MySJPHTable = () => {
     useEffect(()=>{
             getSJPH()
     },[])
+
+    const backBtnClass = 'btn btn-sm btn-outline-primary',
+        nextBtnClass = 'btn btn-sm btn-primary btn-next'
+
+    let instance = null
+
+    const steps = [
+        {
+            id: 'dataTable',
+            title: 'Data Table',
+            text: 'This is your data table',
+            attachTo: { element: '.dataTable', on: 'bottom' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    action: () => instance.cancel(),
+                    classes: backBtnClass,
+                    text: 'Skip'
+                },
+                {
+                    text: 'Next',
+                    classes: nextBtnClass,
+                    action: () => instance.next()
+                }
+            ]
+        },
+        {
+            id: 'card',
+            title: 'Card',
+            text: 'This is a card',
+            attachTo: { element: '#basic-tour .card', on: 'top' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    text: 'Skip',
+                    classes: backBtnClass,
+                    action: () => instance.cancel()
+                },
+                {
+                    text: 'Back',
+                    classes: backBtnClass,
+                    action: () => instance.back()
+                },
+                {
+                    text: 'Next',
+                    classes: nextBtnClass,
+                    action: () => instance.next()
+                }
+            ]
+        },
+        {
+            id: 'footer',
+            title: 'Footer',
+            text: 'This is the footer',
+            attachTo: { element: '.footer', on: 'top' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    text: 'Back',
+                    classes: backBtnClass,
+                    action: () => instance.back()
+                },
+                {
+                    text: 'Finish',
+                    classes: nextBtnClass,
+                    action: () => instance.cancel()
+                }
+            ]
+        }
+    ]
+
+    const tour = useContext(ShepherdTourContext)
+    instance = tour
 
 
     const handlePagination = page => {
@@ -312,8 +394,24 @@ const MySJPHTable = () => {
         }
     ]
 
+    const Content = () => {
+        const tour = useContext(ShepherdTourContext)
+        instance = tour
+
+        return (
+            <Button className='ms-2' color='primary' onClick={() => tour.start()} >
+                <span className='align-middle ms-50'>Mulai Tur!</span>
+            </Button>
+        )
+    }
+
     return (
         <Fragment>
+            <ShepherdTour
+            steps={steps}
+            tourOptions={{
+                useModalOverlay: true
+            }} >
             <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
                 <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
@@ -359,10 +457,11 @@ const MySJPHTable = () => {
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
-                        <Button className='ms-2' color='primary' onClick={()=> setShow(true)}>
-                            <Plus size={15} />
-                            <span className='align-middle ms-50'>Add Record</span>
-                        </Button>
+                        <Content />
+                        {/*<Button className='ms-2' color='primary' onClick={() => tour.start()}>*/}
+                        {/*    <Plus size={15} />*/}
+                        {/*    <span className='align-middle ms-50'>Mulai Tur!</span>*/}
+                        {/*</Button>*/}
                     </div>
                 </CardHeader>
                 <CardBody>
@@ -385,9 +484,10 @@ const MySJPHTable = () => {
                         />
                     </Col>
                 </Row>
-            <div className='react-dataTable'>
+            <div className='react-dataTable' >
                 <DataTable
                     noHeader
+                    id= 'dataTable'
                     pagination
                     selectableRows
                     columns={columns}
@@ -410,6 +510,7 @@ const MySJPHTable = () => {
             </Col>
                 </CardBody>
         </Card>
+            </ShepherdTour>
         </Fragment>
     )
 
