@@ -19,6 +19,7 @@ const logout = () => {
   localStorage.removeItem("username");
   localStorage.removeItem("sjph_id");
   localStorage.removeItem("sjph_id");
+  localStorage.removeItem("ability");
 }
 
 const UserDropdown = () => {

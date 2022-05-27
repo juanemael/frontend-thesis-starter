@@ -82,6 +82,7 @@ const PDFConverter = () => {
             paddingTop: 35,
             paddingBottom: 65,
             paddingHorizontal: 35,
+            border: 3
         },
         title: {
             fontSize: 24,
@@ -125,7 +126,7 @@ const PDFConverter = () => {
 
     return (
         <Document>
-            <Page size="A4"  style={styles.body}>
+            <Page size="A4"  style={styles.body} >
                 <Text style={styles.header} fixed>
                     ~ Created with react-pdf ~
                 </Text>

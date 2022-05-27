@@ -1,5 +1,5 @@
 import {Card, CardHeader, CardBody, CardTitle, CardText, Progress} from 'reactstrap'
-import MySJPHTable from "../../../tables/sjph/my_sjph/MySJPHTable";
+import MySJPHTable from "../../../tables/sjph/sjph_umkm/MySJPHTable";
 
 const MySJPHPage = () => {
 

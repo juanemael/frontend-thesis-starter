@@ -16,8 +16,10 @@ import { isObjEmpty } from '@utils'
 import {Circle, Menu} from "react-feather";
 
 // Route Imports
-import SJPHRoutes from "./SJPH";
+import SJPHRoutes from "./umkm/SJPH";
 import AuthenticationRoutes from "./Authentication";
+import PenyeliaHalalRoutes from "./penyelia_halal/PenyeliaHalal";
+import AuditorRoutes from "./auditor/Auditor";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -48,7 +50,9 @@ const Routes = [
     path: '/beranda',
     element: <Home />,
   },
+    ...PenyeliaHalalRoutes,
     ...SJPHRoutes,
+    ...AuditorRoutes,
     ...AuthenticationRoutes,
   {
     path: '/*',

@@ -2,7 +2,7 @@ import {Card, CardHeader, CardBody, CardTitle, CardText, CardLink, Col, Row} fro
 import CardWelcome from "./ui-elements/cards/advance/CardWelcome";
 import ProgressOverview from "./ui-elements/cards/analytics/ProgressOverview";
 import { ThemeColors } from '@src/utility/context/ThemeColors'
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 
 const Home = () => {
     const context = useContext(ThemeColors)

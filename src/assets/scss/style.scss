@@ -9,3 +9,12 @@ NOTE:
 ------
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+.react-dataTable.react-dataTable-selectable-rows {
+  .rdt_TableHead {
+    .rdt_TableHeadRow {
+      .rdt_TableCol:not(:first-child) {
+        padding-left: 0.2rem;
+      }
+    }
+  }
+}

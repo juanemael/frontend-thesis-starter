@@ -28,6 +28,8 @@ import {useForm, Controller} from "react-hook-form"
 import { handleLogin } from '@store/authentication'
 import UserModels from '../../../models/User'
 import {FaBeer, FaCross, FaInfo} from 'react-icons/fa'
+import Select from "react-select";
+import { selectThemeColors } from '@utils'
 
 const defaultValues = {
   password: 'admin',
@@ -83,7 +85,7 @@ const ToastEmpty = () =>{
   )
 }
 
-const Login = () => {
+const Login = ({onRouteChanged}) => {
   const { skin } = useSkin()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -118,12 +120,19 @@ const Login = () => {
           sessionStorage.sjph_id = 'null'
           sessionStorage.username = result.username
           sessionStorage.user_id = result.id
+          sessionStorage.role = result.role
+          sessionStorage.setItem('ability', JSON.stringify(result.ability))
+
+          console.log("ABILITY", sessionStorage.ability)
+
+         await ability.update(sessionStorage.ability)
 
           toast(t => (
               <ToastContent t={t} role={'user'} name={result.email || 'Unknown'}/>
           ))
 
           await navigate('/beranda')
+          window.location.reload()
         } else {
           toast(t =>(
               <ToastDanger t={t} />

@@ -39,6 +39,14 @@ import Avatar from "../../../@core/components/avatar"
 import {FaInfo} from "react-icons/fa"
 import toast from "react-hot-toast"
 import isEmail from "validator/es/lib/isEmail";
+import Select from "react-select";
+import { selectThemeColors } from '@utils'
+
+const roleOptions = [
+  { value: 'UMKM', label: 'UMKM' },
+  { value: 'PENYELIA_HALAL', label: 'Penyelia Halal' },
+  { value: 'AUDITOR', label: 'Auditor' },
+]
 
 const Register = () => {
   // ** Hooks
@@ -47,6 +55,7 @@ const Register = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [role, setRole] = useState("")
 
   const userModel = new UserModels()
   const navigate = useNavigate()
@@ -123,7 +132,8 @@ const Register = () => {
             const body = {
               username,
               email,
-              password
+              password,
+              role: role.value
             }
 
             try {
@@ -245,6 +255,22 @@ const Register = () => {
                 </Label>
                 <InputPasswordToggle className='input-group-merge' id='confirm-password' onChange={(e) => { setConfirmPassword(e.target.value) }}/>
               </div>
+              <div className='mb-1'>
+                <Label className='form-label'>Daftar Sebagai</Label>
+                <Select
+                    theme={selectThemeColors}
+                    className='react-select'
+                    classNamePrefix='select'
+                    // defaultValue={roleOptions[1]}
+                    placeholder={"Pilih disini"}
+                    name='clear'
+                    options={roleOptions}
+                    onChange={(opt)=>{
+                      setRole(opt)
+                    }}
+                    isClearable
+                />
+                </div>
               <div className='form-check mb-1'>
                 <Input type='checkbox' id='terms' />
                 <Label className='form-check-label' for='terms'>

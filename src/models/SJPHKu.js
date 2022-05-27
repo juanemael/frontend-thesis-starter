@@ -5,6 +5,10 @@ export default class SJPHKu {
         return await ApiRequest.set(`/sjph/user/${sessionStorage.user_id}`, "GET")
     }
 
+    getAll = async () => {
+        return await ApiRequest.set(`/sjph`, "GET")
+    }
+
     getNamaPerusahaan = async (id) => {
         return await ApiRequest.set(`/sjph/nama_perusahaan/${id}`, "GET")
     }
