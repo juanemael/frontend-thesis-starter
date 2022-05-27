@@ -30,7 +30,15 @@ const UserDropdown = () => {
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>
         <div className='user-nav d-sm-flex d-none'>
           <span className='user-name fw-bold'>{sessionStorage.username}</span>
-          <span className='user-status'>User</span>
+          <span className='user-status'>{
+            // eslint-disable-next-line multiline-ternary
+            (sessionStorage.role === "UMKM" ?
+                // eslint-disable-next-line multiline-ternary
+                (<>UMKM</>) : sessionStorage.role === "PENYELIA_HALAL" ?
+                    // eslint-disable-next-line multiline-ternary
+                (<>Penyelia Halal</>) : sessionStorage.role === "AUDITOR" ?
+                (<> Auditor </>) : (<>User</>))
+          }</span>
         </div>
         <Avatar img={defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
