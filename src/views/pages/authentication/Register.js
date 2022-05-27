@@ -48,6 +48,24 @@ const roleOptions = [
   { value: 'AUDITOR', label: 'Auditor' },
 ]
 
+const ability = [
+  [
+    {
+        action: "manage", subject: "UMKM"
+      }
+  ],
+  [
+    {
+        action: "manage", subject: "PenyeliaHalal"
+      }
+  ],
+  [
+    {
+        action: "manage", subject: "Auditor"
+      }
+  ]
+]
+
 const Register = () => {
   // ** Hooks
   // const {skin} = useSkin()
@@ -133,10 +151,19 @@ const Register = () => {
               username,
               email,
               password,
-              role: role.value
+              role: role.value,
+              // eslint-disable-next-line multiline-ternary
+              ability: role.value === "UMKM" ? ability[0]
+                  // eslint-disable-next-line multiline-ternary
+                  :  role.value === "PENYELIA_HALAL"
+                      // eslint-disable-next-line multiline-ternary
+                      ? ability[1] : role.value === "AUDITOR" ?
+                          ability[2] : "null"
             }
 
             try {
+              console.log("ABILITY JSON", body.ability)
+              console.log("ABILITY JSON 2", role.value)
               const result = await userModel.register(body)
               if ((result.id) || (result.success)) {
                 await swal.fire('', "Data berhasil di simpan", 'success')
