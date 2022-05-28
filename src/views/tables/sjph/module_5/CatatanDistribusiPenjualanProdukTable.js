@@ -374,9 +374,12 @@ const CatatanDistribusiPenjualanProdukTable = () => {
                 </tbody>
             </Table>
             <Col sm='12'>
-                <div className='d-flex justify-content-end'>
-                    <Button className='me-1' color='primary' onClick={() => setShow(true)}>
+                <div className='d-flex justify-content-center'>
+                    <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
                         Tambah
+                    </Button>
+                    <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kaji_ulang_manajemen')}>
+                        Selanjutnya
                     </Button>
                 </div>
             </Col>

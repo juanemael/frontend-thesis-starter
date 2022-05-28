@@ -2,7 +2,7 @@ import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/K
 import MediaKomunikasiTable from "../../../tables/sjph/module_2/MediaKomunikasiTable";
 import {FileText, Link, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import SuratPernyataanBebasBabiForm from "../../../forms/sjph/module_4/SuratPernyataanBebasBabiForm";
 import DaftarBahanTable from "../../../tables/sjph/module_4/DaftarBahanTable";
 import DaftarBahanDigunakanSetiapProdukForm from "../../../forms/sjph/module_4/DaftarBahanDigunakanSetiapProdukForm";
@@ -13,7 +13,7 @@ import LayoutDenahRuangProduksiForm from "../../../forms/sjph/module_5/LayoutDen
 import DiagramAlirProsesProduksiForm from "../../../forms/sjph/module_5/DiagramAlirProsesProduksiForm";
 import CatatanDistribusiPenjualanProdukTable from "../../../tables/sjph/module_5/CatatanDistribusiPenjualanProdukTable";
 import CatatanHasilProduksiTable from "../../../tables/sjph/module_5/CatatanHasilProduksiTable";
-import {Card, CardBody, CardHeader, CardTitle} from "reactstrap";
+import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 
 
 const KepentinganProduksiDistribusiProdukPage = () => {
@@ -56,8 +56,28 @@ const KepentinganProduksiDistribusiProdukPage = () => {
             content: <CatatanDistribusiPenjualanProdukTable stepper={stepper} type='wizard-modern'/>
         },
     ]
+
+    const [progress, setProgress] = useState(64);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setProgress((oldProgress) => {
+                if (oldProgress === 80) {
+                    return 80;
+                }
+                const diff = 8 * 10;
+                return Math.min(oldProgress + diff, 80);
+            });
+        }, 500);
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
+
     return (
         <div>
+            <Progress striped animated value={progress} />
             <Card>
             <CardHeader>
                 <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>

@@ -5,7 +5,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import themeConfig from '@configs/themeConfig'
 
 const initialMenuCollapsed = () => {
-  const item = window.localStorage.getItem('menuCollapsed')
+  // const item = window.localStorage.getItem('menuCollapsed')
+  const item = "true"
   //** Parse stored json or if none return initialValue
   return item ? JSON.parse(item) : themeConfig.layout.menu.isCollapsed
 }

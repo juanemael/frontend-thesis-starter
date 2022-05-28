@@ -386,7 +386,11 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = () => {
                 </tbody>
             </Table>
             <Col sm='12'>
-                <div className='d-flex justify-content-end'>
+                <div className='d-flex justify-content-center'>
+                    <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kriteria_sistem_jaminan_produk_halal')} outline>
+                        {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
+                        Kembali
+                    </Button>
                     <Button className='me-1' color='primary' onClick={() => setShow(true)}>
                         Tambah
                     </Button>

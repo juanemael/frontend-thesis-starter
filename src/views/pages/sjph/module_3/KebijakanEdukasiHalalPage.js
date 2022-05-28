@@ -1,11 +1,11 @@
 import {FileText, Link, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable
     from "../../../tables/sjph/module_3/SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable";
 import DaftarHadirPelatihanInternalForm from "../../../forms/sjph/module_3/DaftarHadirPelatihanInternalForm";
 import DaftarHadirPelatihanInternalTable from "../../../tables/sjph/module_3/DaftarHadirPelatihanInternalTable";
-import {Card, CardBody, CardHeader, CardTitle} from "reactstrap";
+import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 
 const KebijakanEdukasiHalalPage = () => {
     const ref = useRef(null)
@@ -33,15 +33,35 @@ const KebijakanEdukasiHalalPage = () => {
             content: <DaftarHadirPelatihanInternalTable stepper={stepper} type='wizard-modern' />
         }
     ]
+
+    const [progress, setProgress] = useState(32);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setProgress((oldProgress) => {
+                if (oldProgress === 48) {
+                    return 48;
+                }
+                const diff = 3 * 10;
+                return Math.min(oldProgress + diff, 48);
+            });
+        }, 500);
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
+
     return (
         <div>
+            <Progress striped animated value={progress} />
             <Card>
                 <CardHeader>
                     <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
                 </CardHeader>
                 <CardBody>
                 <Wizard
-                    type='modern-vertical'
+                    type='modern-horizontal'
                     ref={ref}
                     steps={steps}
                     options={{

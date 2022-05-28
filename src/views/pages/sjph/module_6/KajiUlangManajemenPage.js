@@ -1,8 +1,8 @@
 import {FileText, Link, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import KajiUlangManajemenTable from "../../../tables/sjph/module_6/KajiUlangManajemenTable";
-import {Card, CardBody, CardHeader, CardTitle} from "reactstrap";
+import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 
 
 const KajiUlangManajemenPage = () => {
@@ -17,8 +17,27 @@ const KajiUlangManajemenPage = () => {
             content: <KajiUlangManajemenTable stepper={stepper} type='wizard-modern' />
         }
     ]
+
+    const [progress, setProgress] = useState(80);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setProgress((oldProgress) => {
+                if (oldProgress === 100) {
+                    return 100;
+                }
+                const diff = 10 * 10;
+                return Math.min(oldProgress + diff, 100);
+            });
+        }, 500);
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
     return (
         <div>
+            <Progress className='progress-bar-success' value={progress} />
             <Card>
                 <CardHeader>
                     <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>

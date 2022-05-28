@@ -374,9 +374,15 @@ const KajiUlangManajemenTable = () => {
                 </tbody>
             </Table>
             <Col sm='12'>
-                <div className='d-flex justify-content-end'>
-                    <Button className='me-1' color='primary' onClick={() => setShow(true)}>
+                <div className='d-flex justify-content-center'>
+                    <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kepentingan_produksi_dan_distribusi_produk')} outline>
+                        Kembali
+                    </Button>
+                    <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
                         Tambah
+                    </Button>
+                    <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>
+                        Hasil Perjalanan
                     </Button>
                 </div>
             </Col>

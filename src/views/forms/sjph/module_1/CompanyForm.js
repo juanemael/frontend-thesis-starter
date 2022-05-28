@@ -299,10 +299,18 @@ const CompanyForm = () => {
                             </span>
                         </Col>
                         <Col sm='12'>
-                            <div className='d-flex justify-content-end'>
-                                <Button className='me-1' color='primary' onClick={submit}>
+                            <div className='d-flex justify-content-center'>
+                                <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/sjph_ku')} outline>
+                                    {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
+                                    Kembali
+                                </Button>
+                                <Button className='me-1' color='success' onClick={submit}>
                                 {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
                                     Save
+                                </Button>
+                                <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kriteria_sistem_jaminan_produk_halal')}>
+                                {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
+                                    Selanjutnya
                                 </Button>
                             </div>
                         </Col>

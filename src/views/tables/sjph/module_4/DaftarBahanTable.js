@@ -312,8 +312,11 @@ const DaftarBahanTable = () => {
                 </tr>
                 </tbody>
             </Table>
-            <Col sm='12'>
-                <div className='d-flex justify-content-end'>
+            <Col sm='12' style={{paddingTop: 20}}>
+                <div className='d-flex justify-content-center'>
+                    <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kebijakan_dan_edukasi_halal')} outline>
+                        Kembali
+                    </Button>
                     <Button className='me-1' color='primary' onClick={() => setShow(true)}>
                         Tambah
                     </Button>

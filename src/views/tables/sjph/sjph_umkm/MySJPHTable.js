@@ -10,7 +10,18 @@ import {
     Button,
     ModalHeader,
     ModalBody,
-    Row, Label, Input, FormFeedback, Modal, CardHeader, CardTitle, Card, CardBody, UncontrolledButtonDropdown
+    Row,
+    Label,
+    Input,
+    FormFeedback,
+    Modal,
+    CardHeader,
+    CardTitle,
+    Card,
+    CardBody,
+    UncontrolledButtonDropdown,
+    Popover,
+    PopoverHeader, PopoverBody, Alert
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, forwardRef, useEffect, useContext} from "react";
@@ -34,6 +45,8 @@ import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 import DataTable from 'react-data-table-component'
 import ReactPaginate from 'react-paginate'
+// import {ReactComponent as Question} from "@src/assets/images/illustration/question.svg";
+import question from '@src/assets/images/illustration/question.png'
 
 import { selectThemeColors } from '@utils'
 
@@ -59,7 +72,7 @@ const MySJPHTable = () => {
     const [details, setDetails] = useState([])
     const [sjph, setSJPH] = useState([])
     const [disable, setDisable] = useState(false)
-
+    const [isSelected, setIsSelected] = useState(true)
 
     const sjphModel = new SJPHModels()
 
@@ -67,6 +80,7 @@ const MySJPHTable = () => {
 
     // ** States
     const [show, setShow] = useState(false)
+    const [initialOptionModal, setInitialOptionModal] = useState(true)
 
     // ** Hooks
     const {
@@ -75,6 +89,7 @@ const MySJPHTable = () => {
         handleSubmit,
         formState: { errors }
     } = useForm()
+
 
     const getSJPH = async () => {
         try {
@@ -93,29 +108,9 @@ const MySJPHTable = () => {
         nextBtnClass = 'btn btn-sm btn-primary btn-next'
 
     let instance = null
+    let instanceInitialModal = null
 
     const steps = [
-        {
-            id: 'tambahData',
-            title: 'Tambah SJPH',
-            text: 'Klik tombol ini untuk membuat SJPH terlebih dahulu',
-            attachTo: { element: '#buttonTambah', on: 'top' },
-            cancelIcon: {
-                enabled: true
-            },
-            buttons: [
-                {
-                    text: 'Kembali',
-                    classes: backBtnClass,
-                    action: () => instance.back()
-                },
-                {
-                    text: 'Selanjutnya',
-                    classes: nextBtnClass,
-                    action: () => instance.next()
-                }
-            ]
-        },
         {
             id: 'dataTable',
             title: 'Data Table',
@@ -129,6 +124,27 @@ const MySJPHTable = () => {
                     action: () => instance.cancel(),
                     classes: backBtnClass,
                     text: 'Lewati'
+                },
+                {
+                    text: 'Selanjutnya',
+                    classes: nextBtnClass,
+                    action: () => instance.next()
+                }
+            ]
+        },
+        {
+            id: 'tambahData',
+            title: 'Awal Perjalanan',
+            text: 'Klik tombol ini untuk kembali ke awal perjalanan untuk membuat SJPH.',
+            attachTo: { element: '#buttonTambah', on: 'top' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    text: 'Kembali',
+                    classes: backBtnClass,
+                    action: () => instance.back()
                 },
                 {
                     text: 'Selanjutnya',
@@ -155,6 +171,135 @@ const MySJPHTable = () => {
                     text: 'Selesai',
                     classes: nextBtnClass,
                     action: () => instance.cancel()
+                }
+            ]
+        },
+    ]
+
+    const stepsInitialModal = [
+        {
+            id: 'sjphPerjalanan',
+            title: 'SJPH sebagai tiket perjalanan',
+            text: 'SJPH merupakan tiket perjalananmu untuk mencapai tujuan akhir perjalanan yaitu dokumen SJPH mu sendiri.',
+            attachTo: { element: '#headerInitialTitle', on: 'bottom' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    text: 'Lewati',
+                    classes: backBtnClass,
+                    action: () => instanceInitialModal.cancel()
+                },
+                {
+                    text: 'Selanjutnya',
+                    classes: nextBtnClass,
+                    action: () => instanceInitialModal.next()
+                }
+            ]
+        },
+        {
+            id: 'sjphPerjalanan2',
+            title: 'SJPH sebagai tiket perjalanan',
+            text: 'Disini kamu bisa membuat dan memilih tiket perjalananmu sebanyak mungkin.',
+            attachTo: { element: '#headerInitialTitle', on: 'bottom' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    text: 'Kembali',
+                    classes: backBtnClass,
+                    action: () => instanceInitialModal.back()
+                },
+                {
+                    text: 'Selanjutnya',
+                    classes: nextBtnClass,
+                    action: () => instanceInitialModal.next()
+                }
+            ]
+        },
+        {
+            id: 'sjphBelumBuat',
+            title: 'Belum pernah buat?',
+            text: 'Jikalau kamu belum pernah membuat SJPH di PasporUMKM klik disini',
+            attachTo: { element: '#belumPernahButton', on: 'bottom' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    action: () => instanceInitialModal.back(),
+                    classes: backBtnClass,
+                    text: 'Kembali'
+                },
+                {
+                    text: 'Selanjutnya',
+                    classes: nextBtnClass,
+                    action: () => instanceInitialModal.next()
+                }
+            ]
+        },
+        {
+            id: 'sjphSudahBuat',
+            title: 'Sudah pernah buat!  😄',
+            text: 'Kami ucapkan terima kasih karena kamu sudah pernah melakukan perjalanan dengan kami.',
+            attachTo: { element: '#sudahPernahButton', on: 'bottom' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    action: () => instanceInitialModal.back(),
+                    classes: backBtnClass,
+                    text: 'Lewati'
+                },
+                {
+                    text: 'Selanjutnya',
+                    classes: nextBtnClass,
+                    action: () => instanceInitialModal.next()
+                }
+            ]
+        },
+        {
+            id: 'sjphSudahBuat2',
+            title: 'Sudah pernah buat!  😄',
+            text: 'Jikalau kamu masih ingin melakukan perjalanan yang baru maka klik disini',
+            attachTo: { element: '#sudahPernahButton', on: 'bottom' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    action: () => instanceInitialModal.back(),
+                    classes: backBtnClass,
+                    text: 'Lewati'
+                },
+                {
+                    text: 'Selanjutnya',
+                    classes: nextBtnClass,
+                    action: () => instanceInitialModal.next()
+                }
+            ]
+        },
+        {
+            id: 'finish',
+            title: 'Semoga sampai tempat tujuan!',
+            text: 'Semoga anda berhasil! Jika ada pertanyaan atau ada kendala di perjalanan, tim kami siap membantu.',
+            attachTo: { element: '', on: 'top' },
+            cancelIcon: {
+                enabled: true
+            },
+            buttons: [
+                {
+                    text: 'Kembali',
+                    classes: backBtnClass,
+                    action: () => instanceInitialModal.back()
+                },
+                {
+                    text: 'Selesai',
+                    classes: nextBtnClass,
+                    action: () => instanceInitialModal.cancel()
                 }
             ]
         },
@@ -314,12 +459,12 @@ const MySJPHTable = () => {
 
     const selectSJPH = async (id,perusahaan_id,name) =>{
         try {
-            setDisable(false)
+            setIsSelected(true)
             sessionStorage.sjph_id = id
             sessionStorage.nama_sjph = name
             sessionStorage.perusahaan_id = perusahaan_id
-            await reload()
-            setTimeout(toast.success(`Anda telah memilih SJPH ${name}`),5000)
+            // await reload()
+            toast.success(`Anda telah memilih SJPH ${name}`)
         } catch (e) {
             console.error(e)
         }
@@ -368,7 +513,9 @@ const MySJPHTable = () => {
                 //     )
                 // }
                 return (
-                    <Button className='me-1' disabled={sessionStorage.sjph_id === row.sjph_id? disable: false} color='primary' id='buttonPilihan' onClick={()=>{ selectSJPH(row.sjph_id,row.perusahaan_id,row.nama_sjph) }}>
+                    <Button className='me-1' disabled={sessionStorage.sjph_id === row.sjph_id? disable: false}
+                            color='primary' id='buttonPilihan'
+                            onClick={()=>{ selectSJPH(row.sjph_id,row.perusahaan_id,row.nama_sjph) }}>
                         Pilih
                     </Button>
                 )
@@ -407,22 +554,57 @@ const MySJPHTable = () => {
         instance = tour
 
         return (
-            <Button className='ms-2' color='primary' onClick={() => tour.start()} >
-                <span className='align-middle ms-50'>Mulai Tur!</span>
+            // <Button className='ms-2' color='primary' onClick={() => tour.start()} >
+            //     <span className='align-middle ms-50'>Mulai Tur!</span>
+            // </Button>
+            <Button className='me-1' color='primary' id={'sudahPernahButton'}
+                    onClick={() => {
+                        setInitialOptionModal(false)
+                        tour.start()
+                    }}>
+                Ya, sudah pernah!
             </Button>
         )
+    }
+
+    const ContentShepherdInitial = () => {
+        const tour = useContext(ShepherdTourContext)
+        instanceInitialModal = tour
+
+        return (
+            <Button className='me-1' color='primary' id='controlledInfoSJPH' onClick={() => tour.start()}>
+                Kenapa harus membuat?
+            </Button>
+        )
+    }
+    
+    const sjphNotSelected = async () => {
+        try {
+            // eslint-disable-next-line multiline-ternary
+            if (sessionStorage.sjph_id === "null"
+                || sessionStorage.sjph_id === "undefined"
+                || sessionStorage.sjph_id === undefined) {
+                setIsSelected(false)
+            } else {
+                navigate('/sjph/informasi_umum_perusahaan')
+                await reload()
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
 
 
     return (
         <Fragment>
-            <ShepherdTour
-            steps={steps}
-            tourOptions={{
-                useModalOverlay: true
-            }} >
-            <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
-                <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+            <Modal isOpen={show} toggle={() => {
+                setInitialOptionModal(true)
+                setShow(!show)
+                }} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => {
+                    setInitialOptionModal(true)
+                    setShow(!show)
+                }}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     <div className='text-center mb-2'>
                         <h1 className='mb-1'>Tambah SJPH</h1>
@@ -446,9 +628,52 @@ const MySJPHTable = () => {
                     </Row>
                 </ModalBody>
             </Modal>
+            <Modal isOpen={initialOptionModal} toggle={() => setInitialOptionModal(!initialOptionModal)} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent'></ModalHeader>
+                <ModalBody className='px-sm-5 mx-50 pb-5'>
+                    <div className='text-center mb-2'>
+                        <h1 className='mb-1' id={"headerInitialTitle"}>Awal Perjalanan</h1>
+                        <p>Apakah kamu sudah pernah membuat SJPH di PasporUMKM?</p>
+                        <Row sm={8} style={{paddingBottom: 20}}>
+                            <img className='initial-qeustion' src={question} alt='question' />
+                        </Row>
+                    <ShepherdTour
+                        steps={stepsInitialModal}
+                        tourOptions={{
+                            useModalOverlay: true
+                        }} >
+                        <ContentShepherdInitial />
+                    </ShepherdTour>
+                    </div>
+                    <Row tag='form' className='gy-1 pt-75'>
+                        <Col xs={12} className='text-center mt-2 pt-50' style={{display:'flex', justifyContent: 'center'}}>
+                            <ShepherdTour
+                                steps={steps}
+                                tourOptions={{
+                                    useModalOverlay: true
+                                }} >
+                                <Content />
+                            </ShepherdTour>
+                            <Button className='me-1' onClick={()=>{
+                                navigate('/beranda')
+                            }} color='secondary' id={'belumPernahButton'} outline>
+                                Kembali ke Beranda
+                            </Button>
+                            <Button onClick={()=>{
+                                setInitialOptionModal(false)
+                                setShow(true)
+                            }} color='warning' id={'belumPernahButton'} >
+                                Tidak, sayangnya belum
+                            </Button>
+                        </Col>
+                    </Row>
+
+                </ModalBody>
+            </Modal>
+
             <Card>
                 <CardHeader>
-                    <CardTitle> SJPH-Ku </CardTitle>
+                    <CardTitle> Tiket perjalanan-ku (SJPH) </CardTitle>
                     <div className='d-flex mt-md-0 mt-1'>
                         <UncontrolledButtonDropdown>
                             <DropdownToggle color='secondary' caret outline>
@@ -466,7 +691,7 @@ const MySJPHTable = () => {
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
-                        <Content />
+                        {/*<Content />*/}
                         {/*<Button className='ms-2' color='primary' onClick={() => tour.start()}>*/}
                         {/*    <Plus size={15} />*/}
                         {/*    <span className='align-middle ms-50'>Mulai Tur!</span>*/}
@@ -477,11 +702,16 @@ const MySJPHTable = () => {
             <div className='content-header'>
                 <h3 className='mb-0'>Daftar SJPH</h3>
                 <small className='text-muted'>Berikut adalah tabel daftar SJPH yang dibuat oleh kamu</small>
+                <Alert color='danger' isOpen={!isSelected} toggle={() => setIsSelected(true)}>
+                    <div className='alert-body'>
+                        Kamu belum pilih SJPH. Silahkan pilih SJPH-mu untuk memulai perjalanan.
+                    </div>
+                </Alert>
             </div>
                 <Row className='justify-content-end mx-0'>
                     <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
                         <Label className='me-1' for='search-input'>
-                            Search
+                            Cari
                         </Label>
                         <Input
                             className='dataTable-filter mb-50'
@@ -510,15 +740,21 @@ const MySJPHTable = () => {
             </div>
             &nbsp;
             <Col sm='12'>
-                <div className='d-flex justify-content-end'>
-                    <Button className='me-1' color='primary' id='buttonTambah' onClick={()=> setShow(true)}>
-                        Tambah
+                <Row>
+                <div className='d-flex justify-content-center'>
+                    <div className='d-flex justify-content-start'>
+                        <Button className='me-1' color='primary' id='buttonKembali' outline onClick={()=> setInitialOptionModal(true)}>
+                            Kembali
+                        </Button>
+                    </div>
+                    <Button className='me-1' color='primary' id='buttonSelanjutnya' onClick={sjphNotSelected}>
+                        Selanjutnya
                     </Button>
                 </div>
+                </Row>
             </Col>
                 </CardBody>
         </Card>
-            </ShepherdTour>
         </Fragment>
     )
 

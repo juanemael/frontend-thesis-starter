@@ -2,14 +2,14 @@ import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/K
 import MediaKomunikasiTable from "../../../tables/sjph/module_2/MediaKomunikasiTable";
 import {FileText, Link, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import SuratPernyataanBebasBabiForm from "../../../forms/sjph/module_4/SuratPernyataanBebasBabiForm";
 import DaftarBahanTable from "../../../tables/sjph/module_4/DaftarBahanTable";
 import DaftarBahanDigunakanSetiapProdukForm from "../../../forms/sjph/module_4/DaftarBahanDigunakanSetiapProdukForm";
 import CatatanPembelianBahanTable from "../../../tables/sjph/module_4/CatatanPembelianBahanTable";
 import FormPemeriksaanBahanTable from "../../../tables/sjph/module_4/FormPemeriksaanBahanTable";
 import CatatanPenyimpananBahanProdukTable from "../../../tables/sjph/module_4/CatatanPenyimpananBahanProdukTable";
-import {Card, CardBody, CardHeader, CardTitle} from "reactstrap";
+import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 
 
 const BahanKepentinganHalalPage = () => {
@@ -52,14 +52,32 @@ const BahanKepentinganHalalPage = () => {
         },
         {
             id: 'suratPermohonanPersetujuanPenggunaanBahanBaru',
-            title: 'Halaman 4',
+            title: 'Halaman 5',
             subtitle: 'Surat Permohonan Persetujuan Penggunaaan Bahan Baru',
             icon: <Link size={18} />,
             content: <CatatanPenyimpananBahanProdukTable stepper={stepper} type='wizard-modern' />
         }
     ]
+    const [progress, setProgress] = useState(48);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setProgress((oldProgress) => {
+                if (oldProgress === 64) {
+                    return 64;
+                }
+                const diff = 8 * 10;
+                return Math.min(oldProgress + diff, 64);
+            });
+        }, 500);
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
     return (
         <div>
+            <Progress striped animated value={progress} />
             <Card>
                 <CardHeader>
                     <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>

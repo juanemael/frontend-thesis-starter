@@ -77,6 +77,7 @@ const Sidebar = props => {
                   activeItem={activeItem}
                   groupActive={groupActive}
                   setGroupOpen={setGroupOpen}
+                  // menuCollapsed={menuCollapsed}
                   menuCollapsed={menuCollapsed}
                   setActiveItem={setActiveItem}
                   setGroupActive={setGroupActive}

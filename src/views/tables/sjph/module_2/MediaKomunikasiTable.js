@@ -32,28 +32,6 @@ import Flatpickr from "react-flatpickr";
 import Swal from "sweetalert2";
 import moment from "moment";
 
-const statusOptions = [
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
-    { value: 'suspended', label: 'Suspended' }
-]
-
-const countryOptions = [
-    { value: 'uk', label: 'UK' },
-    { value: 'usa', label: 'USA' },
-    { value: 'france', label: 'France' },
-    { value: 'russia', label: 'Russia' },
-    { value: 'canada', label: 'Canada' }
-]
-
-const languageOptions = [
-    { value: 'english', label: 'English' },
-    { value: 'spanish', label: 'Spanish' },
-    { value: 'french', label: 'French' },
-    { value: 'german', label: 'German' },
-    { value: 'dutch', label: 'Dutch' }
-]
-
 const defaultValues = {
     firstName: 'Bob',
     lastName: 'Barton',
@@ -65,7 +43,7 @@ const MediaKomunikasiTable = () => {
     const [searchValue, setSearchValue] = useState('')
     const [filteredData, setFilteredData] = useState([])
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
-    const [tanggalSosialisasi, setTanggalSosialisasi] = useState("")
+    const [tanggalSosialisasi, setTanggalSosialisasi] = useState(new Date())
     const [judulKegiatan, setJudulKegiatan] = useState("")
     const [peserta, setPeserta] = useState("")
     const [mediaKomunikasi, setMediaKomunikasi] = useState([])
@@ -398,11 +376,21 @@ const MediaKomunikasiTable = () => {
             </div>
             &nbsp;
             <Col sm='12'>
-                <div className='d-flex justify-content-end'>
+                <div className='d-flex justify-content-center'>
                     <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
+                        {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
                         Tambah
                     </Button>
+                    <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kebijakan_dan_edukasi_halal')}>
+                        {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
+                        Selanjutnya
+                    </Button>
                 </div>
+                {/*<div className='d-flex justify-content-end'>*/}
+                {/*    <Button className='me-1' color='primary' onClick={()=> setShow(true)}>*/}
+                {/*        Tambah*/}
+                {/*    </Button>*/}
+                {/*</div>*/}
             </Col>
         </Fragment>
     )
