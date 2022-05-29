@@ -98,6 +98,17 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
 
     return (
         <div>
+            {/*<Breadcrumb listClassName='breadcrumb-chevron'>*/}
+            {/*    <BreadcrumbItem>*/}
+            {/*        <Link to='/sjph/sjph_ku'> SJPH-ku </Link>*/}
+            {/*    </BreadcrumbItem>*/}
+            {/*    <BreadcrumbItem>*/}
+            {/*        <Link to='/sjph/informasi_umum_perusahaan'> Informasi Perusahaan </Link>*/}
+            {/*    </BreadcrumbItem>*/}
+            {/*    <BreadcrumbItem active>*/}
+            {/*        <span> Kriteria Sistem Jaminan Produk Halal </span>*/}
+            {/*    </BreadcrumbItem>*/}
+            {/*</Breadcrumb>*/}
             <Breadcrumb listClassName='breadcrumb-chevron'>
                 <BreadcrumbItem>
                     <Link to='/sjph/sjph_ku'> SJPH-ku </Link>
@@ -108,6 +119,18 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
                 <BreadcrumbItem active>
                     <span> Kriteria Sistem Jaminan Produk Halal </span>
                 </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kebijakan_dan_edukasi_halal'> Kebijakan dan Edukasi Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/bahan_untuk_kepentingan_halal'> Bahan untuk Kepentingan Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kepentingan_produksi_dan_distribusi_produk'> Kepentingan Produksi dan Distribusi Produk </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kaji_ulang_manajemen'> Audit dan Kaji Ulang Manajemen </Link>
+                </BreadcrumbItem>
             </Breadcrumb>
             <Card>
                 <Progress striped animated value={progress} />
@@ -115,7 +138,8 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
                     <CardTitle> Form SJPH: &nbsp;
                         <Badge color='success' pill>
                             {sessionStorage.nama_sjph}
-                        </Badge> </CardTitle>
+                        </Badge>
+                    </CardTitle>
                 </CardHeader>
                 {/*<div className='divider'>*/}
                 {/*    <div className='divider-text'></div>*/}

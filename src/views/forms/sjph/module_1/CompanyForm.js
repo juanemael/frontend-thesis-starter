@@ -24,6 +24,13 @@ import {useNavigate} from "react-router-dom";
 import {ArrowDown, ArrowLeft, ArrowRight} from "react-feather";
 import {ShepherdTour} from "react-shepherd";
 import CompanyModalPic from '@src/assets/images/illustration/demand.svg';
+import Select from "react-select";
+import { selectThemeColors } from '@utils'
+
+const skalaUsahaOptions = [
+    { value: 'Mikro', label: 'Mikro' },
+    { value: 'Kecil', label: 'Kecil' },
+]
 
 const CompanyForm = () => {
 
@@ -41,9 +48,10 @@ const CompanyForm = () => {
     const [contactPersonEmail, setContactPersonEmail] = useState("")
     const [nomorIzinEdar, setNomorIzinEdar] = useState("")
     const [jenisProduk, setJenisProduk] = useState("")
+    const [namaMerekProduk, setNamaMerekProduk] = useState("")
     const [daerahPemasaran, setDaerahPemasaran] = useState("")
     const [sistemPemasaran, setSistemPemasaran] = useState("")
-    const [details,setDetails] = useState([])
+    const [details,setDetails] = useState({})
 
     const [companyModal, setCompanyModal] = useState(true)
 
@@ -57,12 +65,13 @@ const CompanyForm = () => {
     const getCompanyProfile = async (id) => {
         try {
             if (!sessionStorage.perusahaan_id || sessionStorage.perusahaan_id === 'null') {
-                const result = await companyProfileModel.getById(sessionStorage.perusahaan_id)
+                const result = await companyProfileModel.getById(id)
                 setDetails(result)
             } else {
                 console.log("TES ID COMP", sessionStorage.perusahaan_id)
-                const result = await companyProfileModel.getById(sessionStorage.perusahaan_id)
+                const result = await companyProfileModel.getById(id)
                 setDetails(result)
+                console.log(details)
             }
         } catch (e) {
             console.error(e)
@@ -85,6 +94,7 @@ const CompanyForm = () => {
             alamat_fasilitas_produksi: alamatFasilitasProduksi? alamatFasilitasProduksi : details.alamat_fasilitas_produksi,
             telp_fax_fasilitas_produksi: telpFaxFasilitasProduksi? telpFaxFasilitasProduksi : details.telp_fax_fasilitas_produksi,
             contact_person_email: contactPersonEmail? contactPersonEmail : details.contact_person_email,
+            nama_merek_produk: namaMerekProduk? namaMerekProduk : details.nama_merek_produk,
             nomor_izin_edar: nomorIzinEdar? nomorIzinEdar : details.nomor_izin_edar,
             jenis_produk: jenisProduk? jenisProduk : details.jenis_produk,
             daerah_pemasaran: daerahPemasaran? daerahPemasaran : details.daerah_pemasaran,
@@ -193,13 +203,27 @@ const CompanyForm = () => {
                             }} placeholder='Nomor Induk Berusaha' />
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
-                            <Label className='form-label' for='cityMulti'>
+                            <Label className='form-label' for='skalaUsaha'>
                                 Skala Usaha
                             </Label>
-                            <Input type='text' name='skalaUsaha' id='skalaUsaha'
-                                   defaultValue={ details.id && details.skala_usaha } onChange={(e)=>{
-                                setSkalaUsaha(e.target.value)
-                            }} placeholder='Skala Usaha' />
+                            {/*<Input type='text' name='skalaUsaha' id='skalaUsaha'*/}
+                            {/*       defaultValue={ details.id && details.skala_usaha } onChange={(e)=>{*/}
+                            {/*    setSkalaUsaha(e.target.value)*/}
+                            {/*}} placeholder='Skala Usaha' />*/}
+                            <Select
+                                id='skalaUsaha'
+                                theme={selectThemeColors}
+                                className='react-select'
+                                classNamePrefix='select'
+                                // value={skalaUsahaOptions}
+                                defaultValue={details.skala_usaha === 'Mikro' ? skalaUsahaOptions[0] : details.skala_usaha === "Kecil" ? skalaUsahaOptions[1] : null}
+                                placeholder={details.skala_usaha === 'Mikro' ? details.skala_usaha : details.skala_usaha === 'Kecil' ? details.skala_usaha : "Pilih disini"}
+                                name='skalaUsaha'
+                                options={skalaUsahaOptions}
+                                onChange={(opt)=>{
+                                    setSkalaUsaha(opt.value)
+                                }}
+                            />
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='CountryMulti'>
@@ -269,12 +293,21 @@ const CompanyForm = () => {
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
+                                Nama/Merek Produk (yang akan disertifikasi)
+                            </Label>
+                            <Input type='text' name='jenisProduk' id='jenisProduk'
+                                   defaultValue={ details.id && details.nama_merek_produk } onChange={(e)=>{
+                                setNamaMerekProduk(e.target.value)
+                            }} placeholder='Nama/Merek Produk yang akan disertifikasi' />
+                        </Col>
+                        <Col md='6' sm='12' className='mb-1'>
+                            <Label className='form-label' for='EmailMulti'>
                                 Nomor Izin Edar
                             </Label>
                             <Input type='text' name='nomorIzinEdar' id='nomorIzinEdar'
                                    defaultValue={ details.id && details.nomor_izin_edar } onChange={(e)=>{
                                 setNomorIzinEdar(e.target.value)
-                            }} placeholder='Nomor Izin Edar' />
+                            }} placeholder='No. (MD/PIRT/SLHS/lainnya)' />
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>

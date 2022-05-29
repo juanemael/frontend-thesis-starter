@@ -110,6 +110,20 @@ const KebijakanEdukasiHalalPage = () => {
 
     return (
         <div>
+            {/*<Breadcrumb listClassName='breadcrumb-chevron'>*/}
+            {/*    <BreadcrumbItem>*/}
+            {/*        <Link to='/sjph/sjph_ku'> SJPH-ku </Link>*/}
+            {/*    </BreadcrumbItem>*/}
+            {/*    <BreadcrumbItem>*/}
+            {/*        <Link to='/sjph/informasi_umum_perusahaan'> Informasi Perusahaan </Link>*/}
+            {/*    </BreadcrumbItem>*/}
+            {/*    <BreadcrumbItem>*/}
+            {/*        <Link to='/sjph/kriteria_sistem_jaminan_produk_halal'> Kriteria Sistem Jaminan Produk Halal </Link>*/}
+            {/*    </BreadcrumbItem>*/}
+            {/*    <BreadcrumbItem active>*/}
+            {/*        <span> Kebijakan dan Edukasi Halal </span>*/}
+            {/*    </BreadcrumbItem>*/}
+            {/*</Breadcrumb>*/}
             <Breadcrumb listClassName='breadcrumb-chevron'>
                 <BreadcrumbItem>
                     <Link to='/sjph/sjph_ku'> SJPH-ku </Link>
@@ -122,6 +136,15 @@ const KebijakanEdukasiHalalPage = () => {
                 </BreadcrumbItem>
                 <BreadcrumbItem active>
                     <span> Kebijakan dan Edukasi Halal </span>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/bahan_untuk_kepentingan_halal'> Bahan untuk Kepentingan Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kepentingan_produksi_dan_distribusi_produk'> Kepentingan Produksi dan Distribusi Produk </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kaji_ulang_manajemen'> Audit dan Kaji Ulang Manajemen </Link>
                 </BreadcrumbItem>
             </Breadcrumb>
             <Progress striped animated value={progress} />
