@@ -7,7 +7,7 @@ import {
     Button,
     Label,
     ModalHeader,
-    ModalBody, Modal
+    ModalBody, Modal, Alert
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import classnames from "classnames";
@@ -22,13 +22,16 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
 
 import { selectThemeColors } from '@utils'
 import {ArrowLeft, ArrowRight} from "react-feather";
+import ModalPic from '@src/assets/images/illustration/travel-illu.svg';
 
 const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState(new Date())
-    const [details, setDetails] = useState([])
+    const [detailCompany, setDetailCompany] = useState([])
+    const [detailKebijakan, setDetailKebijakan] = useState([])
+    const [modalShow, setModalShow] = useState(true)
 
 
     const kriteriaSJPHKebijakanHalalModel = new KriteriaSJPHKebijakanHalalModels()
@@ -46,7 +49,21 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
             } else {
                 console.log("TEST ID",id)
                 const result = await companyProfileModel.getById(id)
-                setDetails(result)
+                setDetailCompany(result)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const getKeteranganKriteria = async (id) => {
+        try {
+            if (!sessionStorage.sjph_id || sessionStorage.sjph_id === 'null') {
+                console.log("NO DATA FOUND")
+            } else {
+                const result = await kriteriaSJPHKebijakanHalalModel.getKeteranganKriteria(id)
+                console.log("TESTIS",result)
+                setDetailKebijakan(result)
             }
         } catch (e) {
             console.error(e)
@@ -57,6 +74,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
         if (sessionStorage.perusahaan_id) {
             if (sessionStorage.perusahaan_id !== "" || sessionStorage.perusahaan_id !==null) {
                 getCompanyProfile(sessionStorage.perusahaan_id)
+                getKeteranganKriteria(sessionStorage.sjph_id)
             }
         } else {
             setNamaPerusahaan("")
@@ -65,12 +83,11 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
 
     const submit = async () => {
         const body = {
-            nama_perusahaan: namaPerusahaan,
             tempat_persetujuan: tempatPersetujuan,
             tanggal_persetujuan: tanggalPersetujuan
         }
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.createKebijakanHalal(body)
+            const result = await kriteriaSJPHKebijakanHalalModel.createKebijakanHalal(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
@@ -87,8 +104,39 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
 
     return (
         <Fragment>
+            <Modal isOpen={modalShow} toggle={() => setModalShow(!modalShow)} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => {
+                    setModalShow(!modalShow)
+                }}></ModalHeader>
+                <ModalBody className='px-sm-5 mx-50 pb-5'>
+                    <div className='text-center mb-2'>
+                        <h1 className='mb-1' id={"headerInitialTitle"}>Selamat datang di destinasi kedua-mu</h1>
+                        {/*<Alert color='info'>*/}
+                        {/*    <h4 className='alert-heading'>Info</h4>*/}
+                        {/*    <div className='alert-body'>*/}
+                        {/*        Tootsie roll lollipop lollipop icing. Wafer cookie danish macaroon. Liquorice fruitcake apple pie I love*/}
+                        {/*        cupcake cupcake.*/}
+                        {/*    </div>*/}
+                        {/*</Alert>*/}
+                        <p>Mulai dari sini, kamu akan berjalan melalui berbagai tempat wisata di setiap destinasi.</p>
+                        <p>Setiap tempat wisata mempunyai isi yang berbeda beda jadi jangan sampai salah ya</p>
+                        <Row sm={8} className='justify-content-center' style={{paddingBottom: 20}}>
+                            <img className='company-pic' src={ModalPic} alt='company' style={{height: 300, width: 360}} />
+                        </Row>
+                    </div>
+                    <Row tag='form' className='gy-1 pt-75'>
+                        <Col xs={12} className='text-center mt-2 pt-50' style={{display:'flex', justifyContent: 'center'}}>
+                            <Button onClick={()=>{
+                                setModalShow(false)
+                            }} color='warning' id={'belumPernahButton'} >
+                                Baik, aku mengerti!
+                            </Button>
+                        </Col>
+                    </Row>
+                </ModalBody>
+            </Modal>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 1</h3>
+                <h3 className='mb-0'>Wisata 1</h3>
                 <small className='text-muted'>Cari tahu tentang kebijakan halal</small>
             </div>
                 <Form>
@@ -139,7 +187,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                             <Label className='form-label' for='nameMulti'>
                                 Nama Perusahaan
                             </Label>
-                            <Input type='text' name='namaPerusahaan' defaultValue={details.id && details.nama_perusahaan} id='namaPerusahaan' onChange={(e)=>{
+                            <Input type='text' disabled name='namaPerusahaan' defaultValue={detailCompany.id && detailCompany.nama_perusahaan} id='namaPerusahaan' onChange={(e)=>{
                                 setNamaPerusahaan(e.target.value)
                             }} placeholder='Nama Perusahaan' />
                         </Col>
@@ -147,7 +195,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                             <Label className='form-label' for='lastNameMulti'>
                                 Tempat Persetujuan
                             </Label>
-                            <Input type='text' name='nib' id='nib' onChange={(e)=>{
+                            <Input type='text' name='nib' id='nib' defaultValue={detailKebijakan.tempat_persetujuan} onChange={(e)=>{
                                 setTempatPersetujuan(e.target.value)
                             }} placeholder='Tempat Persetujuan' />
                         </Col>
@@ -159,7 +207,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                             {/*    setTanggalPersetujuan(e.target.value)*/}
                             {/*}} placeholder='Nomor Induk Berusaha' />*/}
                             <Flatpickr
-                                value={tanggalPersetujuan}
+                                value={detailKebijakan.tanggal_persetujuan ? detailKebijakan.tanggal_persetujuan : tanggalPersetujuan}
                                 id='hf-picker'
                                 className='form-control'
                                 onChange={date => setTanggalPersetujuan(date)}
@@ -177,7 +225,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                                     <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                                 </Button>
                                 <Button className='me-1' color='primary' onClick={submit}>
-                                    Submit
+                                    Simpan
                                 </Button>
                                 <Button className='me-1' color='primary' onClick={()=>{
                                     stepper.next()

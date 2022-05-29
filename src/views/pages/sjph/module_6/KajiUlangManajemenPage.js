@@ -12,7 +12,7 @@ const KajiUlangManajemenPage = () => {
     const steps = [
         {
             id: 'hal1',
-            title: 'Halaman 1',
+            title: 'Wisata 1',
             subtitle: 'Kaji Ulang Manajemen',
             icon: <FileText size={18} />,
             content: <KajiUlangManajemenTable stepper={stepper} type='wizard-modern' />

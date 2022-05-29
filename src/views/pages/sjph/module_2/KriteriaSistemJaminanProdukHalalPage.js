@@ -15,7 +15,7 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
     const steps = [
         {
             id: 'hal1',
-            title: 'Halaman 1',
+            title: 'Wisata 1',
             subtitle: 'Keterangan Kriteria',
             icon: <FileText size={18} />,
             content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper}
@@ -23,7 +23,7 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
         },
         {
             id: 'hal2',
-            title: 'Halaman 2',
+            title: 'Wisata 2',
             subtitle: 'Media Komunikasi Table',
             icon: <User size={18} />,
             content: <MediaKomunikasiTable stepper={stepper} setCheckpoint={setCheckpoint} type='wizard-modern' />

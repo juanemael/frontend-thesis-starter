@@ -374,7 +374,7 @@ const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
                 </tbody>
             </Table>
             <Col sm='12'>
-                <div className='d-flex justify-content-end'>
+                <div className='d-flex justify-content-center'>
                     <Button className='me-1 ms-1' color='primary' onClick={() => {
                         stepper.previous()
                         setCheckpoint(2)

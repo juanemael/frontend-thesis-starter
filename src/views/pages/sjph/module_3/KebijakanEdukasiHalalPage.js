@@ -14,7 +14,7 @@ const KebijakanEdukasiHalalPage = () => {
     const steps = [
         {
             id: 'hal1',
-            title: 'Halaman 1',
+            title: 'Wisata 1',
             subtitle: 'Surat Keputusan',
             icon: <FileText size={18} />,
             content: <SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable
@@ -22,7 +22,7 @@ const KebijakanEdukasiHalalPage = () => {
         },
         {
             id: 'hal2',
-            title: 'Halaman 2',
+            title: 'Wisata 2',
             subtitle: 'Daftar Hadir Pelatihan Internal Pt.1',
             icon: <User size={18} />,
             content: <DaftarHadirPelatihanInternalForm
@@ -30,7 +30,7 @@ const KebijakanEdukasiHalalPage = () => {
         },
         {
             id: 'step-address',
-            title: 'Halaman 3',
+            title: 'Wisata 3',
             subtitle: 'Daftar Hadir Pelatihan Internal Pt.2',
             icon: <MapPin size={18} />,
             content: <DaftarHadirPelatihanInternalTable

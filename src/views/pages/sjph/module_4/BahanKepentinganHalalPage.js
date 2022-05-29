@@ -19,7 +19,7 @@ const BahanKepentinganHalalPage = () => {
     const steps = [
         {
             id: 'hal1',
-            title: 'Halaman 1',
+            title: 'Wisata 1',
             subtitle: 'Daftar Bahan',
             icon: <FileText size={18} />,
             content: <DaftarBahanTable
@@ -27,14 +27,14 @@ const BahanKepentinganHalalPage = () => {
         },
         {
             id: 'hal2',
-            title: 'Halaman 2',
+            title: 'Wisata 2',
             subtitle: 'Daftar Bahan Setiap Produk',
             icon: <User size={18} />,
             content: <DaftarBahanDigunakanSetiapProdukForm
                 setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },        {
             id: 'hal3',
-            title: 'Halaman 3',
+            title: 'Wisata 3',
             subtitle: 'Catatan Pembelian Bahan',
             icon: <User size={18} />,
             content: <CatatanPembelianBahanTable
@@ -42,7 +42,7 @@ const BahanKepentinganHalalPage = () => {
         },
         {
             id: 'step-address',
-            title: 'Halaman 3',
+            title: 'Wisata 4',
             subtitle: 'Form Pemeriksaan Bahan',
             icon: <MapPin size={18} />,
             content: <FormPemeriksaanBahanTable
@@ -50,7 +50,7 @@ const BahanKepentinganHalalPage = () => {
         },
         {
             id: 'suratPernyataanBebasBabi',
-            title: 'Halaman 4',
+            title: 'Wisata 5',
             subtitle: 'Surat Pernyataan Bebas Babi',
             icon: <Link size={18}/>,
             content: <SuratPernyataanBebasBabiForm
@@ -58,7 +58,7 @@ const BahanKepentinganHalalPage = () => {
         },
         {
             id: 'suratPermohonanPersetujuanPenggunaanBahanBaru',
-            title: 'Halaman 5',
+            title: 'Wisata 6',
             subtitle: 'Surat Permohonan Persetujuan Penggunaaan Bahan Baru',
             icon: <Link size={18} />,
             content: <CatatanPenyimpananBahanProdukTable

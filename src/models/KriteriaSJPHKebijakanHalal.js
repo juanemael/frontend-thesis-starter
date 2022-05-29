@@ -1,8 +1,8 @@
 import ApiRequest from "../utility/ApiRequest"
 
 export default class KriteriaSJPHKebijakanHalal {
-    getAll = async () => {
-        return await ApiRequest.set("/sjph/company_profiles", "GET")
+     getKeteranganKriteria = async (sjph_id) => {
+        return await ApiRequest.set(`/sjph/kebijakan_halal/get/${sjph_id}`, "GET")
     }
 
     getNamaPerusahaan = async (id) => {
@@ -10,7 +10,7 @@ export default class KriteriaSJPHKebijakanHalal {
     }
 
     createKebijakanHalal = async (sjph_id,body) => {
-        return await ApiRequest.set(`/sjph/kebijkakan_halal/create/${sjph_id}`, 'POST', body)
+        return await ApiRequest.set(`/sjph/kebijakan_halal/create/${sjph_id}`, 'POST', body)
     }
     createMediaKomunikasi = async (body) => {
         return await ApiRequest.set(`/sjph/kebijakan_halal/media_komunikasi`, 'POST', body)

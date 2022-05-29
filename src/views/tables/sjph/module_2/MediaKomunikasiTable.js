@@ -341,8 +341,8 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                 </ModalBody>
             </Modal>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 2</h3>
-                <small className='text-muted'>Cari tahu tentang kebijakan halal</small>
+                <h3 className='mb-0'>Wisata 2</h3>
+                <small className='text-muted'>Tabel media komunikasi-mu</small>
             </div>
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>

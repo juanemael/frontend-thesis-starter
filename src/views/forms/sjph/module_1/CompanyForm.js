@@ -1,5 +1,18 @@
 // ** Reactstrap Imports
-import {Card, CardHeader, CardTitle, CardBody, Row, Col, Input, Form, Button, Label, Progress} from 'reactstrap'
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardBody,
+    Row,
+    Col,
+    Input,
+    Form,
+    Button,
+    Label,
+    Progress,
+    ModalHeader, ModalBody, Modal
+} from 'reactstrap'
 import { EditorState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import '@styles/react/libs/editor/editor.scss'
@@ -9,6 +22,8 @@ import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import {ArrowDown, ArrowLeft, ArrowRight} from "react-feather";
+import {ShepherdTour} from "react-shepherd";
+import CompanyModalPic from '@src/assets/images/illustration/demand.svg';
 
 const CompanyForm = () => {
 
@@ -29,6 +44,8 @@ const CompanyForm = () => {
     const [daerahPemasaran, setDaerahPemasaran] = useState("")
     const [sistemPemasaran, setSistemPemasaran] = useState("")
     const [details,setDetails] = useState([])
+
+    const [companyModal, setCompanyModal] = useState(true)
 
     const [progressValue, setProgressValue] = useState(10)
     const value = 10
@@ -119,11 +136,38 @@ const CompanyForm = () => {
 
     return (
         <Card>
+            <Modal isOpen={companyModal} toggle={() => setCompanyModal(!companyModal)} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => {
+                    setCompanyModal(!companyModal)
+                }}></ModalHeader>
+                <ModalBody className='px-sm-5 mx-50 pb-5'>
+                    <div className='text-center mb-2'>
+                        <h1 className='mb-1' id={"headerInitialTitle"}>Mengisi Keterangan Perusahaan</h1>
+                        <div className=' justify-content-between'>
+                            Silahkan mengisi keterangan perusahaan/usaha kamu disini.<br/>
+                            Disini kamu bisa leluasa mengisi atau mengubah isi keterangan perusahaan kamu. <br/>
+                            Jadi.. jangan khawatir jika kamu salah mengisi keterangan ya <br />
+                            Oh iya.. diatas kamu juga ada jejak perkembangan-mu sebagai gambaran letak kamu sekarang.
+                        </div>
+                        <Row sm={8} style={{paddingBottom: 20}}>
+                            <img className='company-pic' src={CompanyModalPic} alt='company' />
+                        </Row>
+                    </div>
+                    <Row tag='form' className='gy-1 pt-75'>
+                        <Col xs={12} className='text-center mt-2 pt-50' style={{display:'flex', justifyContent: 'center'}}>
+                            <Button onClick={()=>{
+                                setCompanyModal(false)
+                            }} color='warning' id={'belumPernahButton'} >
+                                Baik, aku mengerti!
+                            </Button>
+                        </Col>
+                    </Row>
+                </ModalBody>
+            </Modal>
             {/*<Progress striped animated value={progressValue} max={100} />*/}
             <CardHeader>
                 <CardTitle tag='h4'>Informasi Perusahaan</CardTitle>
             </CardHeader>
-
             <CardBody>
                 <Form>
                     <Row>
@@ -272,14 +316,14 @@ const CompanyForm = () => {
                                 style={{ minHeight: '100px' }}
                                 onChange={e => setTujuan(e.target.value)}
                                 defaultValue={ details.id && details.tujuan }
-                                className={classnames({ 'text-danger': tujuan.length > 20 })}
+                                className={classnames({ 'text-danger': tujuan.length > 120 })}
                             />
                             <span
                                 className={classnames('textarea-counter-value float-end', {
-                                    'bg-danger': tujuan.length > 20
+                                    'bg-danger': tujuan.length > 120
                                 })}
                             >
-                            {`${tujuan.length}/20`}
+                            {`${tujuan.length}/120`}
                             </span>
                             {/*<Editor />*/}
                         </Col>
@@ -295,19 +339,19 @@ const CompanyForm = () => {
                                 style={{ minHeight: '100px' }}
                                 onChange={e => setRuangLingkup(e.target.value)}
                                 defaultValue={ details.id && details.ruang_lingkup }
-                                className={classnames({ 'text-danger': ruangLingkup.length > 20 })}
+                                className={classnames({ 'text-danger': ruangLingkup.length > 120 })}
                             />
                             <span
                                 className={classnames('textarea-counter-value float-end', {
-                                    'bg-danger': ruangLingkup.length > 20
+                                    'bg-danger': ruangLingkup.length > 120
                                 })}
                             >
-                            {`${ruangLingkup.length}/20`}
+                            {`${ruangLingkup.length}/120`}
                             </span>
                         </Col>
                         <Col sm='12'>
                             <div className='d-flex justify-content-center'>
-                                <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/sjph_ku')} outline>
+                                <Button className='me-1 ms-3' color='primary' onClick={()=>navigate('/sjph/sjph_ku')} outline>
                                     {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
                                     <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                                     <span className='align-middle d-sm-inline-block d-none'>Kembali</span>

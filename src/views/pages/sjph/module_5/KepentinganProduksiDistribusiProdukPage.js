@@ -23,7 +23,7 @@ const KepentinganProduksiDistribusiProdukPage = () => {
     const steps = [
         {
             id: 'hal1',
-            title: 'Halaman 1',
+            title: 'Wisata 1',
             subtitle: 'Layout Ruang Produksi',
             icon: <FileText size={18} />,
             content: <LayoutDenahRuangProduksiForm
@@ -31,7 +31,7 @@ const KepentinganProduksiDistribusiProdukPage = () => {
         },
         {
             id: 'hal2',
-            title: 'Halaman 2',
+            title: 'Wisata 2',
             subtitle: 'Diagram Alir Proses Produksi',
             icon: <User size={18} />,
             content: <DiagramAlirProsesProduksiForm
@@ -39,7 +39,7 @@ const KepentinganProduksiDistribusiProdukPage = () => {
         },
         {
             id: 'step-address',
-            title: 'Halaman 3',
+            title: 'Wisata 3',
             subtitle: 'Catatan Hasil Produksi',
             icon: <MapPin size={18} />,
             content: <CatatanHasilProduksiTable
@@ -47,7 +47,7 @@ const KepentinganProduksiDistribusiProdukPage = () => {
         },
         {
             id: 'catatanDistribusiPenjualanProduk',
-            title: 'Halaman 4',
+            title: 'Wisata 4',
             subtitle: 'Catatan Distribusi Penjualan Produk',
             icon: <Link size={18}/>,
             content: <CatatanDistribusiPenjualanProdukTable
