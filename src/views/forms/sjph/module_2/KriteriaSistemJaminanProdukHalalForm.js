@@ -62,7 +62,6 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                 console.log("NO DATA FOUND")
             } else {
                 const result = await kriteriaSJPHKebijakanHalalModel.getKeteranganKriteria(id)
-                console.log("TESTIS",result)
                 setDetailKebijakan(result)
             }
         } catch (e) {
@@ -173,7 +172,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                         </Modal>
                     <Col md='6' sm='6' className='mb-1'>
                         <Label className='form-label' for='nameMulti'>
-                            Surat Kebijakan Halal
+                            Contoh Jadi Surat Kebijakan Halal
                         </Label>
                     </Col>
                     </Row>

@@ -1,6 +1,6 @@
 import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/KriteriaSistemJaminanProdukHalalForm";
 import MediaKomunikasiTable from "../../../tables/sjph/module_2/MediaKomunikasiTable";
-import {FileText, Link, MapPin, User} from "react-feather";
+import {FileText, Link as LinkIcon, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
 import {useEffect, useRef, useState} from "react";
 import SuratPernyataanBebasBabiForm from "../../../forms/sjph/module_4/SuratPernyataanBebasBabiForm";
@@ -13,8 +13,8 @@ import LayoutDenahRuangProduksiForm from "../../../forms/sjph/module_5/LayoutDen
 import DiagramAlirProsesProduksiForm from "../../../forms/sjph/module_5/DiagramAlirProsesProduksiForm";
 import CatatanDistribusiPenjualanProdukTable from "../../../tables/sjph/module_5/CatatanDistribusiPenjualanProdukTable";
 import CatatanHasilProduksiTable from "../../../tables/sjph/module_5/CatatanHasilProduksiTable";
-import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
-
+import {Badge, Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
+import {Link} from "react-router-dom";
 
 const KepentinganProduksiDistribusiProdukPage = () => {
     const ref = useRef(null)
@@ -49,7 +49,7 @@ const KepentinganProduksiDistribusiProdukPage = () => {
             id: 'catatanDistribusiPenjualanProduk',
             title: 'Wisata 4',
             subtitle: 'Catatan Distribusi Penjualan Produk',
-            icon: <Link size={18}/>,
+            icon: <LinkIcon size={18}/>,
             content: <CatatanDistribusiPenjualanProdukTable
                 setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern'/>
         },
@@ -157,12 +157,40 @@ const KepentinganProduksiDistribusiProdukPage = () => {
 
     return (
         <div>
+            <Breadcrumb listClassName='breadcrumb-chevron'>
+                <BreadcrumbItem>
+                    <Link to='/sjph/sjph_ku'> SJPH-ku </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/informasi_umum_perusahaan'> Informasi Perusahaan </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kriteria_sistem_jaminan_produk_halal'> Kriteria Sistem Jaminan Produk Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kebijakan_dan_edukasi_halal'> Kebijakan dan Edukasi Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/bahan_untuk_kepentingan_halal'> Bahan untuk Kepentingan Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem active>
+                    <span> Kepentingan Produksi dan Distribusi Produk </span>
+                </BreadcrumbItem>
+            </Breadcrumb>
             <Progress striped animated value={progress} />
             <Card>
-            <CardHeader>
-                <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
-            </CardHeader>
+                <CardHeader>
+                    <CardTitle> Form SJPH: &nbsp;
+                        <Badge color='success' pill>
+                            {sessionStorage.nama_sjph}
+                        </Badge> </CardTitle>
+                </CardHeader>
             <CardBody>
+                <h4>Destinasi Kelima: &nbsp;
+                    <Badge color='primary' pill>
+                        Kepentingan Produksi dan Distribusi Produk
+                    </Badge>
+                </h4>
             <Wizard
                 type='modern-horizontal'
                 ref={ref}

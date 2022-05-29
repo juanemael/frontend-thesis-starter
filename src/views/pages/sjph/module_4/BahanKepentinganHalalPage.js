@@ -1,6 +1,4 @@
-import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/KriteriaSistemJaminanProdukHalalForm";
-import MediaKomunikasiTable from "../../../tables/sjph/module_2/MediaKomunikasiTable";
-import {FileText, Link, MapPin, User} from "react-feather";
+import {FileText, MapPin, User, Link as LinkIcon} from "react-feather";
 import Wizard from '@components/wizard'
 import {useEffect, useRef, useState} from "react";
 import SuratPernyataanBebasBabiForm from "../../../forms/sjph/module_4/SuratPernyataanBebasBabiForm";
@@ -9,8 +7,8 @@ import DaftarBahanDigunakanSetiapProdukForm from "../../../forms/sjph/module_4/D
 import CatatanPembelianBahanTable from "../../../tables/sjph/module_4/CatatanPembelianBahanTable";
 import FormPemeriksaanBahanTable from "../../../tables/sjph/module_4/FormPemeriksaanBahanTable";
 import CatatanPenyimpananBahanProdukTable from "../../../tables/sjph/module_4/CatatanPenyimpananBahanProdukTable";
-import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
-
+import {Badge, Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
+import {Link} from "react-router-dom";
 
 const BahanKepentinganHalalPage = () => {
     const ref = useRef(null)
@@ -52,7 +50,7 @@ const BahanKepentinganHalalPage = () => {
             id: 'suratPernyataanBebasBabi',
             title: 'Wisata 5',
             subtitle: 'Surat Pernyataan Bebas Babi',
-            icon: <Link size={18}/>,
+            icon: <LinkIcon size={18}/>,
             content: <SuratPernyataanBebasBabiForm
                 setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern'/>
         },
@@ -60,7 +58,7 @@ const BahanKepentinganHalalPage = () => {
             id: 'suratPermohonanPersetujuanPenggunaanBahanBaru',
             title: 'Wisata 6',
             subtitle: 'Surat Permohonan Persetujuan Penggunaaan Bahan Baru',
-            icon: <Link size={18} />,
+            icon: <LinkIcon size={18} />,
             content: <CatatanPenyimpananBahanProdukTable
                 setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         }
@@ -196,12 +194,37 @@ const BahanKepentinganHalalPage = () => {
     // }, []);
     return (
         <div>
+            <Breadcrumb listClassName='breadcrumb-chevron'>
+                <BreadcrumbItem>
+                    <Link to='/sjph/sjph_ku'> SJPH-ku </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/informasi_umum_perusahaan'> Informasi Perusahaan </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kriteria_sistem_jaminan_produk_halal'> Kriteria Sistem Jaminan Produk Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kebijakan_dan_edukasi_halal'> Kebijakan dan Edukasi Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem active>
+                    <span> Bahan untuk Kepentingan Halal </span>
+                </BreadcrumbItem>
+            </Breadcrumb>
             <Progress striped animated value={progress} />
             <Card>
                 <CardHeader>
-                    <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
+                    <CardTitle> Form SJPH: &nbsp;
+                        <Badge color='success' pill>
+                            {sessionStorage.nama_sjph}
+                        </Badge> </CardTitle>
                 </CardHeader>
                 <CardBody>
+                    <h4>Destinasi Keempat: &nbsp;
+                        <Badge color='primary' pill>
+                            Bahan untuk Kepentingan Halal
+                        </Badge>
+                    </h4>
                 <Wizard
                     type='modern-horizontal'
                     ref={ref}

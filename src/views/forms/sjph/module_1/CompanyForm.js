@@ -171,6 +171,9 @@ const CompanyForm = () => {
             <CardBody>
                 <Form>
                     <Row>
+                        <div className='divider divider-dashed'>
+                            <div className='divider-text'>Informasi Umum <ArrowDown size={15} /></div>
+                        </div>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='nameMulti'>
                                 Nama Perusahaan
@@ -225,9 +228,6 @@ const CompanyForm = () => {
                                 setAlamatPerusahaan(e.target.value)
                             }} placeholder='Alamat Perusahaan' />
                         </Col>
-                        <div className='divider divider-dashed'>
-                            <div className='divider-text'><ArrowDown size={15} /></div>
-                        </div>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
                                 Telp/Fax Perusahaan
@@ -237,6 +237,9 @@ const CompanyForm = () => {
                                 setTelpFaxPerusahaan(e.target.value)
                             }} placeholder='Telp/Fax Perusahaan' />
                         </Col>
+                        <div className='divider divider-dashed'>
+                            <div className='divider-text'> Produksi <ArrowDown size={15} /></div>
+                        </div>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
                                 Alamat Fasilitas Produksi
@@ -283,7 +286,7 @@ const CompanyForm = () => {
                             }} placeholder='Jenis Produk' />
                         </Col>
                         <div className='divider divider-dashed'>
-                            <div className='divider-text'><ArrowDown size={15} /></div>
+                            <div className='divider-text'>Pemasaran <ArrowDown size={15} /></div>
                         </div>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
@@ -335,7 +338,7 @@ const CompanyForm = () => {
                                 name='ruangLingkup'
                                 type='textarea'
                                 id='ruangLingkup'
-                                placeholder='Tujuan'
+                                placeholder='Ruang Lingkup'
                                 style={{ minHeight: '100px' }}
                                 onChange={e => setRuangLingkup(e.target.value)}
                                 defaultValue={ details.id && details.ruang_lingkup }

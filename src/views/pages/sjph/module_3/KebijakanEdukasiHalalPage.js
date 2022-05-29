@@ -1,11 +1,12 @@
-import {FileText, Link, MapPin, User} from "react-feather";
+import {FileText, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
 import {useEffect, useRef, useState} from "react";
 import SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable
     from "../../../tables/sjph/module_3/SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable";
 import DaftarHadirPelatihanInternalForm from "../../../forms/sjph/module_3/DaftarHadirPelatihanInternalForm";
 import DaftarHadirPelatihanInternalTable from "../../../tables/sjph/module_3/DaftarHadirPelatihanInternalTable";
-import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
+import {Badge, Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
+import {Link} from "react-router-dom";
 
 const KebijakanEdukasiHalalPage = () => {
     const ref = useRef(null)
@@ -109,12 +110,34 @@ const KebijakanEdukasiHalalPage = () => {
 
     return (
         <div>
+            <Breadcrumb listClassName='breadcrumb-chevron'>
+                <BreadcrumbItem>
+                    <Link to='/sjph/sjph_ku'> SJPH-ku </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/informasi_umum_perusahaan'> Informasi Perusahaan </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/kriteria_sistem_jaminan_produk_halal'> Kriteria Sistem Jaminan Produk Halal </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem active>
+                    <span> Kebijakan dan Edukasi Halal </span>
+                </BreadcrumbItem>
+            </Breadcrumb>
             <Progress striped animated value={progress} />
             <Card>
                 <CardHeader>
-                    <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
+                    <CardTitle> Form SJPH: &nbsp;
+                        <Badge color='success' pill>
+                            {sessionStorage.nama_sjph}
+                        </Badge> </CardTitle>
                 </CardHeader>
                 <CardBody>
+                    <h4>Destinasi Ketiga: &nbsp;
+                        <Badge color='primary' pill>
+                            Kebijakan dan Edukasi Halal
+                        </Badge>
+                    </h4>
                 <Wizard
                     type='modern-horizontal'
                     ref={ref}

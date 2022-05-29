@@ -1,10 +1,11 @@
-import {Card, CardHeader, CardBody, CardTitle, CardText, Progress} from 'reactstrap'
+import {Card, CardHeader, CardBody, CardTitle, CardText, Progress, Breadcrumb, BreadcrumbItem, Badge} from 'reactstrap'
 import CompanyForm from "../../../forms/sjph/module_1/CompanyForm";
 import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/KriteriaSistemJaminanProdukHalalForm";
 import MediaKomunikasiTable from "../../../tables/sjph/module_2/MediaKomunikasiTable";
-import {FileText, Link, MapPin, User} from "react-feather";
+import {FileText, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
 import {useEffect, useRef, useState} from "react";
+import {Link} from "react-router-dom";
 
 const KriteriaSistemJaminanProdukHalalPage = () => {
     const ref = useRef(null)
@@ -97,12 +98,34 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
 
     return (
         <div>
+            <Breadcrumb listClassName='breadcrumb-chevron'>
+                <BreadcrumbItem>
+                    <Link to='/sjph/sjph_ku'> SJPH-ku </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <Link to='/sjph/informasi_umum_perusahaan'> Informasi Perusahaan </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem active>
+                    <span> Kriteria Sistem Jaminan Produk Halal </span>
+                </BreadcrumbItem>
+            </Breadcrumb>
             <Card>
                 <Progress striped animated value={progress} />
                 <CardHeader>
-                    <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>
+                    <CardTitle> Form SJPH: &nbsp;
+                        <Badge color='success' pill>
+                            {sessionStorage.nama_sjph}
+                        </Badge> </CardTitle>
                 </CardHeader>
+                {/*<div className='divider'>*/}
+                {/*    <div className='divider-text'></div>*/}
+                {/*</div>*/}
                 <CardBody>
+                    <h4>Destinasi Kedua: &nbsp;
+                        <Badge color='primary' pill>
+                            Kriteria Sistem Jaminan Produk Halal
+                        </Badge>
+                    </h4>
                 <Wizard
                     type='modern-horizontal'
                     ref={ref}
