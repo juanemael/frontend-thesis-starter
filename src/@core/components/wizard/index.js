@@ -22,7 +22,8 @@ const Wizard = forwardRef((props, ref) => {
     className,
     headerClassName,
     contentClassName,
-    contentWrapperClassName
+    contentWrapperClassName,
+      setCheckpoint
   } = props
 
   // ** State
@@ -57,7 +58,14 @@ const Wizard = forwardRef((props, ref) => {
             })}
             data-target={`#${step.id}`}
           >
-            <button type='button' className='step-trigger'>
+            <button type='button' className='step-trigger' onClick={()=>{
+                // if (index !== steps.length && activeIndex < index) {
+                //     setCheckpoint(activeIndex)
+                // } else {
+                //
+                // }
+                setCheckpoint(activeIndex)
+            }}>
               <span className='bs-stepper-box'>{step.icon ? step.icon : index + 1}</span>
               <span className='bs-stepper-label'>
                 <span className='bs-stepper-title'>{step.title}</span>

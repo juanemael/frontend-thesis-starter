@@ -19,61 +19,141 @@ import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 const KepentinganProduksiDistribusiProdukPage = () => {
     const ref = useRef(null)
     const [stepper, setStepper] = useState(null)
+    const [checkpoint, setCheckpoint] = useState(0);
     const steps = [
         {
             id: 'hal1',
             title: 'Halaman 1',
             subtitle: 'Layout Ruang Produksi',
             icon: <FileText size={18} />,
-            content: <LayoutDenahRuangProduksiForm stepper={stepper} type='wizard-modern' />
+            content: <LayoutDenahRuangProduksiForm
+                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'hal2',
             title: 'Halaman 2',
             subtitle: 'Diagram Alir Proses Produksi',
             icon: <User size={18} />,
-            content: <DiagramAlirProsesProduksiForm stepper={stepper} type='wizard-modern' />
-        },
-        {
-            id: 'hal3',
-            title: 'Halaman 3',
-            subtitle: 'Catatan Pembelian Bahan',
-            icon: <User size={18} />,
-            content: <CatatanPembelianBahanTable stepper={stepper} type='wizard-modern' />
+            content: <DiagramAlirProsesProduksiForm
+                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'step-address',
-            title: 'Halaman 4',
+            title: 'Halaman 3',
             subtitle: 'Catatan Hasil Produksi',
             icon: <MapPin size={18} />,
-            content: <CatatanHasilProduksiTable stepper={stepper} type='wizard-modern' />
+            content: <CatatanHasilProduksiTable
+                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'catatanDistribusiPenjualanProduk',
-            title: 'Halaman 5',
+            title: 'Halaman 4',
             subtitle: 'Catatan Distribusi Penjualan Produk',
             icon: <Link size={18}/>,
-            content: <CatatanDistribusiPenjualanProdukTable stepper={stepper} type='wizard-modern'/>
+            content: <CatatanDistribusiPenjualanProdukTable
+                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern'/>
         },
     ]
 
     const [progress, setProgress] = useState(64);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setProgress((oldProgress) => {
-                if (oldProgress === 80) {
-                    return 80;
-                }
-                const diff = 8 * 10;
-                return Math.min(oldProgress + diff, 80);
-            });
-        }, 500);
+        if (checkpoint === 0) {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    // oldProgress = {...progress}
+                    oldProgress = 64
+                    if (oldProgress === 67.2) {
+                        return 67.2;
+                    }
+                    const diff = 6 * 10;
+                    return Math.min(oldProgress + diff, 67.2);
+                });
+            }, 200);
 
-        return () => {
-            clearInterval(timer);
-        };
-    }, []);
+            return () => {
+                clearInterval(timer);
+            };
+        } else if (checkpoint === 1) {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    // oldProgress = {...progress}
+                    oldProgress = 67.2
+                    if (oldProgress === 70.4) {
+                        return 70.4;
+                    }
+                    const diff = 6 * 10;
+                    return Math.min(oldProgress + diff, 70.4);
+                });
+            }, 200);
+
+            return () => {
+                clearInterval(timer);
+            };
+        } else if (checkpoint === 2) {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    oldProgress = 70.4
+                    if (oldProgress === 73.6) {
+                        return 73.6;
+                    }
+                    const diff = 6 * 10;
+                    return Math.min(oldProgress + diff, 73.6);
+                });
+            }, 200);
+
+            return () => {
+                clearInterval(timer);
+            }
+        } else if (checkpoint === 3) {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    oldProgress = 73.6
+                    if (oldProgress === 76.8) {
+                        return 76.8;
+                    }
+                    const diff = 7 * 10;
+                    return Math.min(oldProgress + diff, 76.8);
+                });
+            }, 200);
+
+            return () => {
+                clearInterval(timer);
+            }
+
+        } else {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    oldProgress = 76.8
+                    if (oldProgress === 80) {
+                        return 80;
+                    }
+                    const diff = 7 * 10;
+                    return Math.min(oldProgress + diff, 80);
+                });
+            }, 200);
+
+            return () => {
+                clearInterval(timer);
+            }
+        }
+    }, [checkpoint]);
+
+    // useEffect(() => {
+    //     const timer = setInterval(() => {
+    //         setProgress((oldProgress) => {
+    //             if (oldProgress === 80) {
+    //                 return 80;
+    //             }
+    //             const diff = 8 * 10;
+    //             return Math.min(oldProgress + diff, 80);
+    //         });
+    //     }, 500);
+    //
+    //     return () => {
+    //         clearInterval(timer);
+    //     };
+    // }, []);
 
     return (
         <div>
@@ -91,6 +171,7 @@ const KepentinganProduksiDistribusiProdukPage = () => {
                     linear: false
                 }}
                 instance={el => setStepper(el)}
+                setCheckpoint={setCheckpoint}
             />
             </CardBody>
             </Card>

@@ -17,7 +17,7 @@ import {useState, Fragment} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {Check, Edit, MoreVertical, Trash, X} from "react-feather";
+import {ArrowLeft, ArrowRight, Check, Edit, MoreVertical, Trash, X} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 // ** Utils
@@ -54,7 +54,7 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
-const DaftarBahanTable = () => {
+const DaftarBahanTable = ({stepper, setCheckpoint}) => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
@@ -270,7 +270,7 @@ const DaftarBahanTable = () => {
                     <th>Negara</th>
                     <th>Supplier</th>
                     <th>Lembaga Penerbit Sert. Halal</th>
-                    <th>Nomor Sertifikast Halal</th>
+                    <th>Nomor Sertifikat Halal</th>
                     <th>Masa Berlaku Sertifikat Halal</th>
                     <th>Dokumen Pedukung</th>
                     <th>Menu</th>
@@ -315,10 +315,18 @@ const DaftarBahanTable = () => {
             <Col sm='12' style={{paddingTop: 20}}>
                 <div className='d-flex justify-content-center'>
                     <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kebijakan_dan_edukasi_halal')} outline>
-                        Kembali
+                        <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                        <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                     </Button>
                     <Button className='me-1' color='primary' onClick={() => setShow(true)}>
                         Tambah
+                    </Button>
+                    <Button className='me-1' color='primary' onClick={()=>{
+                        stepper.next()
+                        setCheckpoint(1)
+                    }}>
+                        <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                        <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                     </Button>
                 </div>
             </Col>

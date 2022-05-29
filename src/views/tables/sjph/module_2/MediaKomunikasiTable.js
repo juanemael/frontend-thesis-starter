@@ -17,7 +17,7 @@ import {useState, Fragment, forwardRef, useEffect} from "react";
 import KriteriaSJPHKebijakanHalalModels from "../../../../models/KriteriaSJPHKebijakanHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
+import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 
@@ -37,7 +37,7 @@ const defaultValues = {
     lastName: 'Barton',
     username: 'bob.dev'
 }
-const MediaKomunikasiTable = () => {
+const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
 
     const [currentPage, setCurrentPage] = useState(0)
     const [searchValue, setSearchValue] = useState('')
@@ -377,13 +377,21 @@ const MediaKomunikasiTable = () => {
             &nbsp;
             <Col sm='12'>
                 <div className='d-flex justify-content-center'>
+                    <Button className='me-1 ms-1' color='primary' onClick={() => {
+                        stepper.previous()
+                        setCheckpoint(0)
+                    }} outline>
+                        {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
+                        <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                        <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
+                    </Button>
                     <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
                         {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
                         Tambah
                     </Button>
                     <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kebijakan_dan_edukasi_halal')}>
-                        {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
-                        Selanjutnya
+                        <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                        <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                     </Button>
                 </div>
                 {/*<div className='d-flex justify-content-end'>*/}

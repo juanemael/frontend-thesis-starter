@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
+import {ArrowDown, ArrowLeft, ArrowRight} from "react-feather";
 
 const CompanyForm = () => {
 
@@ -180,6 +181,9 @@ const CompanyForm = () => {
                                 setAlamatPerusahaan(e.target.value)
                             }} placeholder='Alamat Perusahaan' />
                         </Col>
+                        <div className='divider divider-dashed'>
+                            <div className='divider-text'><ArrowDown size={15} /></div>
+                        </div>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
                                 Telp/Fax Perusahaan
@@ -234,6 +238,9 @@ const CompanyForm = () => {
                                 setJenisProduk(e.target.value)
                             }} placeholder='Jenis Produk' />
                         </Col>
+                        <div className='divider divider-dashed'>
+                            <div className='divider-text'><ArrowDown size={15} /></div>
+                        </div>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
                                 Daerah Pemasaran
@@ -302,15 +309,16 @@ const CompanyForm = () => {
                             <div className='d-flex justify-content-center'>
                                 <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/sjph_ku')} outline>
                                     {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
-                                    Kembali
+                                    <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                                    <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                                 </Button>
                                 <Button className='me-1' color='success' onClick={submit}>
                                 {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
                                     Save
                                 </Button>
                                 <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kriteria_sistem_jaminan_produk_halal')}>
-                                {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
-                                    Selanjutnya
+                                    <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                                    <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                                 </Button>
                             </div>
                         </Col>

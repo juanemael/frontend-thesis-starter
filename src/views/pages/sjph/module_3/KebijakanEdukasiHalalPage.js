@@ -10,47 +10,102 @@ import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 const KebijakanEdukasiHalalPage = () => {
     const ref = useRef(null)
     const [stepper, setStepper] = useState(null)
+    const [checkpoint, setCheckpoint] = useState(0);
     const steps = [
         {
             id: 'hal1',
             title: 'Halaman 1',
             subtitle: 'Surat Keputusan',
             icon: <FileText size={18} />,
-            content: <SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable stepper={stepper} type='wizard-modern' />
+            content: <SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable
+                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'hal2',
             title: 'Halaman 2',
             subtitle: 'Daftar Hadir Pelatihan Internal Pt.1',
             icon: <User size={18} />,
-            content: <DaftarHadirPelatihanInternalForm stepper={stepper} type='wizard-modern' />
+            content: <DaftarHadirPelatihanInternalForm
+                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'step-address',
             title: 'Halaman 3',
             subtitle: 'Daftar Hadir Pelatihan Internal Pt.2',
             icon: <MapPin size={18} />,
-            content: <DaftarHadirPelatihanInternalTable stepper={stepper} type='wizard-modern' />
+            content: <DaftarHadirPelatihanInternalTable
+                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         }
     ]
 
     const [progress, setProgress] = useState(32);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setProgress((oldProgress) => {
-                if (oldProgress === 48) {
-                    return 48;
-                }
-                const diff = 3 * 10;
-                return Math.min(oldProgress + diff, 48);
-            });
-        }, 500);
+        if (checkpoint === 0) {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    // oldProgress = {...progress}
+                    oldProgress = 32
+                    if (oldProgress === 37) {
+                        return 37;
+                    }
+                    const diff = 3 * 10;
+                    return Math.min(oldProgress + diff, 37);
+                });
+            }, 200);
 
-        return () => {
-            clearInterval(timer);
-        };
-    }, []);
+            return () => {
+                clearInterval(timer);
+            };
+        } else if (checkpoint === 1) {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    // oldProgress = {...progress}
+                    oldProgress = 37
+                    if (oldProgress === 42) {
+                        return 42;
+                    }
+                    const diff = 3 * 10;
+                    return Math.min(oldProgress + diff, 42);
+                });
+            }, 200);
+
+            return () => {
+                clearInterval(timer);
+            };
+        } else {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    oldProgress = 42
+                    if (oldProgress === 48) {
+                        return 48;
+                    }
+                    const diff = 4 * 10;
+                    return Math.min(oldProgress + diff, 48);
+                });
+            }, 200);
+
+            return () => {
+                clearInterval(timer);
+            }
+        }
+    }, [checkpoint]);
+
+    // useEffect(() => {
+    //     const timer = setInterval(() => {
+    //         setProgress((oldProgress) => {
+    //             if (oldProgress === 48) {
+    //                 return 48;
+    //             }
+    //             const diff = 3 * 10;
+    //             return Math.min(oldProgress + diff, 48);
+    //         });
+    //     }, 500);
+    //
+    //     return () => {
+    //         clearInterval(timer);
+    //     };
+    // }, []);
 
     return (
         <div>
@@ -68,6 +123,7 @@ const KebijakanEdukasiHalalPage = () => {
                         linear: false
                     }}
                     instance={el => setStepper(el)}
+                    setCheckpoint={setCheckpoint}
                 />
                 </CardBody>
             </Card>

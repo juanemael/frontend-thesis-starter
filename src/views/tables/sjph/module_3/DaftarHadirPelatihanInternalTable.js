@@ -21,7 +21,7 @@ import react from '@src/assets/images/icons/react.svg'
 import vuejs from '@src/assets/images/icons/vuejs.svg'
 import angular from '@src/assets/images/icons/angular.svg'
 import bootstrap from '@src/assets/images/icons/bootstrap.svg'
-import {Check, Edit, MoreVertical, Trash, X} from "react-feather";
+import {ArrowLeft, Check, Edit, MoreVertical, Trash, X} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 // ** Utils
@@ -58,7 +58,7 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
-const DaftarHadirPelatihanInternalTable = () => {
+const DaftarHadirPelatihanInternalTable = ({stepper, setCheckpoint}) => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
@@ -387,9 +387,13 @@ const DaftarHadirPelatihanInternalTable = () => {
             </Table>
             <Col sm='12'>
                 <div className='d-flex justify-content-center'>
-                    <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kriteria_sistem_jaminan_produk_halal')} outline>
+                    <Button className='me-1 ms-1' color='primary' onClick={() => {
+                        stepper.previous()
+                        setCheckpoint(1)
+                    }} outline>
                         {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
-                        Kembali
+                        <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                        <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                     </Button>
                     <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
                         {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}

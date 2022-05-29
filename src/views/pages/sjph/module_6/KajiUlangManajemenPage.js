@@ -8,6 +8,7 @@ import {Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 const KajiUlangManajemenPage = () => {
     const ref = useRef(null)
     const [stepper, setStepper] = useState(null)
+    const [isFinish, setIsFinish] = useState(false)
     const steps = [
         {
             id: 'hal1',
@@ -24,6 +25,7 @@ const KajiUlangManajemenPage = () => {
         const timer = setInterval(() => {
             setProgress((oldProgress) => {
                 if (oldProgress === 100) {
+                    setIsFinish(true)
                     return 100;
                 }
                 const diff = 10 * 10;
@@ -37,7 +39,17 @@ const KajiUlangManajemenPage = () => {
     }, []);
     return (
         <div>
-            <Progress className='progress-bar-success' value={progress} />
+            {/* eslint-disable-next-line multiline-ternary */}
+            { isFinish ?
+                // eslint-disable-next-line multiline-ternary
+                <><Progress className='progress-bar-success' value={100}>
+                    Selesai
+                </Progress></> :
+                <><Progress animated striped value={progress} /></>
+            }
+            {/*<Progress className='progress-bar-success' value={progress}>*/}
+            {/*    Selesai*/}
+            {/*</Progress>*/}
             <Card>
                 <CardHeader>
                     <CardTitle> Form SJPH:  {sessionStorage.nama_sjph} </CardTitle>

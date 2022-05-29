@@ -21,8 +21,9 @@ import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 
 import { selectThemeColors } from '@utils'
+import {ArrowLeft, ArrowRight} from "react-feather";
 
-const KriteriaSistemJaminanProdukHalalForm = () => {
+const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
 
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
@@ -172,10 +173,18 @@ const KriteriaSistemJaminanProdukHalalForm = () => {
                         <Col sm='12'>
                             <div className='d-flex justify-content-center'>
                                 <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/informasi_umum_perusahaan')} outline>
-                                    Kembali
+                                    <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                                    <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                                 </Button>
                                 <Button className='me-1' color='primary' onClick={submit}>
                                     Submit
+                                </Button>
+                                <Button className='me-1' color='primary' onClick={()=>{
+                                    stepper.next()
+                                    setCheckpoint(1)
+                                }}>
+                                    <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                                    <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                                 </Button>
                             </div>
                         </Col>

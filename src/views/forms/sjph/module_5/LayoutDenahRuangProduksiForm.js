@@ -11,8 +11,9 @@ import ExtensionsHeader from '@components/extensions-header'
 import '@styles/react/libs/file-uploader/file-uploader.scss'
 import FileUploaderMultiple from "../../form-elements/FileUploaderMultiple";
 import {useNavigate} from "react-router-dom";
+import {ArrowRight} from "react-feather";
 
-const LayoutDenahRuangProduksiForm = () => {
+const LayoutDenahRuangProduksiForm = ({stepper,setCheckpoint}) => {
 
     const navigate = useNavigate()
     return (
@@ -28,9 +29,16 @@ const LayoutDenahRuangProduksiForm = () => {
                 </Col>
             </Row>
             <div className='d-flex justify-content-center'>
-            <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/bahan_untuk_kepentingan_halal')} outline>
-                Kembali
-            </Button>
+                <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/bahan_untuk_kepentingan_halal')} outline>
+                    Kembali
+                </Button>
+                <Button className='me-1' color='primary' onClick={()=>{
+                    stepper.next()
+                    setCheckpoint(1)
+                }}>
+                    <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                    <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
+                </Button>
             </div>
         </Fragment>
     )

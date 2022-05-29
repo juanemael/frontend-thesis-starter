@@ -8,8 +8,9 @@ import {useState, Fragment} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
+import {ArrowLeft, ArrowRight} from "react-feather";
 
-const DaftarHadirPelatihanInternalForm = () => {
+const DaftarHadirPelatihanInternalForm = ({stepper,setCheckpoint}) => {
 
     const [hariTanggal, setHariTanggal] = useState("")
     const [pematri, setPematri] = useState("")
@@ -76,9 +77,24 @@ const DaftarHadirPelatihanInternalForm = () => {
                         }} placeholder='Nomor Induk Berusaha' />
                     </Col>
                     <Col sm='12'>
-                        <div className='d-flex justify-content-end'>
+                        <div className='d-flex justify-content-center'>
+                            <Button className='me-1 ms-1' color='primary' onClick={() => {
+                                stepper.previous()
+                                setCheckpoint(0)
+                            }} outline>
+                                {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
+                                <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                                <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
+                            </Button>
                             <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>
                                 Submit
+                            </Button>
+                            <Button className='me-1' color='primary' onClick={()=>{
+                                stepper.next()
+                                setCheckpoint(2)
+                            }}>
+                                <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                                <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                             </Button>
                         </div>
                     </Col>

@@ -8,8 +8,9 @@ import {useState, Fragment} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
+import {ArrowLeft, ArrowRight} from "react-feather";
 
-const SuratPernyataanBebasBabiForm = () => {
+const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
 
     const [nama, setNama] = useState("")
     const [jabatan, setJabatan] = useState("")
@@ -86,9 +87,23 @@ const SuratPernyataanBebasBabiForm = () => {
                         }} placeholder='Perusahaan' />
                     </Col>
                     <Col sm='12'>
-                        <div className='d-flex justify-content-end'>
+                        <div className='d-flex justify-content-center'>
+                            <Button className='me-1 ms-1' color='primary' onClick={() => {
+                                stepper.previous()
+                                setCheckpoint(3)
+                            }} outline>
+                                <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                                <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
+                            </Button>
                             <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>
                                 Submit
+                            </Button>
+                            <Button className='me-1' color='primary' onClick={()=>{
+                                stepper.next()
+                                setCheckpoint(5)
+                            }}>
+                                <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                                <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                             </Button>
                         </div>
                     </Col>

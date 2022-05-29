@@ -8,6 +8,7 @@ import {useNavigate} from "react-router-dom";
 import Select from "react-select";
 import { selectThemeColors } from '@utils'
 import makeAnimated from 'react-select/animated'
+import {ArrowLeft, ArrowRight} from "react-feather";
 
 const colorOptions = [
     { value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true },
@@ -18,7 +19,7 @@ const colorOptions = [
     { value: 'yellow', label: 'Yellow', color: '#FFC400', isFixed: false }
 ]
 
-const DaftarBahanDigunakanSetiapProdukForm = () => {
+const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
 
     const [nama, setNama] = useState("")
     const [jabatan, setJabatan] = useState("")
@@ -101,9 +102,23 @@ const DaftarBahanDigunakanSetiapProdukForm = () => {
                         }} placeholder='Nomor KTP' />
                     </Col>
                     <Col sm='12'>
-                        <div className='d-flex justify-content-end'>
+                        <div className='d-flex justify-content-center'>
+                            <Button className='me-1 ms-1' color='primary' onClick={() => {
+                                stepper.previous()
+                                setCheckpoint(0)
+                            }} outline>
+                                <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                                <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
+                            </Button>
                             <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>
                                 Submit
+                            </Button>
+                            <Button className='me-1' color='primary' onClick={()=>{
+                                stepper.next()
+                                setCheckpoint(2)
+                            }}>
+                                <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                                <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                             </Button>
                         </div>
                     </Col>
