@@ -13,11 +13,11 @@ import {
     Row, Label, Input, FormFeedback, Modal
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
-import {useState, Fragment} from "react";
+import {useState, Fragment, useEffect, forwardRef} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {ArrowLeft, ArrowRight, Check, Edit, MoreVertical, Trash, X} from "react-feather";
+import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 // ** Utils
@@ -25,28 +25,12 @@ import { selectThemeColors } from '@utils'
 
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
+import DataTable from "react-data-table-component";
+import ReactPaginate from "react-paginate";
+import Swal from "sweetalert2";
+import Flatpickr from "react-flatpickr";
 
-const statusOptions = [
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
-    { value: 'suspended', label: 'Suspended' }
-]
-
-const countryOptions = [
-    { value: 'uk', label: 'UK' },
-    { value: 'usa', label: 'USA' },
-    { value: 'france', label: 'France' },
-    { value: 'russia', label: 'Russia' },
-    { value: 'canada', label: 'Canada' }
-]
-
-const languageOptions = [
-    { value: 'english', label: 'English' },
-    { value: 'spanish', label: 'Spanish' },
-    { value: 'french', label: 'French' },
-    { value: 'german', label: 'German' },
-    { value: 'dutch', label: 'Dutch' }
-]
 
 const defaultValues = {
     firstName: 'Bob',
@@ -56,9 +40,20 @@ const defaultValues = {
 
 const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
 
+    const [currentPage, setCurrentPage] = useState(0)
+    const [searchValue, setSearchValue] = useState('')
+    const [filteredData, setFilteredData] = useState([])
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [details, setDetails] = useState([
+        {
+            id: 1,
+            nama_dan_merek: 'Tepung beras Rosebrand',
+            jumlah: 'Tepung',
+            waktu_pembelian: '09-11-2018'
+        }
+    ])
 
 
     const companyProfileModel = new CompanyProfileModels()
@@ -76,30 +71,203 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
         formState: { errors }
     } = useForm({ defaultValues })
 
-    const onSubmitModal = data => {
-        if (Object.values(data).every(field => field.length > 0)) {
-            return null
-        } else {
-            for (const key in data) {
-                if (data[key].length === 0) {
-                    setError(key, {
-                        type: 'manual'
-                    })
-                }
-            }
+    const getMediaKomunikasiByID = async (id) => {
+        try {
+            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiBySJPHId(id)
+            setMediaKomunikasi(result)
+        } catch (e) {
+            console.error(e)
         }
     }
 
+    useEffect(()=>{
+        getMediaKomunikasiByID(sessionStorage.sjph_id)
+    },[])
+
+
+    const handlePagination = page => {
+        setCurrentPage(page.selected)
+    }
+
+    const handleFilter = e => {
+        const value = e.target.value
+        let updatedData = []
+        setSearchValue(value)
+
+        const status = {
+            1: { title: 'Current', color: 'light-primary' },
+            2: { title: 'Professional', color: 'light-success' },
+            3: { title: 'Rejected', color: 'light-danger' },
+            4: { title: 'Resigned', color: 'light-warning' },
+            5: { title: 'Applied', color: 'light-info' }
+        }
+
+        if (value.length) {
+            updatedData = details.filter(item => {
+                const startsWith =
+                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                const includes =
+                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                if (startsWith) {
+                    return startsWith
+                } else if (!startsWith && includes) {
+                    return includes
+                } else return null
+            })
+            setFilteredData(updatedData)
+            setSearchValue(value)
+        }
+    }
+
+    const CustomPagination = () => (
+        <ReactPaginate
+            previousLabel=''
+            nextLabel=''
+            forcePage={currentPage}
+            onPageChange={page => handlePagination(page)}
+            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(details.length / 7) || 1}
+            breakLabel='...'
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={2}
+            activeClassName='active'
+            pageClassName='page-item'
+            breakClassName='page-item'
+            nextLinkClassName='page-link'
+            pageLinkClassName='page-link'
+            breakLinkClassName='page-link'
+            previousLinkClassName='page-link'
+            nextClassName='page-item next-item'
+            previousClassName='page-item prev-item'
+            containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1'
+        />
+    )
+
+    const BootstrapCheckbox = forwardRef((props, ref) => (
+        <div className='form-check'>
+            <Input type='checkbox' ref={ref} {...props} />
+        </div>
+    ))
+
+    const deleteMediaKomunikas = async (id) => {
+        swal.fire({
+            title: "Peringatan!",
+            text: "Apakah kamu yakin ingin menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButton: "Iya, tentu saja",
+            cancelButton: "Tidak",
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+            // dangerMode: true,
+        }).then(async (res) => {
+            if (res.isConfirmed) {
+                try {
+                    const result = await kriteriaSJPHKebijakanHalalModel.deleteMediaKomunikasi(id);
+
+                    if (result.id || result.success) {
+                        await Swal.fire({
+                            icon: "success",
+                            title: "Sukses menghapus!",
+                            text: 'Data kamu telah dihapus.',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }
+                        }).then(()=>{
+                            getMediaKomunikasiByID(sessionStorage.sjph_id)
+                        })
+                    } else {
+                        await Swal.fire({
+                            title: 'Failed',
+                            text: 'Failed to delete',
+                            icon: 'error',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }})
+                    }
+                } catch (e) {
+                    console.error(e)
+                    await Swal.fire('', e.error_message ? e.error_message : "Something Wrong", 'error')
+                }
+            }
+        })
+    }
+
+    const columns = [
+        {
+            name: 'ID',
+            // minWidth: '150px',
+            selector: row => row.id,
+            sortable: row => row.id
+        },
+        {
+            name: 'Tanggal Sosialisasi',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.nama_dan_merek
+        },
+        {
+            name: 'Judul Kegiatan',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.jumlah
+        },
+
+        {
+            name: 'Peserta',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.waktu_pembelian
+        },
+        {
+            name: 'Tindakan',
+            allowOverflow: false,
+            cell: (row) => {
+                return (
+                    <div className='d-flex'>
+                        <UncontrolledDropdown>
+                            <DropdownToggle className='cursor-pointer pe-1' tag='span' >
+                                <MoreVertical size={15} />
+                            </DropdownToggle>
+                            <DropdownMenu container={'body'} end>
+                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                    <FileText size={15} />
+                                    <span className='align-middle ms-50'>Details</span>
+                                </DropdownItem>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                    <Trash size={15} />
+                                    <span className='align-middle ms-50'>Delete</span>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <Edit size={15} />
+                    </div>
+                )
+            }
+        }
+    ]
+
     const submit = async () => {
         const body = {
-            nama_perusahaan: namaPerusahaan,
+            tanggal_sosialisasi: tanggalSosialisasi ? new Date(tanggalSosialisasi) : details.tanggal_sosialisasi,
+            judul_kegiatan: judulKegiatan ? judulKegiatan : details.judul_kegiatan,
+            peserta: peserta? peserta : details.peserta
         }
         try {
-            const result = await companyProfileModel.createCompanyProfile(body)
+            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        navigate('/sjph/company_profile')
+                        getMediaKomunikasiByID(sessionStorage.sjph_id)
+                        setShow(false)
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
@@ -119,134 +287,41 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
                         <h1 className='mb-1'>Tambah Data Tabel</h1>
                         <p>Tambah data tabelmu sekarang</p>
                     </div>
-                    <Row tag='form' className='gy-1 pt-75' onSubmit={handleSubmit(onSubmitModal)}>
+                    <Row tag='form' className='gy-1 pt-75' >
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='firstName'>
-                                First Name
+                            <Label className='form-label' for='tanggalPersetujuan'>
+                                Tanggal Sosialisasi
                             </Label>
-                            <Controller
-                                control={control}
-                                name='firstName'
-                                render={({ field }) => {
-                                    return (
-                                        <Input
-                                            {...field}
-                                            id='firstName'
-                                            placeholder='John'
-                                            value={field.value}
-                                            invalid={errors.firstName && true}
-                                        />
-                                    )
+                            <Flatpickr
+                                // value={tanggalSosialisasi}
+                                // defaultValue={cont}
+                                id='tanggalPersetujuan'
+                                className='form-control'
+                                // onChange={date => setTanggalSosialisasi(date)}
+                                options={{
+                                    altInput: true,
+                                    altFormat: 'F j, Y',
+                                    dateFormat: 'Y-m-d',
                                 }}
                             />
                             {errors.firstName && <FormFeedback>Please enter a valid First Name</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='lastName'>
-                                Last Name
+                            <Label className='form-label' for='judulKegiatan'>
+                                Judul Kegiatan
                             </Label>
-                            <Controller
-                                name='lastName'
-                                control={control}
-                                render={({ field }) => (
-                                    <Input {...field} id='lastName' placeholder='Doe' invalid={errors.lastName && true} />
-                                )}
-                            />
+                            <Input id='judulKegiatan' placeholder='Kegiatan' onChange={(e)=>{ setJudulKegiatan(e.target.value) }}  invalid={errors.judulKegiatan && true} />
                             {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
                         </Col>
                         <Col xs={12}>
-                            <Label className='form-label' for='username'>
-                                Username
+                            <Label className='form-label' for='peserta'>
+                                Peserta
                             </Label>
-                            <Controller
-                                name='username'
-                                control={control}
-                                render={({ field }) => (
-                                    <Input {...field} id='username' placeholder='john.doe.007' invalid={errors.username && true} />
-                                )}
-                            />
+                            <Input id='peserta' placeholder='Budi Setiawan' onChange={(e)=>{ setPeserta(e.target.value) }} invalid={errors.peserta && true} />
                             {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='email'>
-                                Billing Email
-                            </Label>
-                            <Input type='email' id='email' placeholder='example@domain.com' />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='status'>
-                                Status:
-                            </Label>
-                            <Select
-                                id='status'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={statusOptions}
-                                theme={selectThemeColors}
-                                defaultValue={statusOptions[0]}
-                            />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='tax-id'>
-                                Tax ID
-                            </Label>
-                            <Input id='tax-id' defaultValue='Tax-8894' placeholder='Tax-1234' />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='contact'>
-                                Contact
-                            </Label>
-                            <Input id='contact' defaultValue='+1 609 933 4422' placeholder='+1 609 933 4422' />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='language'>
-                                Language
-                            </Label>
-                            <Select
-                                id='language'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={languageOptions}
-                                theme={selectThemeColors}
-                                defaultValue={languageOptions[0]}
-                            />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='country'>
-                                Country
-                            </Label>
-                            <Select
-                                id='country'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={countryOptions}
-                                theme={selectThemeColors}
-                                defaultValue={countryOptions[0]}
-                            />
-                        </Col>
-                        <Col xs={12}>
-                            <div className='d-flex align-items-center'>
-                                <div className='form-switch'>
-                                    <Input type='switch' defaultChecked id='billing-switch' name='billing-switch' />
-                                    <Label className='form-check-label' htmlFor='billing-switch'>
-                                    <span className='switch-icon-left'>
-                                      <Check size={14} />
-                                    </span>
-                                        <span className='switch-icon-right'>
-                                          <X size={14} />
-                                        </span>
-                                    </Label>
-                                </div>
-                                <Label className='form-check-label fw-bolder' htmlFor='billing-switch'>
-                                    Use as a billing address?
-                                </Label>
-                            </div>
-                        </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
-                            <Button type='submit' className='me-1' color='primary'>
+                            <Button onClick={submit} className='me-1' color='primary'>
                                 Submit
                             </Button>
                             <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
@@ -260,119 +335,38 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
                 <h3 className='mb-0'>Halaman 3</h3>
                 <small className='text-muted'>Catatan Pembelian Bahan</small>
             </div>
-            <Table responsive>
-                <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Nama Bahan - Merk Bahan</th>
-                    <th>Jumlah (KG)</th>
-                    <th>Waktu Pembelian</th>
-                    <th>Menu</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>1.</span>
-                    </td>
-                    <td>Tepung - Segitiga Biru</td>
-                    <td>
-                        15
-                    </td>
-                    <td>19-09-2022</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>2.</span>
-                    </td>
-                    <td>Tepung - Segitiga Biru</td>
-                    <td>
-                        15
-                    </td>
-                    <td>19-09-2022</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>3.</span>
-                    </td>
-                    <td>Tepung - Segitiga Biru</td>
-                    <td>
-                        15
-                    </td>
-                    <td>19-09-2022</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>4.</span>
-                    </td>
-                    <td>Tepung - Segitiga Biru</td>
-                    <td>
-                        15
-                    </td>
-                    <td>19-09-2022</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                </tbody>
-            </Table>
+            <Row className='justify-content-end mx-0'>
+                <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
+                    <Label className='me-1' for='search-input'>
+                        Cari
+                    </Label>
+                    <Input
+                        className='dataTable-filter mb-50'
+                        type='text'
+                        bsSize='sm'
+                        id='search-input'
+                        value={searchValue}
+                        onChange={handleFilter}
+                    />
+                </Col>
+            </Row>
+            <div className={'react-dataTable'}>
+                <DataTable
+
+                    noHeader
+                    pagination
+                    // selectableRows
+                    columns={columns}
+                    paginationPerPage={7}
+                    className='react-dataTable'
+                    sortIcon={<ChevronDown size={10} />}
+                    paginationDefaultPage={currentPage + 1}
+                    paginationComponent={CustomPagination}
+                    data={searchValue.length ? filteredData : details}
+                    // selectableRowsComponent={BootstrapCheckbox}
+                />
+            </div>
+            &nbsp;
             <Col sm='12'>
                 <div className='d-flex justify-content-center'>
                     <Button className='me-1 ms-1' color='primary' onClick={() => {

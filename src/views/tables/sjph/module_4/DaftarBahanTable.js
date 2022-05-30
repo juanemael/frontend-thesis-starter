@@ -13,11 +13,11 @@ import {
     Row, Label, Input, FormFeedback, Modal
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
-import {useState, Fragment} from "react";
+import {useState, Fragment, useEffect, forwardRef} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {ArrowLeft, ArrowRight, Check, Edit, MoreVertical, Trash, X} from "react-feather";
+import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 // ** Utils
@@ -25,28 +25,12 @@ import { selectThemeColors } from '@utils'
 
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
-
-const statusOptions = [
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
-    { value: 'suspended', label: 'Suspended' }
-]
-
-const countryOptions = [
-    { value: 'uk', label: 'UK' },
-    { value: 'usa', label: 'USA' },
-    { value: 'france', label: 'France' },
-    { value: 'russia', label: 'Russia' },
-    { value: 'canada', label: 'Canada' }
-]
-
-const languageOptions = [
-    { value: 'english', label: 'English' },
-    { value: 'spanish', label: 'Spanish' },
-    { value: 'french', label: 'French' },
-    { value: 'german', label: 'German' },
-    { value: 'dutch', label: 'Dutch' }
-]
+import '@styles/react/libs/tables/react-dataTable-component.scss'
+import DataTable from "react-data-table-component";
+import KriteriaSJPHKebijakanHalalModels from "../../../../models/KriteriaSJPHKebijakanHalal";
+import ReactPaginate from "react-paginate";
+import Swal from "sweetalert2";
+import Flatpickr from "react-flatpickr";
 
 const defaultValues = {
     firstName: 'Bob',
@@ -56,12 +40,40 @@ const defaultValues = {
 
 const DaftarBahanTable = ({stepper, setCheckpoint}) => {
 
+    const [currentPage, setCurrentPage] = useState(0)
+    const [searchValue, setSearchValue] = useState('')
+    const [filteredData, setFilteredData] = useState([])
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
-    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
-    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [tanggalSosialisasi, setTanggalSosialisasi] = useState(new Date())
+    const [judulKegiatan, setJudulKegiatan] = useState("")
+    const [peserta, setPeserta] = useState("")
+    const [mediaKomunikasi, setMediaKomunikasi] = useState([])
+    const [namaMerek, setNamaMerek] = useState("")
+    const [jenisBahan,setJenisBahan] = useState("")
+    const [produsen, setProdusen] = useState("")
+    const [negara, setNegara] = useState("")
+    const [supplier, setSupplier] = useState("")
+    const [lembagaPenerbitSertHalal, setLembagaPenerbitSertHalal] = useState("")
+    const [nomorSertHalal, setNomorSertHalal] = useState("")
+    const [masaBerlakuSertHalal, setMasaBerlakuSertHalal] = useState("")
+    const [dokumenPendukung, setDokumenPendukung] = useState("")
+    const [details, setDetails] = useState([
+        {
+            id: 1,
+            nama_dan_merek: 'Tepung beras Rosebrand',
+            jenis_bahan: 'Tepung',
+            produsen: 'PT. Indofood',
+            negara: 'Indonesia',
+            supplier: 'Supplier Indofood',
+            lembaga_penerbit_sert_halal: 'MUI',
+            no_sert_halal: '08456413651',
+            masa_berlaku_sert_halal: '2018',
+            dokumen_pendukung: 'Dokumen'
+        }
+    ])
 
 
-    const companyProfileModel = new CompanyProfileModels()
+    const kriteriaSJPHKebijakanHalalModel = new KriteriaSJPHKebijakanHalalModels()
 
     const navigate = useNavigate()
 
@@ -76,30 +88,209 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
         formState: { errors }
     } = useForm({ defaultValues })
 
-    const onSubmitModal = data => {
-        if (Object.values(data).every(field => field.length > 0)) {
-            return null
-        } else {
-            for (const key in data) {
-                if (data[key].length === 0) {
-                    setError(key, {
-                        type: 'manual'
-                    })
-                }
-            }
+    const getMediaKomunikasiAll = async () => {
+        try {
+            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiAll()
+            setMediaKomunikasi(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+    const getMediaKomunikasiByID = async (id) => {
+        try {
+            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiBySJPHId(id)
+            setMediaKomunikasi(result)
+        } catch (e) {
+            console.error(e)
         }
     }
 
+    useEffect(()=>{
+        getMediaKomunikasiByID(sessionStorage.sjph_id)
+    },[])
+
+
+    const handlePagination = page => {
+        setCurrentPage(page.selected)
+    }
+
+    const handleFilter = e => {
+        const value = e.target.value
+        let updatedData = []
+        setSearchValue(value)
+
+        const status = {
+            1: { title: 'Current', color: 'light-primary' },
+            2: { title: 'Professional', color: 'light-success' },
+            3: { title: 'Rejected', color: 'light-danger' },
+            4: { title: 'Resigned', color: 'light-warning' },
+            5: { title: 'Applied', color: 'light-info' }
+        }
+
+        if (value.length) {
+            updatedData = mediaKomunikasi.filter(item => {
+                const startsWith =
+                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                const includes =
+                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                if (startsWith) {
+                    return startsWith
+                } else if (!startsWith && includes) {
+                    return includes
+                } else return null
+            })
+            setFilteredData(updatedData)
+            setSearchValue(value)
+        }
+    }
+
+    const CustomPagination = () => (
+        <ReactPaginate
+            previousLabel=''
+            nextLabel=''
+            forcePage={currentPage}
+            onPageChange={page => handlePagination(page)}
+            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(mediaKomunikasi.length / 7) || 1}
+            breakLabel='...'
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={2}
+            activeClassName='active'
+            pageClassName='page-item'
+            breakClassName='page-item'
+            nextLinkClassName='page-link'
+            pageLinkClassName='page-link'
+            breakLinkClassName='page-link'
+            previousLinkClassName='page-link'
+            nextClassName='page-item next-item'
+            previousClassName='page-item prev-item'
+            containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1'
+        />
+    )
+
+    const BootstrapCheckbox = forwardRef((props, ref) => (
+        <div className='form-check'>
+            <Input type='checkbox' ref={ref} {...props} />
+        </div>
+    ))
+
+    const deleteMediaKomunikas = async (id) => {
+    }
+
+    const columns = [
+        {
+            name: 'ID',
+            // minWidth: '150px',
+            selector: row => row.id,
+            sortable: row => row.id
+        },
+        {
+            name: 'Nama dan Merek',
+            sortable: true,
+            minWidth: name.length,
+            selector: row => row.nama_dan_merek
+        },
+        {
+            name: 'Jenis Bahan',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.jenis_bahan
+        },
+        {
+            name: 'Produsen',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.produsen
+        },
+        {
+            name: 'Negara',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.negara
+        },
+        {
+            name: 'Supplier',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.supplier
+        },
+        {
+            name: `Lembaga Penerbit Sert. Halal`,
+            sortable: true,
+            // minWidth: '150px',
+
+            selector: row => row.lembaga_penerbit_sert_halal
+        },
+        {
+            name: 'Nomor Sertifikat Halal',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.no_sert_halal
+        },
+        {
+            name: 'Masa Berlaku Sertifikat Halal',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.masa_berlaku_sert_halal
+        },
+        {
+            name: 'Dokumen Pendukung',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.dokumen_pendukung
+        },
+        {
+            name: 'Tindakan',
+            allowOverflow: false,
+            cell: (row) => {
+                return (
+                    <div className='d-flex'>
+                        <UncontrolledDropdown>
+                            <DropdownToggle className='cursor-pointer pe-1' tag='span' >
+                                <MoreVertical size={15} />
+                            </DropdownToggle>
+                            <DropdownMenu container={'body'} end>
+                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                    <FileText size={15} />
+                                    <span className='align-middle ms-50'>Details</span>
+                                </DropdownItem>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                    <Trash size={15} />
+                                    <span className='align-middle ms-50'>Delete</span>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <Edit size={15} />
+                    </div>
+                )
+            }
+        }
+    ]
+
     const submit = async () => {
         const body = {
-            nama_perusahaan: namaPerusahaan,
+            nama_dan_merek: namaMerek,
+            jenis_bahan: jenisBahan,
+            produsen,
+            negara,
+            supplier,
+            lembaga_penerbit_sert_halal: lembagaPenerbitSertHalal,
+            no_sert_halal: nomorSertHalal,
+            masa_berlaku_sert_halal: masaBerlakuSertHalal,
+            dokumen_pendukung: dokumenPendukung
         }
         try {
-            const result = await companyProfileModel.createCompanyProfile(body)
+            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        navigate('/sjph/company_profile')
+                        getMediaKomunikasiByID(sessionStorage.sjph_id)
+                        setShow(false)
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
@@ -119,134 +310,82 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
                         <h1 className='mb-1'>Tambah Data Tabel</h1>
                         <p>Tambah data tabelmu sekarang</p>
                     </div>
-                    <Row tag='form' className='gy-1 pt-75' onSubmit={handleSubmit(onSubmitModal)}>
+                    <Row tag='form' className='gy-1 pt-75' >
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='firstName'>
-                                First Name
+                            <Label className='form-label' for='tanggalPersetujuan'>
+                                Nama dan Merek
                             </Label>
-                            <Controller
-                                control={control}
-                                name='firstName'
-                                render={({ field }) => {
-                                    return (
-                                        <Input
-                                            {...field}
-                                            id='firstName'
-                                            placeholder='John'
-                                            value={field.value}
-                                            invalid={errors.firstName && true}
-                                        />
-                                    )
-                                }}
-                            />
+                            <Input id='judulKegiatan' placeholder='Kegiatan'
+                                   onChange={(e)=>{ setNamaMerek(e.target.value) }}  invalid={errors.judulKegiatan && true} />
                             {errors.firstName && <FormFeedback>Please enter a valid First Name</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='lastName'>
-                                Last Name
+                            <Label className='form-label' for='judulKegiatan'>
+                                Jenis Bahan
                             </Label>
-                            <Controller
-                                name='lastName'
-                                control={control}
-                                render={({ field }) => (
-                                    <Input {...field} id='lastName' placeholder='Doe' invalid={errors.lastName && true} />
-                                )}
-                            />
+                            <Input id='judulKegiatan' placeholder='Kegiatan'
+                                   onChange={(e)=>{ setJenisBahan(e.target.value) }}  invalid={errors.judulKegiatan && true} />
                             {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
                         </Col>
-                        <Col xs={12}>
-                            <Label className='form-label' for='username'>
-                                Username
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='peserta'>
+                                Produsen
                             </Label>
-                            <Controller
-                                name='username'
-                                control={control}
-                                render={({ field }) => (
-                                    <Input {...field} id='username' placeholder='john.doe.007' invalid={errors.username && true} />
-                                )}
-                            />
+                            <Input id='peserta' placeholder='Budi Setiawan'
+                                   onChange={(e)=>{ setProdusen(e.target.value) }} invalid={errors.peserta && true} />
                             {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='email'>
-                                Billing Email
+                            <Label className='form-label' for='peserta'>
+                                Negara
                             </Label>
-                            <Input type='email' id='email' placeholder='example@domain.com' />
+                            <Input id='peserta' placeholder='Budi Setiawan'
+                                   onChange={(e)=>{ setNegara(e.target.value) }} invalid={errors.peserta && true} />
+                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='status'>
-                                Status:
+                            <Label className='form-label' for='peserta'>
+                                Supplier
                             </Label>
-                            <Select
-                                id='status'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={statusOptions}
-                                theme={selectThemeColors}
-                                defaultValue={statusOptions[0]}
-                            />
+                            <Input id='peserta' placeholder='Budi Setiawan'
+                                   onChange={(e)=>{ setSupplier(e.target.value) }} invalid={errors.peserta && true} />
+                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='tax-id'>
-                                Tax ID
+                            <Label className='form-label' for='peserta'>
+                                Lembaga Penerbit Sertifikasi Halal
                             </Label>
-                            <Input id='tax-id' defaultValue='Tax-8894' placeholder='Tax-1234' />
+                            <Input id='peserta' placeholder='Budi Setiawan'
+                                   onChange={(e)=>{ setLembagaPenerbitSertHalal(e.target.value) }} invalid={errors.peserta && true} />
+                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='contact'>
-                                Contact
+                            <Label className='form-label' for='peserta'>
+                                Nomor Sertifikasi Halal
                             </Label>
-                            <Input id='contact' defaultValue='+1 609 933 4422' placeholder='+1 609 933 4422' />
+                            <Input id='peserta' placeholder='Budi Setiawan'
+                                   onChange={(e)=>{ setNomorSertHalal(e.target.value) }} invalid={errors.peserta && true} />
+                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='language'>
-                                Language
+                            <Label className='form-label' for='peserta'>
+                                Masa Berlaku Sertifikat Halal
                             </Label>
-                            <Select
-                                id='language'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={languageOptions}
-                                theme={selectThemeColors}
-                                defaultValue={languageOptions[0]}
-                            />
+                            <Input id='peserta' placeholder='Budi Setiawan'
+                                   onChange={(e)=>{ setMasaBerlakuSertHalal(e.target.value) }} invalid={errors.peserta && true} />
+                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='country'>
-                                Country
+                        <Col md={12} xs={12}>
+                            <Label className='form-label' for='dokumenPendukung'>
+                                Dokumen Pendukung
                             </Label>
-                            <Select
-                                id='country'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={countryOptions}
-                                theme={selectThemeColors}
-                                defaultValue={countryOptions[0]}
-                            />
-                        </Col>
-                        <Col xs={12}>
-                            <div className='d-flex align-items-center'>
-                                <div className='form-switch'>
-                                    <Input type='switch' defaultChecked id='billing-switch' name='billing-switch' />
-                                    <Label className='form-check-label' htmlFor='billing-switch'>
-                                    <span className='switch-icon-left'>
-                                      <Check size={14} />
-                                    </span>
-                                        <span className='switch-icon-right'>
-                                          <X size={14} />
-                                        </span>
-                                    </Label>
-                                </div>
-                                <Label className='form-check-label fw-bolder' htmlFor='billing-switch'>
-                                    Use as a billing address?
-                                </Label>
-                            </div>
+                            <Input type='file' id='dokumenPendukung' name='dokumenPendukung' />
+                            {/*<Input id='dokumenPendukung' placeholder='Isi Nomor Sertifikasi Halal'*/}
+                            {/*       onChange={(e)=>{ setDokumenPendukung(e.target.value) }} invalid={errors.peserta && true} />*/}
+                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
-                            <Button type='submit' className='me-1' color='primary'>
+                            <Button onClick={submit} className='me-1' color='primary'>
                                 Submit
                             </Button>
                             <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
@@ -260,58 +399,37 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
                 <h3 className='mb-0'>Halaman 1</h3>
                 <small className='text-muted'>Daftar Bahan</small>
             </div>
-            <Table responsive>
-                <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Nama dan Merek</th>
-                    <th>Jenis Bahan</th>
-                    <th>Produsen</th>
-                    <th>Negara</th>
-                    <th>Supplier</th>
-                    <th>Lembaga Penerbit Sert. Halal</th>
-                    <th>Nomor Sertifikat Halal</th>
-                    <th>Masa Berlaku Sertifikat Halal</th>
-                    <th>Dokumen Pedukung</th>
-                    <th>Menu</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>1.</span>
-                    </td>
-                    <td>Tepung, Tiga Roda</td>
-                    <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            Bahan Baku
-                        </Badge>
-                    </td>
-                    <td>PT. Informatika</td>
-                    <td>Negara</td>
-                    <td>Supplier</td>
-                    <td>MUI</td>
-                    <td>18930</td>
-                    <td>11-09-2024</td>
-                    <td>Dokumen</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                </tbody>
-            </Table>
+            <Row className='justify-content-end mx-0'>
+                <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
+                    <Label className='me-1' for='search-input'>
+                        Cari
+                    </Label>
+                    <Input
+                        className='dataTable-filter mb-50'
+                        type='text'
+                        bsSize='sm'
+                        id='search-input'
+                        value={searchValue}
+                        onChange={handleFilter}
+                    />
+                </Col>
+            </Row>
+            <div className='react-dataTable'>
+                <DataTable
+                    noHeader
+                    pagination
+                    // selectableRows
+                    columns={columns}
+                    paginationPerPage={7}
+                    className='react-dataTable'
+                    sortIcon={<ChevronDown size={10} />}
+                    paginationDefaultPage={currentPage + 1}
+                    paginationComponent={CustomPagination}
+                    data={searchValue.length ? filteredData : details}
+                    // selectableRowsComponent={BootstrapCheckbox}
+                />
+            </div>
+
             <Col sm='12' style={{paddingTop: 20}}>
                 <div className='d-flex justify-content-center'>
                     <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kebijakan_dan_edukasi_halal')} outline>

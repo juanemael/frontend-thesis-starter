@@ -586,7 +586,7 @@ const MySJPHTable = () => {
                 return (
                     <div className='d-flex'>
                         <UncontrolledDropdown>
-                            <DropdownToggle className='pe-1' tag='span' >
+                            <DropdownToggle className='cursor-pointer pe-1' tag='span' >
                                 <MoreVertical size={15} />
                             </DropdownToggle>
                             <DropdownMenu container={'body'} end>

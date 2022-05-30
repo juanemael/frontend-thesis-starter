@@ -25,6 +25,7 @@ import { selectThemeColors } from '@utils'
 
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 import DataTable from "react-data-table-component";
 import ReactPaginate from "react-paginate";
 
@@ -84,7 +85,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
 
     const columns = [
         {
-            name: 'No.',
+            name: 'ID',
             // minWidth: '150px',
             selector: row => row.id,
             sortable: row => row.id
@@ -99,7 +100,12 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             name: 'Jabatan',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.jabatan
+            selector: (row) => {
+                return (<Badge color='light-success' pill>
+                    {row.jabatan}
+                </Badge>)
+
+            }
         },
 
         {
@@ -115,10 +121,10 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                 return (
                     <div className='d-flex'>
                         <UncontrolledDropdown>
-                            <DropdownToggle className='pe-1' tag='span' >
+                            <DropdownToggle className='cursor-pointer pe-1' tag='span' >
                                 <MoreVertical size={15} />
                             </DropdownToggle>
-                            <DropdownMenu end>
+                            <DropdownMenu container={'body'} end>
                                 <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
                                     <FileText size={15} />
                                     <span className='align-middle ms-50'>Details</span>

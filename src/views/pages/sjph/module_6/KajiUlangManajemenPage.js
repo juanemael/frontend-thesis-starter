@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import KajiUlangManajemenTable from "../../../tables/sjph/module_6/KajiUlangManajemenTable";
 import {Badge, Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 import {Link} from "react-router-dom";
+import KajiUlangManajemenForm from "../../../forms/sjph/module_6/KajiUlangManajemenForm";
 
 const KajiUlangManajemenPage = () => {
     const ref = useRef(null)
@@ -15,7 +16,7 @@ const KajiUlangManajemenPage = () => {
             title: 'Wisata 1',
             subtitle: 'Kaji Ulang Manajemen',
             icon: <FileText size={18} />,
-            content: <KajiUlangManajemenTable stepper={stepper} type='wizard-modern' />
+            content: <KajiUlangManajemenForm stepper={stepper} type='wizard-modern' />
         }
     ]
 

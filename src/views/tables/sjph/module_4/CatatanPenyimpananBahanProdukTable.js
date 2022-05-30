@@ -257,7 +257,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, setCheckpoint}) => {
                 </ModalBody>
             </Modal>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 5</h3>
+                <h3 className='mb-0'>Halaman 3</h3>
                 <small className='text-muted'>Catatan Penyimpanan Bahan Produk</small>
             </div>
             <Table responsive>
@@ -285,7 +285,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, setCheckpoint}) => {
                             <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
                                 <MoreVertical size={15} />
                             </DropdownToggle>
-                            <DropdownMenu>
+                            <DropdownMenu >
                                 <DropdownItem href='/' onClick={e => e.preventDefault()}>
                                     <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
                                 </DropdownItem>
@@ -377,7 +377,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, setCheckpoint}) => {
                 <div className='d-flex justify-content-center'>
                     <Button className='me-1 ms-1' color='primary' onClick={() => {
                         stepper.previous()
-                        setCheckpoint(5)
+                        setCheckpoint(1)
                     }} outline>
                         <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                         <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
@@ -385,7 +385,10 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, setCheckpoint}) => {
                     <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
                         Tambah
                     </Button>
-                    <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kepentingan_produksi_dan_distribusi_produk')}>
+                    <Button className='me-1' color='primary' onClick={()=>{
+                        stepper.next()
+                        setCheckpoint(2)
+                    }} outline>
                         <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
                         <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                     </Button>

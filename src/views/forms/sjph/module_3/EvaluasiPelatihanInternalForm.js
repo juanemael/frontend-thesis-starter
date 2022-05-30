@@ -12,9 +12,10 @@ import {ArrowLeft, ArrowRight} from "react-feather";
 
 const EvaluasiPelatihanInternalForm = ({stepper,setCheckpoint}) => {
 
-    const [hariTanggal, setHariTanggal] = useState("")
-    const [pematri, setPematri] = useState("")
-    const [materi, setMateri] = useState("")
+    // const [hariTanggal, setHariTanggal] = useState("")
+    // const [pematri, setPematri] = useState("")
+    // const [materi, setMateri] = useState("")
+    const [soal, setSoal] = useState("")
 
 
     const companyProfileModel = new CompanyProfileModels()
@@ -23,9 +24,7 @@ const EvaluasiPelatihanInternalForm = ({stepper,setCheckpoint}) => {
 
     const submit = async () => {
         const body = {
-            hari_tanggal: hariTanggal,
-            pematri,
-            materi
+            soal
         }
         try {
             const result = await companyProfileModel.createCompanyProfile(body)
@@ -51,30 +50,23 @@ const EvaluasiPelatihanInternalForm = ({stepper,setCheckpoint}) => {
             </div>
             <Form>
                 <Row>
-                    <Col md='6' sm='12' className='mb-1'>
-                        <Label className='form-label' for='nameMulti'>
-                            Hari/Tanggal
+                    <Col md='12' sm='12' className='mb-1'>
+                        <Label className='form-label' for='soal'>
+                            Soal Evaluasi
                         </Label>
-                        <Input type='text' name='namaPerusahaan' id='namaPerusahaan' onChange={(e)=>{
-                            setHariTanggal(
-                                e.target.value)
-                        }} placeholder='Nama Perusahaan' />
-                    </Col>
-                    <Col md='6' sm='12' className='mb-1'>
-                        <Label className='form-label' for='lastNameMulti'>
-                           Pematri
-                        </Label>
-                        <Input type='text' name='nib' id='nib' onChange={(e)=>{
-                            setPematri(e.target.value)
-                        }} placeholder='Nomor Induk Berusaha' />
-                    </Col>
-                    <Col md='6' sm='12' className='mb-1'>
-                        <Label className='form-label' for='lastNameMulti'>
-                            Materi yang disampaikan
-                        </Label>
-                        <Input type='text' name='nib' id='nib' onChange={(e)=>{
-                            setMateri(e.target.value)
-                        }} placeholder='Nomor Induk Berusaha' />
+                        <Editor name='soal' id='soal'
+                                placeholder=
+                                    'Contoh Soal Pelatihan Internal
+1. Contoh bahan haram yaitu …
+2. Dalam proses produk halal hanya menggunakan bahan dengan nama/merek dan
+produsen seperti yang tercantum dalam …
+3. Jika akan menggunakan bahan baru di luar Daftar Bahan Halal(termasuk bahan lama
+dengan produsen baru), akan meminta persetujuan penggunaan bahan tersebut ke
+…
+4. Pada proses produksi, semua fasilitas produksi dan peralatan harus dalam keadaan
+…
+5. Audit internal dilakukan minimal … kali dalam setahun.'
+                                editorState={soal} onEditorStateChange={data => setSoal(data)} />
                     </Col>
                     <Col sm='12'>
                         <div className='d-flex justify-content-center'>

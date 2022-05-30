@@ -9,6 +9,8 @@ import FormPemeriksaanBahanTable from "../../../tables/sjph/module_4/FormPemerik
 import CatatanPenyimpananBahanProdukTable from "../../../tables/sjph/module_4/CatatanPenyimpananBahanProdukTable";
 import {Badge, Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 import {Link} from "react-router-dom";
+import SuratPermohonanPersetujuanPenggunaanBahanBaruTable
+    from "../../../tables/sjph/module_4/SuratPermohonanPersetujuanPenggunaanBahanBaru";
 
 const BahanKepentinganHalalPage = () => {
     const ref = useRef(null)
@@ -59,7 +61,7 @@ const BahanKepentinganHalalPage = () => {
             title: 'Wisata 6',
             subtitle: 'Surat Permohonan Persetujuan Penggunaaan Bahan Baru',
             icon: <LinkIcon size={18} />,
-            content: <CatatanPenyimpananBahanProdukTable
+            content: <SuratPermohonanPersetujuanPenggunaanBahanBaruTable
                 setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         }
     ]
@@ -72,10 +74,10 @@ const BahanKepentinganHalalPage = () => {
                     // oldProgress = {...progress}
                     oldProgress = 48
                     if (oldProgress === 50.3) {
-                        return 50.3;
+                        return 50.6;
                     }
                     const diff = 4 * 10;
-                    return Math.min(oldProgress + diff, 50.3);
+                    return Math.min(oldProgress + diff, 50.6);
                 });
             }, 200);
 
@@ -86,12 +88,12 @@ const BahanKepentinganHalalPage = () => {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
                     // oldProgress = {...progress}
-                    oldProgress = 50.3
-                    if (oldProgress === 52.6) {
-                        return 52.6;
+                    oldProgress = 50.6
+                    if (oldProgress === 53.2) {
+                        return 53.2;
                     }
                     const diff = 4 * 10;
-                    return Math.min(oldProgress + diff, 52.6);
+                    return Math.min(oldProgress + diff, 53.2);
                 });
             }, 200);
 
@@ -101,12 +103,12 @@ const BahanKepentinganHalalPage = () => {
         } else if (checkpoint === 2) {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 52.6
-                    if (oldProgress === 54.9) {
-                        return 54.9;
+                    oldProgress = 53.2
+                    if (oldProgress === 55.8) {
+                        return 55.8;
                     }
                     const diff = 4 * 10;
-                    return Math.min(oldProgress + diff, 54.9);
+                    return Math.min(oldProgress + diff, 55.8);
                 });
             }, 200);
 
@@ -116,12 +118,12 @@ const BahanKepentinganHalalPage = () => {
         } else if (checkpoint === 3) {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 54.9
-                    if (oldProgress === 57.2) {
-                        return 57.2;
+                    oldProgress = 55.8
+                    if (oldProgress === 58.4) {
+                        return 58.4;
                     }
                     const diff = 5 * 10;
-                    return Math.min(oldProgress + diff, 57.2);
+                    return Math.min(oldProgress + diff, 58.4);
                 });
             }, 200);
 
@@ -132,27 +134,12 @@ const BahanKepentinganHalalPage = () => {
         } else if (checkpoint === 4) {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 57.2
-                    if (oldProgress === 59.5) {
-                        return 59.5;
+                    oldProgress = 58.4
+                    if (oldProgress === 61) {
+                        return 61;
                     }
                     const diff = 5 * 10;
-                    return Math.min(oldProgress + diff, 59.5);
-                });
-            }, 200);
-
-            return () => {
-                clearInterval(timer);
-            }
-        } else if (checkpoint === 5) {
-            const timer = setInterval(() => {
-                setProgress((oldProgress) => {
-                    oldProgress = 59.5
-                    if (oldProgress === 61.8) {
-                        return 61.8;
-                    }
-                    const diff = 5 * 10;
-                    return Math.min(oldProgress + diff, 61.8);
+                    return Math.min(oldProgress + diff, 61);
                 });
             }, 200);
 
@@ -162,7 +149,7 @@ const BahanKepentinganHalalPage = () => {
         } else {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 61.8
+                    oldProgress = 61
                     if (oldProgress === 64) {
                         return 64;
                     }

@@ -236,10 +236,10 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                 return (
                     <div className='d-flex'>
                         <UncontrolledDropdown>
-                            <DropdownToggle className='pe-1' tag='span' >
+                            <DropdownToggle className='cursor-pointer pe-1' tag='span' >
                                 <MoreVertical size={15} />
                             </DropdownToggle>
-                            <DropdownMenu end>
+                            <DropdownMenu container={'body'} end>
                                 <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
                                     <FileText size={15} />
                                     <span className='align-middle ms-50'>Details</span>
@@ -256,21 +256,6 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
             }
         }
     ]
-
-    const onSubmitModal = data => {
-        if (Object.values(data).every(field => field.length > 0)) {
-            return null
-        } else {
-            for (const key in data) {
-                if (data[key].length === 0) {
-                    setError(key, {
-                        type: 'manual'
-                    })
-                }
-            }
-        }
-    }
-
 
     const submit = async () => {
         const body = {
@@ -371,7 +356,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                 <DataTable
                     noHeader
                     pagination
-                    selectableRows
+                    // selectableRows
                     columns={columns}
                     paginationPerPage={7}
                     className='react-dataTable'
@@ -379,7 +364,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                     paginationDefaultPage={currentPage + 1}
                     paginationComponent={CustomPagination}
                     data={searchValue.length ? filteredData : mediaKomunikasi}
-                    selectableRowsComponent={BootstrapCheckbox}
+                    // selectableRowsComponent={BootstrapCheckbox}
                 />
             </div>
             &nbsp;
