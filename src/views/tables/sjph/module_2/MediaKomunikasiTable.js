@@ -283,7 +283,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        getMediaKomunikasiAll()
+                        getMediaKomunikasiByID(sessionStorage.sjph_id)
                         setShow(false)
                     })
             } else {

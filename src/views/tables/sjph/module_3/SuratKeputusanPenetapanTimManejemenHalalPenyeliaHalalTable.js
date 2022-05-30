@@ -17,11 +17,7 @@ import {useState, Fragment} from "react";
 import CompanyProfileModels from "../../../../models/CompanyProfile";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import react from '@src/assets/images/icons/react.svg'
-import vuejs from '@src/assets/images/icons/vuejs.svg'
-import angular from '@src/assets/images/icons/angular.svg'
-import bootstrap from '@src/assets/images/icons/bootstrap.svg'
-import {ArrowLeft, ArrowRight, Check, Edit, MoreVertical, Trash, X} from "react-feather";
+import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 // ** Utils
@@ -29,6 +25,8 @@ import { selectThemeColors } from '@utils'
 
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
+import DataTable from "react-data-table-component";
+import ReactPaginate from "react-paginate";
 
 const statusOptions = [
     { value: 'active', label: 'Active' },
@@ -58,14 +56,71 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
+const columns = [
+    {
+        name: 'No.',
+        // minWidth: '150px',
+        selector: row => row.id,
+        sortable: row => row.id
+    },
+    {
+        name: 'Nama',
+        sortable: true,
+        // minWidth: '150px',
+        selector: row => row.tanggal_sosialisasi
+    },
+    {
+        name: 'Jabatan',
+        sortable: true,
+        // minWidth: '150px',
+        selector: row => row.judul_kegiatan
+    },
+
+    {
+        name: 'Posisi di Tim',
+        sortable: true,
+        // minWidth: '150px',
+        selector: row => row.peserta
+    },
+    {
+        name: 'Menu',
+        allowOverflow: false,
+        cell: (row) => {
+            return (
+                <div className='d-flex'>
+                    <UncontrolledDropdown>
+                        <DropdownToggle className='pe-1' tag='span' >
+                            <MoreVertical size={15} />
+                        </DropdownToggle>
+                        <DropdownMenu end>
+                            <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                <FileText size={15} />
+                                <span className='align-middle ms-50'>Details</span>
+                            </DropdownItem>
+                            <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <Trash size={15} />
+                                <span className='align-middle ms-50'>Delete</span>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                    <Edit size={15} />
+                </div>
+            )
+        }
+    }
+]
+
 const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, setCheckpoint}) => {
 
+    const [currentPage, setCurrentPage] = useState(0)
+    const [searchValue, setSearchValue] = useState('')
+    const [filteredData, setFilteredData] = useState([])
     const [namaPerusahaan, setNamaPerusahaan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
 
 
-    const companyProfileModel = new CompanyProfileModels()
+    // const companyProfileModel = new CompanyProfileModels()
 
     const navigate = useNavigate()
 
@@ -93,6 +148,70 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             }
         }
     }
+
+
+    const handlePagination = page => {
+        setCurrentPage(page.selected)
+    }
+
+    const handleFilter = e => {
+        const value = e.target.value
+        let updatedData = []
+        setSearchValue(value)
+
+        const status = {
+            1: { title: 'Current', color: 'light-primary' },
+            2: { title: 'Professional', color: 'light-success' },
+            3: { title: 'Rejected', color: 'light-danger' },
+            4: { title: 'Resigned', color: 'light-warning' },
+            5: { title: 'Applied', color: 'light-info' }
+        }
+
+        if (value.length) {
+            updatedData = mediaKomunikasi.filter(item => {
+                const startsWith =
+                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                const includes =
+                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                if (startsWith) {
+                    return startsWith
+                } else if (!startsWith && includes) {
+                    return includes
+                } else return null
+            })
+            setFilteredData(updatedData)
+            setSearchValue(value)
+        }
+    }
+
+    const CustomPagination = () => (
+        <ReactPaginate
+            previousLabel=''
+            nextLabel=''
+            forcePage={currentPage}
+            onPageChange={page => handlePagination(page)}
+            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(mediaKomunikasi.length / 7) || 1}
+            breakLabel='...'
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={2}
+            activeClassName='active'
+            pageClassName='page-item'
+            breakClassName='page-item'
+            nextLinkClassName='page-link'
+            pageLinkClassName='page-link'
+            breakLinkClassName='page-link'
+            previousLinkClassName='page-link'
+            nextClassName='page-item next-item'
+            previousClassName='page-item prev-item'
+            containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1'
+        />
+    )
 
     const submit = async () => {
         const body = {
@@ -262,7 +381,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             </Modal>
             <div className='content-header'>
                 <h3 className='mb-0'>Halaman 1</h3>
-                <small className='text-muted'>Surat Keputusan Penetapan Tim Manajemen Hlala Dan/Atau Penyelia Halal</small>
+                <small className='text-muted'>Surat Keputusan Penetapan Tim Manajemen Halal Dan/Atau Penyelia Halal</small>
             </div>
             <Table responsive>
                 <thead>
@@ -274,117 +393,22 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                     <th>Menu</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>1.</span>
-                    </td>
-                    <td>Rudi</td>
-                    <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            CEO
-                        </Badge>
-                    </td>
-                    <td>Advisor</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>2.</span>
-                    </td>
-                    <td>Ronald</td>
-                    <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            CEO
-                        </Badge>
-                    </td>
-                    <td>Advisor</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>3.</span>
-                    </td>
-                    <td>Jack</td>
-                    <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            CEO
-                        </Badge>
-                    </td>
-                    <td>Advisor</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span className='align-middle fw-bold'>4.</span>
-                    </td>
-                    <td>Jerry</td>
-                    <td>
-                        <Badge pill color='light-primary' className='me-1'>
-                            CEO
-                        </Badge>
-                    </td>
-                    <td>Advisor</td>
-                    <td>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
-                                </DropdownItem>
-                                <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </td>
-                </tr>
-                </tbody>
             </Table>
+
+            <div className='react-dataTable'>
+                <DataTable
+                    noHeader
+                    pagination
+                    columns={columns}
+                    paginationPerPage={7}
+                    className='react-dataTable'
+                    sortIcon={<ChevronDown size={10} />}
+                    paginationDefaultPage={currentPage + 1}
+                    paginationComponent={CustomPagination}
+                    data={searchValue.length ? filteredData : filteredData}
+                />
+            </div>
+            &nbsp;
             <Col sm='12'>
                 <div className='d-flex justify-content-center'>
                     <Button className='me-1 ms-1' color='primary' onClick={()=>navigate('/sjph/kriteria_sistem_jaminan_produk_halal')} outline>
