@@ -25,6 +25,7 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
     const [jabatan, setJabatan] = useState("")
     const [ktp, setKTP] = useState("")
     const [perusahaan, setPerusahaan] = useState("")
+    const [daftarBahan, setDaftarBahan] = useState([])
     const animatedComponents = makeAnimated()
 
     const companyProfileModel = new CompanyProfileModels()
@@ -33,21 +34,19 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
 
     const submit = async () => {
         const body = {
-            nama,
-            jabatan,
-            ktp,
-            perusahaan
+            daftar_bahan: daftarBahan
         }
         try {
-            const result = await companyProfileModel.createCompanyProfile(body)
-            if ((result.id)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        navigate('/sjph/company_profile')
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
-            }
+            console.log(daftarBahan)
+            // const result = await companyProfileModel.createCompanyProfile(body)
+            // if ((result.id)||(result.success)) {
+            //     await swal.fire('','Data berhasil di simpan','success')
+            //         .then(()=>{
+            //             navigate('/sjph/company_profile')
+            //         })
+            // } else {
+            //     await swal.fire('','Data gagal disimpan', 'error')
+            // }
         } catch (e) {
             console.error(e)
             await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
@@ -78,11 +77,14 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
                             theme={selectThemeColors}
                             closeMenuOnSelect={false}
                             components={animatedComponents}
-                            defaultValue={[colorOptions[4], colorOptions[5]]}
+                            // defaultValue={[colorOptions[4], colorOptions[5]]}
                             isMulti
                             options={colorOptions}
                             className='react-select'
                             classNamePrefix='select'
+                            onChange={(opt)=>{
+                                setDaftarBahan(opt)
+                            }}
                         />
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
@@ -110,7 +112,7 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
                                 <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                                 <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                             </Button>
-                            <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>
+                            <Button className='me-1' color='primary' onClick={submit}>
                                 Submit
                             </Button>
                             <Button className='me-1' color='primary' onClick={()=>{
