@@ -279,7 +279,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
             peserta: peserta? peserta : details.peserta
         }
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(body)
+            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
