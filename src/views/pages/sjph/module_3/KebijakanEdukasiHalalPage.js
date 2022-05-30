@@ -7,6 +7,7 @@ import DaftarHadirPelatihanInternalForm from "../../../forms/sjph/module_3/Dafta
 import DaftarHadirPelatihanInternalTable from "../../../tables/sjph/module_3/DaftarHadirPelatihanInternalTable";
 import {Badge, Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 import {Link} from "react-router-dom";
+import EvaluasiPelatihanInternalForm from "../../../forms/sjph/module_3/EvaluasiPelatihanInternalForm";
 
 const KebijakanEdukasiHalalPage = () => {
     const ref = useRef(null)
@@ -24,19 +25,27 @@ const KebijakanEdukasiHalalPage = () => {
         {
             id: 'hal2',
             title: 'Wisata 2',
-            subtitle: 'Daftar Hadir Pelatihan Internal Pt.1',
+            subtitle: 'Evaluasi Pelatihan Internal',
             icon: <User size={18} />,
-            content: <DaftarHadirPelatihanInternalForm
+            content: <EvaluasiPelatihanInternalForm
                 setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
-        {
-            id: 'step-address',
-            title: 'Wisata 3',
-            subtitle: 'Daftar Hadir Pelatihan Internal Pt.2',
-            icon: <MapPin size={18} />,
-            content: <DaftarHadirPelatihanInternalTable
-                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
-        }
+        // {
+        //     id: 'hal2',
+        //     title: 'Wisata 2',
+        //     subtitle: 'Daftar Hadir Pelatihan Internal Pt.1',
+        //     icon: <User size={18} />,
+        //     content: <DaftarHadirPelatihanInternalForm
+        //         setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
+        // },
+        // {
+        //     id: 'step-address',
+        //     title: 'Wisata 3',
+        //     subtitle: 'Daftar Hadir Pelatihan Internal Pt.2',
+        //     icon: <MapPin size={18} />,
+        //     content: <DaftarHadirPelatihanInternalTable
+        //         setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
+        // }
     ]
 
     const [progress, setProgress] = useState(32);
@@ -47,27 +56,11 @@ const KebijakanEdukasiHalalPage = () => {
                 setProgress((oldProgress) => {
                     // oldProgress = {...progress}
                     oldProgress = 32
-                    if (oldProgress === 37) {
-                        return 37;
+                    if (oldProgress === 40) {
+                        return 40;
                     }
                     const diff = 3 * 10;
-                    return Math.min(oldProgress + diff, 37);
-                });
-            }, 200);
-
-            return () => {
-                clearInterval(timer);
-            };
-        } else if (checkpoint === 1) {
-            const timer = setInterval(() => {
-                setProgress((oldProgress) => {
-                    // oldProgress = {...progress}
-                    oldProgress = 37
-                    if (oldProgress === 42) {
-                        return 42;
-                    }
-                    const diff = 3 * 10;
-                    return Math.min(oldProgress + diff, 42);
+                    return Math.min(oldProgress + diff, 40);
                 });
             }, 200);
 
@@ -77,7 +70,7 @@ const KebijakanEdukasiHalalPage = () => {
         } else {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 42
+                    oldProgress = 40
                     if (oldProgress === 48) {
                         return 48;
                     }
@@ -91,6 +84,24 @@ const KebijakanEdukasiHalalPage = () => {
             }
         }
     }, [checkpoint]);
+        // else if (checkpoint === 1) {
+        //     const timer = setInterval(() => {
+        //         setProgress((oldProgress) => {
+        //             // oldProgress = {...progress}
+        //             oldProgress = 37
+        //             if (oldProgress === 42) {
+        //                 return 42;
+        //             }
+        //             const diff = 3 * 10;
+        //             return Math.min(oldProgress + diff, 42);
+        //         });
+        //     }, 200);
+        //
+        //     return () => {
+        //         clearInterval(timer);
+        //     };
+        // }
+
 
     // useEffect(() => {
     //     const timer = setInterval(() => {

@@ -21,7 +21,7 @@ export default class KebijakanEdukasiHalal {
         return await ApiRequest.set(`/sjph/kebijakan_edukasi_halal/surat_keputusan/create/${sjph_id}`, 'POST', body)
     }
 
-    getSuratKeputusanBySJPHId = async (sjph_id) => {
-        return await ApiRequest.set(`/sjph/kebijakan_edukasi_halal/surat_keputusan/${sjph_id}`, 'GET')
+    getSuratKeputusanBySJPHID = async (id) => {
+        return await ApiRequest.set(`/sjph/kebijakan_edukasi_halal/surat_keputusan/${id}`, 'GET')
     }
 }

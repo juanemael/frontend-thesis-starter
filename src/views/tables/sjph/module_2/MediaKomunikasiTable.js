@@ -355,7 +355,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
                     <Label className='me-1' for='search-input'>
-                        Search
+                        Cari
                     </Label>
                     <Input
                         className='dataTable-filter mb-50'

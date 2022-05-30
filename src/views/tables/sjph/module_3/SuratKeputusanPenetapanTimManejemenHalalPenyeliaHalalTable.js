@@ -13,8 +13,8 @@ import {
     Row, Label, Input, FormFeedback, Modal
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
-import {useState, Fragment} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import {useState, Fragment, useEffect} from "react";
+import KebijakanEdukasiHalalModels from "../../../../models/KebijakanEdukasiHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
@@ -56,71 +56,18 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
-const columns = [
-    {
-        name: 'No.',
-        // minWidth: '150px',
-        selector: row => row.id,
-        sortable: row => row.id
-    },
-    {
-        name: 'Nama',
-        sortable: true,
-        // minWidth: '150px',
-        selector: row => row.tanggal_sosialisasi
-    },
-    {
-        name: 'Jabatan',
-        sortable: true,
-        // minWidth: '150px',
-        selector: row => row.judul_kegiatan
-    },
-
-    {
-        name: 'Posisi di Tim',
-        sortable: true,
-        // minWidth: '150px',
-        selector: row => row.peserta
-    },
-    {
-        name: 'Menu',
-        allowOverflow: false,
-        cell: (row) => {
-            return (
-                <div className='d-flex'>
-                    <UncontrolledDropdown>
-                        <DropdownToggle className='pe-1' tag='span' >
-                            <MoreVertical size={15} />
-                        </DropdownToggle>
-                        <DropdownMenu end>
-                            <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                                <FileText size={15} />
-                                <span className='align-middle ms-50'>Details</span>
-                            </DropdownItem>
-                            <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
-                                <Trash size={15} />
-                                <span className='align-middle ms-50'>Delete</span>
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
-                    <Edit size={15} />
-                </div>
-            )
-        }
-    }
-]
-
 const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, setCheckpoint}) => {
 
     const [currentPage, setCurrentPage] = useState(0)
     const [searchValue, setSearchValue] = useState('')
     const [filteredData, setFilteredData] = useState([])
-    const [namaPerusahaan, setNamaPerusahaan] = useState("")
-    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
-    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [nama, setNama] = useState("")
+    const [jabatan, setJabatan] = useState("")
+    const [posisiDiTim, setPosisiDiTim] = useState("")
+    const [details,setDetails] = useState([])
 
 
-    // const companyProfileModel = new CompanyProfileModels()
+    const kebijakanEdukasiHalalModel = new KebijakanEdukasiHalalModels()
 
     const navigate = useNavigate()
 
@@ -135,20 +82,59 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
         formState: { errors }
     } = useForm({ defaultValues })
 
-    const onSubmitModal = data => {
-        if (Object.values(data).every(field => field.length > 0)) {
-            return null
-        } else {
-            for (const key in data) {
-                if (data[key].length === 0) {
-                    setError(key, {
-                        type: 'manual'
-                    })
-                }
+    const columns = [
+        {
+            name: 'No.',
+            // minWidth: '150px',
+            selector: row => row.id,
+            sortable: row => row.id
+        },
+        {
+            name: 'Nama',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.nama
+        },
+        {
+            name: 'Jabatan',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.jabatan
+        },
+
+        {
+            name: 'Posisi di Tim',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.posisi_di_tim
+        },
+        {
+            name: 'Menu',
+            allowOverflow: false,
+            cell: (row) => {
+                return (
+                    <div className='d-flex'>
+                        <UncontrolledDropdown>
+                            <DropdownToggle className='pe-1' tag='span' >
+                                <MoreVertical size={15} />
+                            </DropdownToggle>
+                            <DropdownMenu end>
+                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                    <FileText size={15} />
+                                    <span className='align-middle ms-50'>Details</span>
+                                </DropdownItem>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                    <Trash size={15} />
+                                    <span className='align-middle ms-50'>Delete</span>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <Edit size={15} />
+                    </div>
+                )
             }
         }
-    }
-
+    ]
 
     const handlePagination = page => {
         setCurrentPage(page.selected)
@@ -168,7 +154,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
         }
 
         if (value.length) {
-            updatedData = mediaKomunikasi.filter(item => {
+            updatedData = details.filter(item => {
                 const startsWith =
                     item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
@@ -196,7 +182,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             nextLabel=''
             forcePage={currentPage}
             onPageChange={page => handlePagination(page)}
-            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(mediaKomunikasi.length / 7) || 1}
+            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(details.length / 7) || 1}
             breakLabel='...'
             pageRangeDisplayed={2}
             marginPagesDisplayed={2}
@@ -213,16 +199,28 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
         />
     )
 
+    const getSuratKeputusanBySJPHID = async (id) => {
+        try {
+            const result = await kebijakanEdukasiHalalModel.getSuratKeputusanBySJPHID(id)
+            setDetails(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     const submit = async () => {
         const body = {
-            nama_perusahaan: namaPerusahaan,
+            nama,
+            jabatan,
+            posisi_di_tim: posisiDiTim
         }
         try {
-            const result = await companyProfileModel.createCompanyProfile(body)
-            if ((result.id)||(result.success)) {
+            const result = await kebijakanEdukasiHalalModel.createSuratKeputusan(sessionStorage.sjph_id,body)
+            if ((result.surat_keputusan_ptmp_halal_id)||(result.success)) {
+                sessionStorage.surat_keputusan_ptmp_halal_id = result.surat_keputusan_ptmp_halal_id
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        navigate('/sjph/company_profile')
+                        getSuratKeputusanBySJPHID(sessionStorage.sjph_id)
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
@@ -233,6 +231,11 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
         }
     }
 
+    useEffect(()=>{
+        getSuratKeputusanBySJPHID(sessionStorage.sjph_id)
+    },[])
+
+
     return (
         <Fragment>
             <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
@@ -242,134 +245,37 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                         <h1 className='mb-1'>Tambah Data Tabel</h1>
                         <p>Tambah data tabelmu sekarang</p>
                     </div>
-                    <Row tag='form' className='gy-1 pt-75' onSubmit={handleSubmit(onSubmitModal)}>
+                    <Row tag='form' className='gy-1 pt-75' >
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='firstName'>
-                                First Name
+                            <Label className='form-label' for='nama'>
+                                Nama
                             </Label>
-                            <Controller
-                                control={control}
-                                name='firstName'
-                                render={({ field }) => {
-                                    return (
-                                        <Input
-                                            {...field}
-                                            id='firstName'
-                                            placeholder='John'
-                                            value={field.value}
-                                            invalid={errors.firstName && true}
-                                        />
-                                    )
-                                }}
+                            <Input
+                                id='nama'
+                                placeholder='Budi'
+                                value={nama}
+                                onChange={(e)=>{ setNama(e.target.value) }}
+                                invalid={errors.nama && true}
                             />
-                            {errors.firstName && <FormFeedback>Please enter a valid First Name</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='lastName'>
-                                Last Name
+                            <Label className='form-label' for='jabatan'>
+                                Jabatan
                             </Label>
-                            <Controller
-                                name='lastName'
-                                control={control}
-                                render={({ field }) => (
-                                    <Input {...field} id='lastName' placeholder='Doe' invalid={errors.lastName && true} />
-                                )}
-                            />
-                            {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
-                        </Col>
+                            <Input id='jabatan' placeholder='Pimpinan Perusahaan/CEO/CTO'
+                                   onChange={(e)=>{ setJabatan(e.target.value) }} invalid={errors.jabatan && true} />
+
+                             </Col>
                         <Col xs={12}>
-                            <Label className='form-label' for='username'>
-                                Username
+                            <Label className='form-label' for='posisi_di_tim'>
+                                Posisi Di Tim
                             </Label>
-                            <Controller
-                                name='username'
-                                control={control}
-                                render={({ field }) => (
-                                    <Input {...field} id='username' placeholder='john.doe.007' invalid={errors.username && true} />
-                                )}
-                            />
-                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='email'>
-                                Billing Email
-                            </Label>
-                            <Input type='email' id='email' placeholder='example@domain.com' />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='status'>
-                                Status:
-                            </Label>
-                            <Select
-                                id='status'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={statusOptions}
-                                theme={selectThemeColors}
-                                defaultValue={statusOptions[0]}
-                            />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='tax-id'>
-                                Tax ID
-                            </Label>
-                            <Input id='tax-id' defaultValue='Tax-8894' placeholder='Tax-1234' />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='contact'>
-                                Contact
-                            </Label>
-                            <Input id='contact' defaultValue='+1 609 933 4422' placeholder='+1 609 933 4422' />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='language'>
-                                Language
-                            </Label>
-                            <Select
-                                id='language'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={languageOptions}
-                                theme={selectThemeColors}
-                                defaultValue={languageOptions[0]}
-                            />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='country'>
-                                Country
-                            </Label>
-                            <Select
-                                id='country'
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={countryOptions}
-                                theme={selectThemeColors}
-                                defaultValue={countryOptions[0]}
-                            />
-                        </Col>
-                        <Col xs={12}>
-                            <div className='d-flex align-items-center'>
-                                <div className='form-switch'>
-                                    <Input type='switch' defaultChecked id='billing-switch' name='billing-switch' />
-                                    <Label className='form-check-label' htmlFor='billing-switch'>
-                                    <span className='switch-icon-left'>
-                                      <Check size={14} />
-                                    </span>
-                                        <span className='switch-icon-right'>
-                                          <X size={14} />
-                                        </span>
-                                    </Label>
-                                </div>
-                                <Label className='form-check-label fw-bolder' htmlFor='billing-switch'>
-                                    Use as a billing address?
-                                </Label>
-                            </div>
+                            <Input id='posisi_di_tim' placeholder='Ketua/Anggota'
+                                   onChange={(e)=>{ setPosisiDiTim(e.target.value) }}
+                                   invalid={errors.username && true} />
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
-                            <Button type='submit' className='me-1' color='primary'>
+                            <Button onClick={submit} className='me-1' color='primary'>
                                 Submit
                             </Button>
                             <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
@@ -383,18 +289,21 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                 <h3 className='mb-0'>Halaman 1</h3>
                 <small className='text-muted'>Surat Keputusan Penetapan Tim Manajemen Halal Dan/Atau Penyelia Halal</small>
             </div>
-            <Table responsive>
-                <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Nama</th>
-                    <th>Jabatan</th>
-                    <th>Posisi di Tim</th>
-                    <th>Menu</th>
-                </tr>
-                </thead>
-            </Table>
-
+            <Row className='justify-content-end mx-0'>
+                <Col className='d-flex align-items-center justify-content-end mt-1' md='4' sm='12'>
+                    <Label className='me-1' for='search-input'>
+                        Cari
+                    </Label>
+                    <Input
+                        className='dataTable-filter mb-50'
+                        type='text'
+                        bsSize='sm'
+                        id='search-input'
+                        value={searchValue}
+                        onChange={handleFilter}
+                    />
+                </Col>
+            </Row>
             <div className='react-dataTable'>
                 <DataTable
                     noHeader
@@ -405,7 +314,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                     sortIcon={<ChevronDown size={10} />}
                     paginationDefaultPage={currentPage + 1}
                     paginationComponent={CustomPagination}
-                    data={searchValue.length ? filteredData : filteredData}
+                    data={searchValue.length ? filteredData : details}
                 />
             </div>
             &nbsp;
