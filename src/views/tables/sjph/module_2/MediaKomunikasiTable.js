@@ -73,9 +73,17 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
             console.error(e)
         }
     }
+    const getMediaKomunikasiByID = async (id) => {
+        try {
+            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiBySJPHId(id)
+            setMediaKomunikasi(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
 
     useEffect(()=>{
-        getMediaKomunikasiAll()
+        getMediaKomunikasiByID(sessionStorage.sjph_id)
     },[])
 
 
@@ -176,7 +184,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                                 confirmButton: 'btn btn-success'
                             }
                         }).then(()=>{
-                            getMediaKomunikasiAll()
+                            getMediaKomunikasiByID(sessionStorage.sjph_id)
                         })
                     } else {
                         await Swal.fire({

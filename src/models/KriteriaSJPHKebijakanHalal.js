@@ -12,8 +12,8 @@ export default class KriteriaSJPHKebijakanHalal {
     createKebijakanHalal = async (sjph_id,body) => {
         return await ApiRequest.set(`/sjph/kebijakan_halal/create/${sjph_id}`, 'POST', body)
     }
-    createMediaKomunikasi = async (body) => {
-        return await ApiRequest.set(`/sjph/kebijakan_halal/media_komunikasi`, 'POST', body)
+    createMediaKomunikasi = async (sjph_id, body) => {
+        return await ApiRequest.set(`/sjph/kebijakan_halal/media_komunikasi/create/${sjph_id}`, 'POST', body)
     }
     getMediaKomunikasiAll = async () => {
         return await ApiRequest.set(`/sjph/kebijakan_halal/media_komunikasi`, 'GET')
