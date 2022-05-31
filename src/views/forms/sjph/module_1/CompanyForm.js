@@ -328,7 +328,7 @@ const CompanyForm = () => {
                             <Input type='text' name='daerahPemasaran' id='daerahPemasaran'
                                    defaultValue={ details.id && details.daerah_pemasaran } onChange={(e)=>{
                                 setDaerahPemasaran(e.target.value)
-                            }} placeholder='Daerah Pemasaran' />
+                            }} placeholder='Provinsi/Nasional/Internasional' />
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
@@ -337,7 +337,7 @@ const CompanyForm = () => {
                             <Input type='text' name='sistemPemasaran' id='sistemPemasaran'
                                    defaultValue={ details.id && details.sistem_pemasaran } onChange={(e)=>{
                                 setSistemPemasaran(e.target.value)
-                            }} placeholder='Sistem Pemasaran' />
+                            }} placeholder='Retail / Non-Retail' />
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>

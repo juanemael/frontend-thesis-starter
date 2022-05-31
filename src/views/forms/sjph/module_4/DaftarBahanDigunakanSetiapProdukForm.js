@@ -2,51 +2,60 @@
 import { Row, Col, Input, Form, Button, Label } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import Select from "react-select";
 import { selectThemeColors } from '@utils'
 import makeAnimated from 'react-select/animated'
 import {ArrowLeft, ArrowRight} from "react-feather";
+import Flatpickr from "react-flatpickr";
 
 const colorOptions = [
-    { value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true },
-    { value: 'blue', label: 'Blue', color: '#0052CC', isFixed: true },
-    { value: 'purple', label: 'Purple', color: '#5243AA', isFixed: true },
-    { value: 'red', label: 'Red', color: '#FF5630', isFixed: false },
-    { value: 'orange', label: 'Orange', color: '#FF8B00', isFixed: false },
-    { value: 'yellow', label: 'Yellow', color: '#FFC400', isFixed: false }
+    { value: 1, label: 'Ocean', color: '#00B8D9', isFixed: true },
+    { value: 2, label: 'Blue', color: '#0052CC', isFixed: true },
+    { value: 3, label: 'Purple', color: '#5243AA', isFixed: true },
+    { value: 4, label: 'Red', color: '#FF5630', isFixed: false },
+    { value: 5, label: 'Orange', color: '#FF8B00', isFixed: false },
+    { value: 6, label: 'Yellow', color: '#FFC400', isFixed: false }
 ]
 
 const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
 
-    const [nama, setNama] = useState("")
-    const [jabatan, setJabatan] = useState("")
-    const [ktp, setKTP] = useState("")
-    const [perusahaan, setPerusahaan] = useState("")
+    const [tanggalDaftarBahanSetiapProduk, setTanggalDaftarBahanSetiapProduk] = useState("")
+    const [tempatDaftarBahanSetiapProduk, setTempatDaftarBahanSetiapProduk] = useState("")
+    const [namaProduk, setNamaProduk] = useState("")
     const [daftarBahan, setDaftarBahan] = useState([])
     const animatedComponents = makeAnimated()
 
-    const companyProfileModel = new CompanyProfileModels()
+    const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
 
     const navigate = useNavigate()
 
     const submit = async () => {
+        console.log(daftarBahan)
+        const daftar_bahan_id = daftarBahan.map((
+            value => ({
+                daftar_bahan_id: value,
+            })
+        ))
+        console.log(daftar_bahan_id)
         const body = {
-            daftar_bahan: daftarBahan
+            daftar_bahan_id,
+            nama_produk: namaProduk,
         }
         try {
             console.log(daftarBahan)
-            // const result = await companyProfileModel.createCompanyProfile(body)
-            // if ((result.id)||(result.success)) {
-            //     await swal.fire('','Data berhasil di simpan','success')
-            //         .then(()=>{
-            //             navigate('/sjph/company_profile')
-            //         })
-            // } else {
-            //     await swal.fire('','Data gagal disimpan', 'error')
-            // }
+            const result = await bahanKepentinganHalalModel.createProduk(sessionStorage.sjph_id,body)
+            if ((result.produk_bahan_id)||(result.success)) {
+                await swal.fire('','Data berhasil di simpan','success')
+                    .then(()=>{
+                        // navigate('/sjph/company_profile')
+                        console.log(result)
+                    })
+            } else {
+                await swal.fire('','Data gagal disimpan', 'error')
+            }
         } catch (e) {
             console.error(e)
             await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
@@ -66,9 +75,9 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
                             Nama Produk
                         </Label>
                         <Input type='text' name='nama' id='nama' onChange={(e)=>{
-                            setNama(
+                            setNamaProduk(
                                 e.target.value)
-                        }} placeholder='Nama' />
+                        }} placeholder='Nama Produk' />
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
                         <Label className='form-label'>Daftar Bahan</Label>
@@ -83,7 +92,9 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
                             className='react-select'
                             classNamePrefix='select'
                             onChange={(opt)=>{
-                                setDaftarBahan(opt)
+                                opt.map(async (item) => {
+                                    setDaftarBahan([...daftarBahan,item.value])
+                                })
                             }}
                         />
                     </Col>
@@ -92,16 +103,25 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, setCheckpoint}) => {
                             Tempat Penetapan
                         </Label>
                         <Input type='text' name='jabatan' id='jabatan' onChange={(e)=>{
-                            setJabatan(e.target.value)
+                            setTempatDaftarBahanSetiapProduk(e.target.value)
                         }} placeholder='Jabatan' />
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
                         <Label className='form-label' for='lastNameMulti'>
-                            Tanggal
+                            Tanggal Penetapan
                         </Label>
-                        <Input type='text' name='ktp' id='ktp' onChange={(e)=>{
-                            setKTP(e.target.value)
-                        }} placeholder='Nomor KTP' />
+                        <Flatpickr
+                            // value={tanggalSosialisasi}
+                            // defaultValue={cont}
+                            id='tanggal'
+                            className='form-control'
+                            onChange={date => setTanggalDaftarBahanSetiapProduk(date)}
+                            options={{
+                                altInput: true,
+                                altFormat: 'F j, Y',
+                                dateFormat: 'Y-m-d',
+                            }}
+                        />
                     </Col>
                     <Col sm='12'>
                         <div className='d-flex justify-content-center'>
