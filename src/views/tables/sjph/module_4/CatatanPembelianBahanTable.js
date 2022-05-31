@@ -14,7 +14,7 @@ import {
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, useEffect, forwardRef} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
@@ -26,6 +26,7 @@ import { selectThemeColors } from '@utils'
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
 import '@styles/react/libs/tables/react-dataTable-component.scss'
+import '@styles/react/libs/flatpickr/flatpickr.scss'
 import DataTable from "react-data-table-component";
 import ReactPaginate from "react-paginate";
 import Swal from "sweetalert2";
@@ -43,20 +44,13 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
     const [currentPage, setCurrentPage] = useState(0)
     const [searchValue, setSearchValue] = useState('')
     const [filteredData, setFilteredData] = useState([])
-    const [namaPerusahaan, setNamaPerusahaan] = useState("")
-    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
-    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
-    const [details, setDetails] = useState([
-        {
-            id: 1,
-            nama_dan_merek: 'Tepung beras Rosebrand',
-            jumlah: 'Tepung',
-            waktu_pembelian: '09-11-2018'
-        }
-    ])
+    const [namaMerek, setNamaMerek] = useState("")
+    const [jumlah, setJumlah] = useState("")
+    const [tanggalPembelian, setTanggalPembelian] = useState("")
+    const [details, setDetails] = useState([])
 
 
-    const companyProfileModel = new CompanyProfileModels()
+    const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
 
     const navigate = useNavigate()
 
@@ -71,17 +65,18 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
         formState: { errors }
     } = useForm({ defaultValues })
 
-    const getMediaKomunikasiByID = async (id) => {
+    const getCatatanPembelianBahanBySJPHID = async (id) => {
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiBySJPHId(id)
-            setMediaKomunikasi(result)
+            const result = await bahanKepentinganHalalModel.getCatatanPembelianBahanBySJPHID(id)
+            setDetails(result)
         } catch (e) {
             console.error(e)
         }
     }
 
     useEffect(()=>{
-        getMediaKomunikasiByID(sessionStorage.sjph_id)
+        getCatatanPembelianBahanBySJPHID(sessionStorage.sjph_id)
+        console.log(details.jumlah)
     },[])
 
 
@@ -105,12 +100,12 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
         if (value.length) {
             updatedData = details.filter(item => {
                 const startsWith =
-                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama_dan_merek.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 
                 const includes =
-                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama_dan_merek.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 
@@ -171,7 +166,7 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await kriteriaSJPHKebijakanHalalModel.deleteMediaKomunikasi(id);
+                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -182,7 +177,7 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
                                 confirmButton: 'btn btn-success'
                             }
                         }).then(()=>{
-                            getMediaKomunikasiByID(sessionStorage.sjph_id)
+                            getCatatanPembelianBahanBySJPHID(sessionStorage.sjph_id)
                         })
                     } else {
                         await Swal.fire({
@@ -209,23 +204,22 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
             sortable: row => row.id
         },
         {
-            name: 'Tanggal Sosialisasi',
+            name: 'Nama Bahan - Merk Bahan',
             sortable: true,
             // minWidth: '150px',
             selector: row => row.nama_dan_merek
         },
         {
-            name: 'Judul Kegiatan',
+            name: 'Jumlah',
             sortable: true,
             // minWidth: '150px',
             selector: row => row.jumlah
         },
-
         {
-            name: 'Peserta',
+            name: 'Waktu Pembelian',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.waktu_pembelian
+            selector: row => row.tanggal_pembelian
         },
         {
             name: 'Tindakan',
@@ -257,16 +251,16 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
 
     const submit = async () => {
         const body = {
-            tanggal_sosialisasi: tanggalSosialisasi ? new Date(tanggalSosialisasi) : details.tanggal_sosialisasi,
-            judul_kegiatan: judulKegiatan ? judulKegiatan : details.judul_kegiatan,
-            peserta: peserta? peserta : details.peserta
+            nama_dan_merek: namaMerek,
+            jumlah,
+            tanggal_pembelian: tanggalPembelian,
         }
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
+            const result = await bahanKepentinganHalalModel.createCatatanPembelianBahan(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        getMediaKomunikasiByID(sessionStorage.sjph_id)
+                        getCatatanPembelianBahanBySJPHID(sessionStorage.sjph_id)
                         setShow(false)
                     })
             } else {
@@ -289,15 +283,15 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
                     </div>
                     <Row tag='form' className='gy-1 pt-75' >
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='tanggalPersetujuan'>
-                                Tanggal Sosialisasi
+                            <Label className='form-label' for='tanggalPembelian'>
+                                Tanggal Pembelian
                             </Label>
                             <Flatpickr
                                 // value={tanggalSosialisasi}
-                                // defaultValue={cont}
-                                id='tanggalPersetujuan'
+                                defaultValue={new Date()}
+                                id='tanggalPembelian'
                                 className='form-control'
-                                // onChange={date => setTanggalSosialisasi(date)}
+                                onChange={date => setTanggalPembelian(date)}
                                 options={{
                                     altInput: true,
                                     altFormat: 'F j, Y',
@@ -307,17 +301,17 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
                             {errors.firstName && <FormFeedback>Please enter a valid First Name</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='judulKegiatan'>
-                                Judul Kegiatan
+                            <Label className='form-label' for='namaMerek'>
+                                Nama dan Merek
                             </Label>
-                            <Input id='judulKegiatan' placeholder='Kegiatan' onChange={(e)=>{ setJudulKegiatan(e.target.value) }}  invalid={errors.judulKegiatan && true} />
+                            <Input id='namaMerek' placeholder='Kegiatan' onChange={(e)=>{ setNamaMerek(e.target.value) }}  invalid={errors.judulKegiatan && true} />
                             {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
                         </Col>
                         <Col xs={12}>
-                            <Label className='form-label' for='peserta'>
-                                Peserta
+                            <Label className='form-label' for='jumlah'>
+                                Jumlah
                             </Label>
-                            <Input id='peserta' placeholder='Budi Setiawan' onChange={(e)=>{ setPeserta(e.target.value) }} invalid={errors.peserta && true} />
+                            <Input id='jumlah' placeholder='(Dalam KG)' onChange={(e)=>{ setJumlah(e.target.value) }} invalid={errors.peserta && true} />
                             {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>

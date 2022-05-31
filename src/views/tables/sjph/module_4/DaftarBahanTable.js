@@ -58,21 +58,19 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
     const [nomorSertHalal, setNomorSertHalal] = useState("")
     const [masaBerlakuSertHalal, setMasaBerlakuSertHalal] = useState("")
     const [dokumenPendukung, setDokumenPendukung] = useState("")
-    const [details, setDetails] = useState([
-        {
-            id: 1,
-            nama_dan_merek: 'Tepung beras Rosebrand',
-            jenis_bahan: 'Tepung',
-            produsen: 'PT. Indofood',
-            negara: 'Indonesia',
-            supplier: 'Supplier Indofood',
-            lembaga_penerbit_sert_halal: 'MUI',
-            no_sert_halal: '08456413651',
-            masa_berlaku_sert_halal: '2018',
-            dokumen_pendukung: 'Dokumen'
-        }
-    ])
-
+    const [details, setDetails] = useState([])
+        // {
+        //     id: 1,
+        //     nama_dan_merek: 'Tepung beras Rosebrand',
+        //     jenis_bahan: 'Tepung',
+        //     produsen: 'PT. Indofood',
+        //     negara: 'Indonesia',
+        //     supplier: 'Supplier Indofood',
+        //     lembaga_penerbit_sert_halal: 'MUI',
+        //     no_sert_halal: '08456413651',
+        //     masa_berlaku_sert_halal: '2018',
+        //     dokumen_pendukung: 'Dokumen'
+        // }
 
     const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
 
