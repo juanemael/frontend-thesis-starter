@@ -14,7 +14,7 @@ import {
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, useEffect, forwardRef} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
@@ -31,6 +31,7 @@ import KriteriaSJPHKebijakanHalalModels from "../../../../models/KriteriaSJPHKeb
 import ReactPaginate from "react-paginate";
 import Swal from "sweetalert2";
 import Flatpickr from "react-flatpickr";
+import BahanKepentinganHalal from "../../../../models/BahanKepentinganHalal";
 
 const defaultValues = {
     firstName: 'Bob',
@@ -73,7 +74,7 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
     ])
 
 
-    const kriteriaSJPHKebijakanHalalModel = new KriteriaSJPHKebijakanHalalModels()
+    const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
 
     const navigate = useNavigate()
 
@@ -88,25 +89,25 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
         formState: { errors }
     } = useForm({ defaultValues })
 
-    const getMediaKomunikasiAll = async () => {
+    const getDaftarBahanAll = async () => {
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiAll()
+            const result = await bahanKepentinganHalalModel.getDaftarBahanAll()
             setMediaKomunikasi(result)
         } catch (e) {
             console.error(e)
         }
     }
-    const getMediaKomunikasiByID = async (id) => {
+    const getDaftarBahanBySJPHID = async (id) => {
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiBySJPHId(id)
-            setMediaKomunikasi(result)
+            const result = await bahanKepentinganHalalModel.getDaftarBahanBySJPHID(id)
+            setDetails(result)
         } catch (e) {
             console.error(e)
         }
     }
 
     useEffect(()=>{
-        getMediaKomunikasiByID(sessionStorage.sjph_id)
+        getDaftarBahanBySJPHID(sessionStorage.sjph_id)
     },[])
 
 
@@ -128,7 +129,7 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
         }
 
         if (value.length) {
-            updatedData = mediaKomunikasi.filter(item => {
+            updatedData = details.filter(item => {
                 const startsWith =
                     item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
@@ -156,7 +157,7 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
             nextLabel=''
             forcePage={currentPage}
             onPageChange={page => handlePagination(page)}
-            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(mediaKomunikasi.length / 7) || 1}
+            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(details.length / 7) || 1}
             breakLabel='...'
             pageRangeDisplayed={2}
             marginPagesDisplayed={2}
@@ -285,11 +286,11 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
             dokumen_pendukung: dokumenPendukung
         }
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
+            const result = await bahanKepentinganHalalModel.createDaftarBahan(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        getMediaKomunikasiByID(sessionStorage.sjph_id)
+                        getDaftarBahanBySJPHID(sessionStorage.sjph_id)
                         setShow(false)
                     })
             } else {
