@@ -191,12 +191,12 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
         {
             name: 'Nama dan Merek',
             sortable: true,
-            minWidth: name.length,
             selector: row => row.nama_dan_merek
         },
         {
             name: 'Jenis Bahan',
             sortable: true,
+
             // minWidth: '150px',
             selector: row => row.jenis_bahan
         },

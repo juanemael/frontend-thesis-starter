@@ -1,11 +1,11 @@
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody, Row, Col, Input, Form, Button, Label } from 'reactstrap'
-import { EditorState } from 'draft-js'
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import '@styles/react/libs/editor/editor.scss'
 import classnames from "classnames";
-import {useState, Fragment} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import {useState, Fragment, useEffect} from "react";
+import KebijakanEdukasiHalalModels from "../../../../models/KebijakanEdukasiHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import {ArrowLeft, ArrowRight} from "react-feather";
@@ -15,23 +15,34 @@ const EvaluasiPelatihanInternalForm = ({stepper,setCheckpoint}) => {
     // const [hariTanggal, setHariTanggal] = useState("")
     // const [pematri, setPematri] = useState("")
     // const [materi, setMateri] = useState("")
-    const [soal, setSoal] = useState("")
+    const [soal, setSoal] = useState(()=>EditorState.createEmpty())
+    const [details, setDetails] = useState(EditorState.createEmpty())
+    const [soalRaw, setSoalRaw] = useState(null)
 
 
-    const companyProfileModel = new CompanyProfileModels()
+    const kebijakanEdukasiHalalModel = new KebijakanEdukasiHalalModels()
 
     const navigate = useNavigate()
 
+    const getSJPHBySJPHID = async (id) => {
+        try {
+            const result = await kebijakanEdukasiHalalModel.getEvaluasiPelatihanInternal(id)
+            setSoal(EditorState.createWithContent(convertFromRaw(result[0].soal_evaluasi_pelatihan_internal)))
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     const submit = async () => {
         const body = {
-            soal
+            soal_evaluasi_pelatihan_internal: soalRaw
         }
         try {
-            const result = await companyProfileModel.createCompanyProfile(body)
+            const result = await kebijakanEdukasiHalalModel.createSoalEvaluasiPelatihanEvaluasi(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        navigate('/sjph/company_profile')
+                        getSJPHBySJPHID(sessionStorage.sjph_id)
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
@@ -40,6 +51,17 @@ const EvaluasiPelatihanInternalForm = ({stepper,setCheckpoint}) => {
             console.error(e)
             await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
         }
+    }
+
+    useEffect(()=>{
+        getSJPHBySJPHID(sessionStorage.sjph_id)
+    },[])
+
+    const updateTextDesc = async (state) => {
+        await setSoal(state)
+        const data = convertToRaw(soal.getCurrentContent())
+        setSoalRaw(data)
+        console.log(soalRaw)
     }
 
     return (
@@ -66,7 +88,7 @@ dengan produsen baru), akan meminta persetujuan penggunaan bahan tersebut ke
 4. Pada proses produksi, semua fasilitas produksi dan peralatan harus dalam keadaan
 …
 5. Audit internal dilakukan minimal … kali dalam setahun.'
-                                editorState={soal} onEditorStateChange={data => setSoal(data)} />
+                                editorState={soal} onEditorStateChange={updateTextDesc} />
                     </Col>
                     <Col sm='12'>
                         <div className='d-flex justify-content-center'>
@@ -78,7 +100,7 @@ dengan produsen baru), akan meminta persetujuan penggunaan bahan tersebut ke
                                 <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                                 <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                             </Button>
-                            <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>
+                            <Button className='me-1' color='primary' onClick={submit}>
                                 Submit
                             </Button>
                             <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/bahan_untuk_kepentingan_halal')}>
