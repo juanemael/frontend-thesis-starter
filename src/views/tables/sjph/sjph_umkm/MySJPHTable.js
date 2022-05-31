@@ -62,6 +62,7 @@ import navigation from '@src/navigation/vertical'
 import ReactDOM from "react-dom";
 // import VerticalLayout from "../../../../layouts/VerticalLayout";
 import VerticalLayout from "../../../../layouts/VerticalLayout";
+import moment from "moment";
 
 const MySJPHTable = () => {
 
@@ -551,14 +552,14 @@ const MySJPHTable = () => {
             name: 'Dibuat pada',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.created_at
+            selector: row => <>{moment(row.created_at).format('DD-MM-YYYY HH:mm')}</>
         },
 
         {
             name: 'Diubah pada',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.modified_at
+            selector: row => <>{moment(row.modified_at).format('DD-MM-YYYY HH:mm')}</>
         },
         {
             name:  'Pilihan',

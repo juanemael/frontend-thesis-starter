@@ -14,7 +14,7 @@ import {
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, useEffect, forwardRef} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
@@ -27,6 +27,8 @@ import '@styles/react/libs/tables/react-dataTable-component.scss'
 import DataTable from "react-data-table-component";
 import ReactPaginate from "react-paginate";
 import Swal from "sweetalert2";
+import Flatpickr from "react-flatpickr";
+import Select from "react-select";
 
 const defaultValues = {
     firstName: 'Bob',
@@ -39,37 +41,32 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper,setCheckpoi
     const [currentPage, setCurrentPage] = useState(0)
     const [searchValue, setSearchValue] = useState('')
     const [filteredData, setFilteredData] = useState([])
-    const [namaPerusahaan, setNamaPerusahaan] = useState("")
-    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
-    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
-    const [details, setDetails] = useState([
-        {
-            id: 1,
-            nama_dan_merek: 'Tepung beras Rosebrand',
-            jumlah: 'Tepung',
-            waktu_pembelian: '09-11-2018'
-        }
-    ])
+    const [namaBahan, setNamaBahan] = useState("")
+    const [merek, setMerek] = useState("")
+    const [produsen, setProdusen] = useState("")
+    const [nomorSH, setNomorSH] = useState("")
+    const [masaBerlakuSertHalal, setMasaBerlakuSertHalal] = useState("")
+    const [details, setDetails] = useState([])
 
 
-    const companyProfileModel = new CompanyProfileModels()
+    const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
 
     const navigate = useNavigate()
 
     // ** States
     const [show, setShow] = useState(false)
 
-    const getMediaKomunikasiByID = async (id) => {
+    const getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID = async (id) => {
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiBySJPHId(id)
-            setMediaKomunikasi(result)
+            const result = await bahanKepentinganHalalModel.getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID(id)
+            setDetails(result)
         } catch (e) {
             console.error(e)
         }
     }
 
     useEffect(()=>{
-        getMediaKomunikasiByID(sessionStorage.sjph_id)
+        getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID(sessionStorage.sjph_id)
     },[])
 
 
@@ -159,7 +156,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper,setCheckpoi
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await kriteriaSJPHKebijakanHalalModel.deleteMediaKomunikasi(id);
+                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -170,7 +167,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper,setCheckpoi
                                 confirmButton: 'btn btn-success'
                             }
                         }).then(()=>{
-                            getMediaKomunikasiByID(sessionStorage.sjph_id)
+                            getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID(sessionStorage.sjph_id)
                         })
                     } else {
                         await Swal.fire({
@@ -200,25 +197,31 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper,setCheckpoi
             name: 'Nama Bahan',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.nama_dan_merek
+            selector: row => row.nama_bahan
         },
         {
             name: 'Merek',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.jumlah
+            selector: row => row.merek
         },
         {
             name: 'Produsen',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.waktu_pembelian
+            selector: row => row.produsen
         },
         {
-            name: 'Nomor SH - Masa Berlaku',
+            name: 'Nomor SH',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.waktu_pembelian
+            selector: row => row.nomor_sh
+        },
+        {
+            name: 'Masa Berlaku Sert. Halal',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.masa_berlaku_sert_halal
         },
         {
             name: 'Tindakan',
@@ -250,16 +253,18 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper,setCheckpoi
 
     const submit = async () => {
         const body = {
-            tanggal_sosialisasi: tanggalSosialisasi ? new Date(tanggalSosialisasi) : details.tanggal_sosialisasi,
-            judul_kegiatan: judulKegiatan ? judulKegiatan : details.judul_kegiatan,
-            peserta: peserta? peserta : details.peserta
+            nama_bahan: namaBahan,
+            merek,
+            produsen,
+            nomor_sh: nomorSH,
+            masa_berlaku_sert_halal: masaBerlakuSertHalal
         }
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
+            const result = await bahanKepentinganHalalModel.createSuratPermohonanPersetujuanPenggunaanBahanBaru(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        getMediaKomunikasiByID(sessionStorage.sjph_id)
+                        getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID(sessionStorage.sjph_id)
                         setShow(false)
                     })
             } else {
@@ -278,6 +283,69 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper,setCheckpoi
                 <h3 className='mb-0'>Halaman 6</h3>
                 <small className='text-muted'>Surat Permohonan Persetujuan Penggunaan Bahan Baru</small>
             </div>
+
+            <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+                <ModalBody className='px-sm-5 mx-50 pb-5'>
+                    <div className='text-center mb-2'>
+                        <h1 className='mb-1'>Tambah Data Tabel</h1>
+                        <p>Tambah data tabelmu sekarang</p>
+                    </div>
+                    <Row tag='form' className='gy-1 pt-75' >
+                        <Col xs={12}>
+                            <Label className='form-label' for='peserta'>
+                                Nama Bahan
+                            </Label>
+                            <Input id='peserta' placeholder='Budi Setiawan' onChange={(e)=>{ setNamaBahan(e.target.value) }} />
+                            </Col>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tanggalDatangBeli'>
+                                Merek
+                            </Label>
+                            <Input id='tanggalDatangBeli' placeholder='Kegiatan' onChange={(e)=>{ setMerek(e.target.value) }}  />
+                        </Col>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tanggalDatangBeli'>
+                                Produsen
+                            </Label>
+                            <Input id='tanggalDatangBeli' placeholder='Kegiatan' onChange={(e)=>{ setProdusen(e.target.value) }} />
+
+                        </Col>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tanggalDatangBeli'>
+                                Nomor Sertifikat Halal
+                            </Label>
+                            <Input id='tanggalDatangBeli' placeholder='Kegiatan' onChange={(e)=>{ setNomorSH(e.target.value) }}  />
+
+                        </Col>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tanggalPersetujuan'>
+                                Masa Berlaku Sertifikasi Halal
+                            </Label>
+                            <Flatpickr
+                                // value={tanggalSosialisasi}
+                                // defaultValue={cont}
+                                id='tanggalPersetujuan'
+                                className='form-control'
+                                onChange={date => setMasaBerlakuSertHalal(date)}
+                                options={{
+                                    altInput: true,
+                                    altFormat: 'F j, Y',
+                                    dateFormat: 'Y-m-d',
+                                }}
+                            />
+                        </Col>
+                        <Col xs={12} className='text-center mt-2 pt-50'>
+                            <Button onClick={submit} className='me-1' color='primary'>
+                                Submit
+                            </Button>
+                            <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
+                                Discard
+                            </Button>
+                        </Col>
+                    </Row>
+                </ModalBody>
+            </Modal>
 
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>

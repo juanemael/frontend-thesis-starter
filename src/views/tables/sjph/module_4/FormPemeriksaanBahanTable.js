@@ -14,7 +14,7 @@ import {
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, useEffect, forwardRef} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
@@ -37,25 +37,24 @@ const defaultValues = {
     lastName: 'Barton',
     username: 'bob.dev'
 }
+const sesuaiOptions = [
+    { value: 'Sesuai', label: 'Sesuai' },
+    { value: 'Tidak Sesuai', label: 'Tidak Sesuai' },
+]
+
 
 const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
 
     const [currentPage, setCurrentPage] = useState(0)
     const [searchValue, setSearchValue] = useState('')
     const [filteredData, setFilteredData] = useState([])
-    const [namaPerusahaan, setNamaPerusahaan] = useState("")
-    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
-    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
-    const [details, setDetails] = useState([
-        {
-            id: 1,
-            nama_dan_merek: 'Tepung beras Rosebrand',
-            jumlah: 'Tepung',
-            waktu_pembelian: '09-11-2018'
-        }
-    ])
+    const [namaMerekKodeBahan, setNamaMerekKodeBahan] = useState("")
+    const [namaLokasiProdusen, setNamaLokasiProdusen] = useState("")
+    const [tanggalDatangBeli, setTanggalDatangBeli] = useState("")
+    const [sesuai, setSesuai] = useState("")
+    const [details, setDetails] = useState([])
 
-    const companyProfileModel = new CompanyProfileModels()
+    const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
 
     const navigate = useNavigate()
 
@@ -70,17 +69,17 @@ const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
         formState: { errors }
     } = useForm({ defaultValues })
 
-    const getMediaKomunikasiByID = async (id) => {
+    const getFormPemeriksaanBahanBySJPHID = async (id) => {
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiBySJPHId(id)
-            setMediaKomunikasi(result)
+            const result = await bahanKepentinganHalalModel.getFormPemeriksaanBahanBySJPHID(id)
+            setDetails(result)
         } catch (e) {
             console.error(e)
         }
     }
 
     useEffect(()=>{
-        getMediaKomunikasiByID(sessionStorage.sjph_id)
+        getFormPemeriksaanBahanBySJPHID(sessionStorage.sjph_id)
     },[])
 
 
@@ -170,7 +169,7 @@ const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await kriteriaSJPHKebijakanHalalModel.deleteMediaKomunikasi(id);
+                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -181,7 +180,7 @@ const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
                                 confirmButton: 'btn btn-success'
                             }
                         }).then(()=>{
-                            getMediaKomunikasiByID(sessionStorage.sjph_id)
+                            getFormPemeriksaanBahanBySJPHID(sessionStorage.sjph_id)
                         })
                     } else {
                         await Swal.fire({
@@ -211,26 +210,26 @@ const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
             name: 'Tanggal Datang/Beli',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.nama_dan_merek
+            selector: row => row.tanggal_datang_beli
         },
         {
             name: 'Nama/Merek/Kode Bahan',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.jumlah
+            selector: row => row.nama_merek_kode_bahan
         },
 
         {
             name: 'Nama & Lokasi Produsen',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.waktu_pembelian
+            selector: row => row.nama_dan_lokasi_produsen
         },
         {
             name: 'Sesuai/Tidak Sesuai',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.waktu_pembelian
+            selector: row => row.sesuai
         },
         {
             name: 'Tindakan',
@@ -262,16 +261,17 @@ const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
 
     const submit = async () => {
         const body = {
-            tanggal_sosialisasi: tanggalSosialisasi ? new Date(tanggalSosialisasi) : details.tanggal_sosialisasi,
-            judul_kegiatan: judulKegiatan ? judulKegiatan : details.judul_kegiatan,
-            peserta: peserta? peserta : details.peserta
+            tanggal_datang_beli: tanggalDatangBeli,
+            nama_merek_kode_bahan: namaMerekKodeBahan,
+            nama_dan_lokasi_produsen: namaLokasiProdusen,
+            sesuai
         }
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
+            const result = await bahanKepentinganHalalModel.createFormPemeriksaanBahan(sessionStorage.sjph_id,body)
             if ((result.id)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        getMediaKomunikasiByID(sessionStorage.sjph_id)
+                        getFormPemeriksaanBahanBySJPHID(sessionStorage.sjph_id)
                         setShow(false)
                     })
             } else {
@@ -293,16 +293,23 @@ const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
                         <p>Tambah data tabelmu sekarang</p>
                     </div>
                     <Row tag='form' className='gy-1 pt-75' >
+                        <Col xs={12}>
+                            <Label className='form-label' for='peserta'>
+                                Nama/Merek/Kode Bahan
+                            </Label>
+                            <Input id='peserta' placeholder='Budi Setiawan' onChange={(e)=>{ setNamaMerekKodeBahan(e.target.value) }} invalid={errors.peserta && true} />
+                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
+                        </Col>
                         <Col md={6} xs={12}>
                             <Label className='form-label' for='tanggalPersetujuan'>
-                                Tanggal Sosialisasi
+                                Tanggal Datang / Tanggal Beli
                             </Label>
                             <Flatpickr
                                 // value={tanggalSosialisasi}
                                 // defaultValue={cont}
                                 id='tanggalPersetujuan'
                                 className='form-control'
-                                // onChange={date => setTanggalSosialisasi(date)}
+                                onChange={date => setTanggalDatangBeli(date)}
                                 options={{
                                     altInput: true,
                                     altFormat: 'F j, Y',
@@ -312,18 +319,30 @@ const FormPemeriksaanBahanTable = ({stepper, setCheckpoint}) => {
                             {errors.firstName && <FormFeedback>Please enter a valid First Name</FormFeedback>}
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='judulKegiatan'>
-                                Judul Kegiatan
+                            <Label className='form-label' for='tanggalDatangBeli'>
+                                Nama dan Lokasi Produsen
                             </Label>
-                            <Input id='judulKegiatan' placeholder='Kegiatan' onChange={(e)=>{ setJudulKegiatan(e.target.value) }}  invalid={errors.judulKegiatan && true} />
+                            <Input id='tanggalDatangBeli' placeholder='Kegiatan' onChange={(e)=>{ setNamaLokasiProdusen(e.target.value) }}  invalid={errors.judulKegiatan && true} />
                             {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
                         </Col>
-                        <Col xs={12}>
-                            <Label className='form-label' for='peserta'>
-                                Peserta
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='sesuai'>
+                                Sesuai
                             </Label>
-                            <Input id='peserta' placeholder='Budi Setiawan' onChange={(e)=>{ setPeserta(e.target.value) }} invalid={errors.peserta && true} />
-                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
+                            <Select
+                                id='sesuai'
+                                theme={selectThemeColors}
+                                className='react-select'
+                                classNamePrefix='select'
+                                // value={skalaUsahaOptions}
+                                defaultValue={details.skala_usaha === 'Sesuai' ? sesuaiOptions[0] : details.skala_usaha === "Tidak Sesuai" ? sesuaiOptions[1] : null}
+                                placeholder={details.skala_usaha === 'Sesuai' ? details.sesuai : details.sesuai === 'Tidak Sesuai' ? details.sesuai : "Pilih disini"}
+                                name='sesuai'
+                                options={sesuaiOptions}
+                                onChange={(opt)=>{
+                                    setSesuai(opt.value)
+                                }}
+                            />
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
                             <Button onClick={submit} className='me-1' color='primary'>
