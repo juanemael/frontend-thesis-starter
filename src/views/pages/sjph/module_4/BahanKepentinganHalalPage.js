@@ -11,11 +11,28 @@ import {Badge, Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, CardTitle
 import {Link} from "react-router-dom";
 import SuratPermohonanPersetujuanPenggunaanBahanBaruTable
     from "../../../tables/sjph/module_4/SuratPermohonanPersetujuanPenggunaanBahanBaru";
+import SJPHKuModels from "../../../../models/SJPHKu";
 
 const BahanKepentinganHalalPage = () => {
     const ref = useRef(null)
     const [stepper, setStepper] = useState(null)
     const [checkpoint, setCheckpoint] = useState(0);
+    const [detailsSJPH,setDetailsSJPH] = useState([])
+
+    const sjphKuModel = new SJPHKuModels()
+
+    const getSJPHInfo= async (id) => {
+        try {
+            const result = await sjphKuModel.getSelectedSJPH(id)
+            setDetailsSJPH(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    useEffect(()=>{
+        getSJPHInfo(sessionStorage.sjph_id)
+    },[])
     const steps = [
         {
             id: 'hal1',
@@ -23,7 +40,7 @@ const BahanKepentinganHalalPage = () => {
             subtitle: 'Daftar Bahan',
             icon: <FileText size={18} />,
             content: <DaftarBahanTable
-                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
+                getSJPHInfo={getSJPHInfo} detailsSJPH={detailsSJPH} setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'hal2',
@@ -31,14 +48,14 @@ const BahanKepentinganHalalPage = () => {
             subtitle: 'Daftar Bahan Setiap Produk',
             icon: <User size={18} />,
             content: <DaftarBahanDigunakanSetiapProdukForm
-                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
+                getSJPHInfo={getSJPHInfo} detailsSJPH={detailsSJPH} setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },        {
             id: 'hal3',
             title: 'Wisata 3',
             subtitle: 'Catatan Pembelian Bahan',
             icon: <User size={18} />,
             content: <CatatanPembelianBahanTable
-                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
+                getSJPHInfo={getSJPHInfo}  detailsSJPH={detailsSJPH} setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'step-address',
@@ -46,7 +63,7 @@ const BahanKepentinganHalalPage = () => {
             subtitle: 'Form Pemeriksaan Bahan',
             icon: <MapPin size={18} />,
             content: <FormPemeriksaanBahanTable
-                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
+                getSJPHInfo={getSJPHInfo} detailsSJPH={detailsSJPH} setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'suratPernyataanBebasBabi',
@@ -57,12 +74,20 @@ const BahanKepentinganHalalPage = () => {
                 setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern'/>
         },
         {
-            id: 'suratPermohonanPersetujuanPenggunaanBahanBaru',
+            id: 'catatanPenyimpananBahanProduk',
             title: 'Wisata 6',
+            subtitle: 'Catatan Penyimpanan Bahan dan Produk',
+            icon: <LinkIcon size={18}/>,
+            content: <CatatanPenyimpananBahanProdukTable
+                getSJPHInfo={getSJPHInfo} detailsSJPH={detailsSJPH} setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern'/>
+        },
+        {
+            id: 'suratPermohonanPersetujuanPenggunaanBahanBaru',
+            title: 'Wisata 7',
             subtitle: 'Surat Permohonan Persetujuan Penggunaaan Bahan Baru',
             icon: <LinkIcon size={18} />,
             content: <SuratPermohonanPersetujuanPenggunaanBahanBaruTable
-                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
+                getSJPHInfo={getSJPHInfo} detailsSJPH={detailsSJPH} setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         }
     ]
     const [progress, setProgress] = useState(48);
@@ -74,10 +99,10 @@ const BahanKepentinganHalalPage = () => {
                     // oldProgress = {...progress}
                     oldProgress = 48
                     if (oldProgress === 50.3) {
-                        return 50.6;
+                        return 50.3;
                     }
                     const diff = 4 * 10;
-                    return Math.min(oldProgress + diff, 50.6);
+                    return Math.min(oldProgress + diff, 50.3);
                 });
             }, 200);
 
@@ -88,12 +113,12 @@ const BahanKepentinganHalalPage = () => {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
                     // oldProgress = {...progress}
-                    oldProgress = 50.6
-                    if (oldProgress === 53.2) {
-                        return 53.2;
+                    oldProgress = 50.3
+                    if (oldProgress === 52.6) {
+                        return 52.6;
                     }
                     const diff = 4 * 10;
-                    return Math.min(oldProgress + diff, 53.2);
+                    return Math.min(oldProgress + diff, 52.6);
                 });
             }, 200);
 
@@ -103,12 +128,12 @@ const BahanKepentinganHalalPage = () => {
         } else if (checkpoint === 2) {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 53.2
-                    if (oldProgress === 55.8) {
-                        return 55.8;
+                    oldProgress = 52.6
+                    if (oldProgress === 54.9) {
+                        return 54.9;
                     }
                     const diff = 4 * 10;
-                    return Math.min(oldProgress + diff, 55.8);
+                    return Math.min(oldProgress + diff, 54.9);
                 });
             }, 200);
 
@@ -118,12 +143,12 @@ const BahanKepentinganHalalPage = () => {
         } else if (checkpoint === 3) {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 55.8
-                    if (oldProgress === 58.4) {
-                        return 58.4;
+                    oldProgress = 54.9
+                    if (oldProgress === 57.2) {
+                        return 57.2;
                     }
                     const diff = 5 * 10;
-                    return Math.min(oldProgress + diff, 58.4);
+                    return Math.min(oldProgress + diff, 57.2);
                 });
             }, 200);
 
@@ -134,12 +159,27 @@ const BahanKepentinganHalalPage = () => {
         } else if (checkpoint === 4) {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 58.4
-                    if (oldProgress === 61) {
-                        return 61;
+                    oldProgress = 57.2
+                    if (oldProgress === 59.5) {
+                        return 59.5;
                     }
                     const diff = 5 * 10;
-                    return Math.min(oldProgress + diff, 61);
+                    return Math.min(oldProgress + diff, 59.5);
+                });
+            }, 200);
+
+            return () => {
+                clearInterval(timer);
+            }
+        } else if (checkpoint === 5) {
+            const timer = setInterval(() => {
+                setProgress((oldProgress) => {
+                    oldProgress = 59.5
+                    if (oldProgress === 61.8) {
+                        return 61.8;
+                    }
+                    const diff = 5 * 10;
+                    return Math.min(oldProgress + diff, 61.8);
                 });
             }, 200);
 
@@ -149,7 +189,7 @@ const BahanKepentinganHalalPage = () => {
         } else {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 61
+                    oldProgress = 61.8
                     if (oldProgress === 64) {
                         return 64;
                     }

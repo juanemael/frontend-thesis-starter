@@ -5,51 +5,45 @@ import {
     DropdownToggle,
     UncontrolledDropdown,
     Badge,
-    Table,
     Col,
     Button,
     ModalHeader,
     ModalBody,
-    Row, Label, Input, FormFeedback, Modal
+    Row,
+    Label,
+    Input,
+    Modal,
+    Card,
+    CardBody,
+    CardHeader, Alert
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
+import '@styles/react/libs/flatpickr/flatpickr.scss'
 import {useState, Fragment, useEffect} from "react";
 import KebijakanEdukasiHalalModels from "../../../../models/KebijakanEdukasiHalal";
+import SJPHKuModels from "../../../../models/SJPHKu";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
-import {Controller, useForm} from "react-hook-form";
-import Select from "react-select";
-// ** Utils
-import { selectThemeColors } from '@utils'
+import {
+    ArrowDown,
+    ArrowLeft,
+    ArrowRight,
+    ChevronDown,
+    Edit,
+    FileText,
+    MoreVertical,
+    Trash,
+    X
+} from "react-feather";
+import {useForm} from "react-hook-form";
+
 
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
 import '@styles/react/libs/tables/react-dataTable-component.scss'
 import DataTable from "react-data-table-component";
 import ReactPaginate from "react-paginate";
-
-const statusOptions = [
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
-    { value: 'suspended', label: 'Suspended' }
-]
-
-const countryOptions = [
-    { value: 'uk', label: 'UK' },
-    { value: 'usa', label: 'USA' },
-    { value: 'france', label: 'France' },
-    { value: 'russia', label: 'Russia' },
-    { value: 'canada', label: 'Canada' }
-]
-
-const languageOptions = [
-    { value: 'english', label: 'English' },
-    { value: 'spanish', label: 'Spanish' },
-    { value: 'french', label: 'French' },
-    { value: 'german', label: 'German' },
-    { value: 'dutch', label: 'Dutch' }
-]
+import Flatpickr from "react-flatpickr";
 
 const defaultValues = {
     firstName: 'Bob',
@@ -63,12 +57,16 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
     const [searchValue, setSearchValue] = useState('')
     const [filteredData, setFilteredData] = useState([])
     const [nama, setNama] = useState("")
+    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
     const [jabatan, setJabatan] = useState("")
     const [posisiDiTim, setPosisiDiTim] = useState("")
     const [details,setDetails] = useState([])
+    const [detailsSJPH,setDetailsSJPH] = useState([])
 
 
     const kebijakanEdukasiHalalModel = new KebijakanEdukasiHalalModels()
+    const sjphKuModel = new SJPHKuModels()
 
     const navigate = useNavigate()
 
@@ -213,6 +211,15 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             console.error(e)
         }
     }
+    const getSJPHInfo= async (id) => {
+        try {
+            const result = await sjphKuModel.getSelectedSJPH(id)
+            console.log(result)
+            setDetailsSJPH(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
 
     const submit = async () => {
         const body = {
@@ -237,8 +244,30 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
         }
     }
 
+    const submitTempatTanggal = async () => {
+        const body = {
+            tempat_persetujuan_surat_keputusan_ptmp_halal: tempatPersetujuan,
+            tanggal_persetujuan_surat_keputusan_ptmp_halal: tanggalPersetujuan
+        }
+        try {
+            const result = await sjphKuModel.editTempatTanggalKeputusanSJPH(sessionStorage.sjph_id,body)
+            if ((result.success)) {
+                await swal.fire('','Data berhasil di simpan','success')
+                    .then(()=>{
+                        getSJPHInfo(sessionStorage.sjph_id)
+                    })
+            } else {
+                await swal.fire('','Data gagal disimpan', 'error')
+            }
+        } catch (e) {
+            console.error(e)
+            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        }
+    }
+
     useEffect(()=>{
         getSuratKeputusanBySJPHID(sessionStorage.sjph_id)
+        getSJPHInfo(sessionStorage.sjph_id)
     },[])
 
 
@@ -261,7 +290,6 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                                 placeholder='Budi'
                                 value={nama}
                                 onChange={(e)=>{ setNama(e.target.value) }}
-                                invalid={errors.nama && true}
                             />
                         </Col>
                         <Col md={6} xs={12}>
@@ -294,6 +322,65 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             <div className='content-header'>
                 <h3 className='mb-0'>Halaman 1</h3>
                 <small className='text-muted'>Surat Keputusan Penetapan Tim Manajemen Halal Dan/Atau Penyelia Halal</small>
+            </div>
+            <Card>
+                <CardHeader>
+                    {/*<Row>*/}
+                    {/*    <Col>*/}
+                    {/*        <AlertCircle id={'infoPersetujuan'}/> Isi tempat dan tanggal persetujuan*/}
+                    {/*    </Col>*/}
+                    {/*</Row>*/}
+                    {/*<UncontrolledTooltip placement='top' target='infoPersetujuan'>*/}
+                    {/*    Isi tempat dan tanggal persetujuan kamu. Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.*/}
+                    {/*</UncontrolledTooltip>*/}
+                    <div>
+                    <h4>Isi Tempat Dan Tanggal Persetujuan</h4>
+                    <Alert color='info'>
+                        <div className='alert-body'>
+                            Info: Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.
+                        </div>
+                    </Alert>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <Row>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tanggalPersetujuan'>
+                                Tempat Persetujuan
+                            </Label>
+                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_surat_keputusan_ptmp_halal} placeholder='Tempat Isi Persetujuan (Cth: Jakarta)'
+                                   onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
+                        </Col>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tempatPersetujuan'>
+                                Tanggal Persetujuan
+                            </Label>
+                            <Flatpickr
+                                value={detailsSJPH.sjph_id && detailsSJPH.tanggal_persetujuan_surat_keputusan_ptmp_halal}
+                                id='tanggal'
+                                className='form-control'
+                                onChange={date => setTanggalPersetujuan(date)}
+                                options={{
+                                    altInput: true,
+                                    altFormat: 'F j, Y',
+                                    defaultDate: "today",
+                                    dateFormat: 'Y-m-d',
+                                }}
+                            />
+                        </Col>
+                        &nbsp;
+                        <Col sm='12'>
+                            <div className='d-flex justify-content-center'>
+                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
+                                    Simpan
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+            <div className='divider divider-dashed'>
+                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
             </div>
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='4' sm='12'>

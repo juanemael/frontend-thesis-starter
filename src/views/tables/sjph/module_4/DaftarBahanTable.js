@@ -10,14 +10,25 @@ import {
     Button,
     ModalHeader,
     ModalBody,
-    Row, Label, Input, FormFeedback, Modal
+    Row, Label, Input, FormFeedback, Modal, CardHeader, Alert, CardBody, Card
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, useEffect, forwardRef} from "react";
 import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
+import {
+    ArrowDown,
+    ArrowLeft,
+    ArrowRight,
+    Check,
+    ChevronDown,
+    Edit,
+    FileText,
+    MoreVertical,
+    Trash,
+    X
+} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 // ** Utils
@@ -32,6 +43,7 @@ import ReactPaginate from "react-paginate";
 import Swal from "sweetalert2";
 import Flatpickr from "react-flatpickr";
 import BahanKepentinganHalal from "../../../../models/BahanKepentinganHalal";
+import SJPHKuModels from "../../../../models/SJPHKu";
 
 const defaultValues = {
     firstName: 'Bob',
@@ -39,16 +51,11 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
-const DaftarBahanTable = ({stepper, setCheckpoint}) => {
+const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => {
 
     const [currentPage, setCurrentPage] = useState(0)
     const [searchValue, setSearchValue] = useState('')
     const [filteredData, setFilteredData] = useState([])
-    const [namaPerusahaan, setNamaPerusahaan] = useState("")
-    const [tanggalSosialisasi, setTanggalSosialisasi] = useState(new Date())
-    const [judulKegiatan, setJudulKegiatan] = useState("")
-    const [peserta, setPeserta] = useState("")
-    const [mediaKomunikasi, setMediaKomunikasi] = useState([])
     const [namaMerek, setNamaMerek] = useState("")
     const [jenisBahan,setJenisBahan] = useState("")
     const [produsen, setProdusen] = useState("")
@@ -59,19 +66,10 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
     const [masaBerlakuSertHalal, setMasaBerlakuSertHalal] = useState("")
     const [dokumenPendukung, setDokumenPendukung] = useState("")
     const [details, setDetails] = useState([])
-        // {
-        //     id: 1,
-        //     nama_dan_merek: 'Tepung beras Rosebrand',
-        //     jenis_bahan: 'Tepung',
-        //     produsen: 'PT. Indofood',
-        //     negara: 'Indonesia',
-        //     supplier: 'Supplier Indofood',
-        //     lembaga_penerbit_sert_halal: 'MUI',
-        //     no_sert_halal: '08456413651',
-        //     masa_berlaku_sert_halal: '2018',
-        //     dokumen_pendukung: 'Dokumen'
-        // }
+    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
 
+    const sjphKuModel = new SJPHKuModels()
     const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
 
     const navigate = useNavigate()
@@ -90,7 +88,7 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
     const getDaftarBahanAll = async () => {
         try {
             const result = await bahanKepentinganHalalModel.getDaftarBahanAll()
-            setMediaKomunikasi(result)
+            // setMediaKomunikasi(result)
         } catch (e) {
             console.error(e)
         }
@@ -300,6 +298,27 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
         }
     }
 
+    const submitTempatTanggal = async () => {
+        const body = {
+            tempat_persetujuan_daftar_bahan: tempatPersetujuan? tempatPersetujuan: detailsSJPH.tempat_persetujuan_daftar_bahan,
+            tanggal_persetujuan_daftar_bahan: tanggalPersetujuan? tanggalPersetujuan: detailsSJPH.tanggal_persetujuan_daftar_bahan
+        }
+        try {
+            const result = await sjphKuModel.editTempatTanggalKeputusanSJPH(sessionStorage.sjph_id,body)
+            if ((result.success)) {
+                await swal.fire('','Data berhasil di simpan','success')
+                    .then(()=>{
+                        getSJPHInfo(sessionStorage.sjph_id)
+                    })
+            } else {
+                await swal.fire('','Data gagal disimpan', 'error')
+            }
+        } catch (e) {
+            console.error(e)
+            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        }
+    }
+
     return (
         <Fragment>
             <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
@@ -397,6 +416,57 @@ const DaftarBahanTable = ({stepper, setCheckpoint}) => {
             <div className='content-header'>
                 <h3 className='mb-0'>Halaman 1</h3>
                 <small className='text-muted'>Daftar Bahan</small>
+            </div>
+            <Card>
+                <CardHeader>
+                    <div>
+                        <h4>Isi Tempat Dan Tanggal Persetujuan</h4>
+                        <Alert color='info'>
+                            <div className='alert-body'>
+                                Info: Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.
+                            </div>
+                        </Alert>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <Row>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tanggalPersetujuan'>
+                                Tempat Persetujuan
+                            </Label>
+                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_daftar_bahan} placeholder='Tempat Isi Persetujuan (Cth: Jakarta)'
+                                   onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
+                        </Col>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tempatPersetujuan'>
+                                Tanggal Persetujuan
+                            </Label>
+                            <Flatpickr
+                                value={detailsSJPH.sjph_id && detailsSJPH.tanggal_persetujuan_daftar_bahan}
+                                id='tanggal'
+                                className='form-control'
+                                onChange={date => setTanggalPersetujuan(date)}
+                                options={{
+                                    altInput: true,
+                                    altFormat: 'F j, Y',
+                                    defaultDate: "today",
+                                    dateFormat: 'Y-m-d',
+                                }}
+                            />
+                        </Col>
+                        &nbsp;
+                        <Col sm='12'>
+                            <div className='d-flex justify-content-center'>
+                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
+                                    Simpan
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+            <div className='divider divider-dashed'>
+                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
             </div>
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>

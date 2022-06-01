@@ -13,11 +13,12 @@ const KriteriaSistemJaminanProdukHalalPage = () => {
     const [progress, setProgress] = useState(16);
     const [checkpoint, setCheckpoint] = useState(0);
 
+
     const steps = [
         {
             id: 'hal1',
             title: 'Wisata 1',
-            subtitle: 'Keterangan Kriteria',
+            subtitle: 'Keterangan Kriteria Kebijakan Halal',
             icon: <FileText size={18} />,
             content: <KriteriaSistemJaminanProdukHalalForm stepper={stepper}
                                                            type='wizard-modern' setCheckpoint={setCheckpoint} />

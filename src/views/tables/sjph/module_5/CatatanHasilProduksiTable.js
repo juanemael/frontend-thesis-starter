@@ -10,14 +10,25 @@ import {
     Button,
     ModalHeader,
     ModalBody,
-    Row, Label, Input, FormFeedback, Modal, InputGroup, InputGroupText
+    Row, Label, Input, FormFeedback, Modal, InputGroup, InputGroupText, Card, CardHeader, Alert, CardBody
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, useEffect, forwardRef} from "react";
 import KepentinganProduksiDistribusiProdukModels from "../../../../models/KepentinganProduksiDistribusiProduk";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
+import {
+    ArrowDown,
+    ArrowLeft,
+    ArrowRight,
+    Check,
+    ChevronDown,
+    Edit,
+    FileText,
+    MoreVertical,
+    Trash,
+    X
+} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 // ** Utils
@@ -31,6 +42,7 @@ import DataTable from "react-data-table-component";
 import ReactPaginate from "react-paginate";
 import Swal from "sweetalert2";
 import Flatpickr from "react-flatpickr";
+import SJPHKuModels from "../../../../models/SJPHKu";
 
 
 const CatatanHasilProduksiTable = ({stepper, setCheckpoint}) => {
@@ -43,6 +55,11 @@ const CatatanHasilProduksiTable = ({stepper, setCheckpoint}) => {
     const [tanggal, setTanggal] = useState(0)
     const [keterangan, setKeterangan] = useState("")
     const [details, setDetails] = useState([])
+    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
+    const [detailsSJPH,setDetailsSJPH] = useState([])
+
+    const sjphKuModel = new SJPHKuModels()
 
 
     const kepentinganProduksiDistribusiProdukModel = new KepentinganProduksiDistribusiProdukModels()
@@ -62,8 +79,19 @@ const CatatanHasilProduksiTable = ({stepper, setCheckpoint}) => {
         }
     }
 
+    const getSJPHInfo= async (id) => {
+        try {
+            const result = await sjphKuModel.getSelectedSJPH(id)
+            console.log(result)
+            setDetailsSJPH(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     useEffect(()=>{
         getCatatanHasilProduksiBySJPHID(sessionStorage.sjph_id)
+        getSJPHInfo(sessionStorage.sjph_id)
     },[])
 
 
@@ -271,6 +299,27 @@ const CatatanHasilProduksiTable = ({stepper, setCheckpoint}) => {
         }
     }
 
+    const submitTempatTanggal = async () => {
+        const body = {
+            tempat_persetujuan_catatan_hasil_produksi: tempatPersetujuan,
+            tanggal_persetujuan_catatan_hasil_produksi: tanggalPersetujuan
+        }
+        try {
+            const result = await sjphKuModel.editTempatTanggalKeputusanSJPH(sessionStorage.sjph_id,body)
+            if ((result.success)) {
+                await swal.fire('','Data berhasil di simpan','success')
+                    .then(()=>{
+                        getSJPHInfo(sessionStorage.sjph_id)
+                    })
+            } else {
+                await swal.fire('','Data gagal disimpan', 'error')
+            }
+        } catch (e) {
+            console.error(e)
+            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        }
+    }
+
     return (
         <Fragment>
             <div className='content-header'>
@@ -333,6 +382,57 @@ const CatatanHasilProduksiTable = ({stepper, setCheckpoint}) => {
                     </Row>
                 </ModalBody>
             </Modal>
+            <Card>
+                <CardHeader>
+                    <div>
+                        <h4>Isi Tempat Dan Tanggal Persetujuan</h4>
+                        <Alert color='info'>
+                            <div className='alert-body'>
+                                Info: Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.
+                            </div>
+                        </Alert>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <Row>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tanggalPersetujuan'>
+                                Tempat Persetujuan
+                            </Label>
+                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_catatan_hasil_produksi} placeholder='Tempat Isi Persetujuan (Cth: Jakarta)'
+                                   onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
+                        </Col>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tempatPersetujuan'>
+                                Tanggal Persetujuan
+                            </Label>
+                            <Flatpickr
+                                value={detailsSJPH.sjph_id && detailsSJPH.tanggal_persetujuan_catatan_hasil_produksi}
+                                id='tanggal'
+                                className='form-control'
+                                onChange={date => setTanggalPersetujuan(date)}
+                                options={{
+                                    altInput: true,
+                                    altFormat: 'F j, Y',
+                                    defaultDate: "today",
+                                    dateFormat: 'Y-m-d',
+                                }}
+                            />
+                        </Col>
+                        &nbsp;
+                        <Col sm='12'>
+                            <div className='d-flex justify-content-center'>
+                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
+                                    Simpan
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+            <div className='divider divider-dashed'>
+                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
+            </div>
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
                     <Label className='me-1' for='search-input'>

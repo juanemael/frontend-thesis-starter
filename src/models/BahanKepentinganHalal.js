@@ -8,6 +8,9 @@ export default class BahanKepentinganHalal {
     createCatatanPembelianBahan = async (sjph_id, body) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan/create/${sjph_id}`, 'POST', body)
     }
+    createCatatanPenyimpananBahanProduk = async (sjph_id, body) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_penyimpanan_bahan_produk/create/${sjph_id}`, 'POST', body)
+    }
     createFormPemeriksaanBahan = async (sjph_id, body) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/form_pemeriksaan_bahan/create/${sjph_id}`, 'POST', body)
     }
@@ -31,6 +34,9 @@ export default class BahanKepentinganHalal {
     }
     getCatatanPembelianBahanBySJPHID = async (sjph_id) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan/get/${sjph_id}`, 'GET')
+    }
+    getCatatanPenyimpananBahanProdukBySJPHID = async (sjph_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_penyimpanan_bahan_produk/get/${sjph_id}`, 'GET')
     }
     getFormPemeriksaanBahanBySJPHID = async (sjph_id) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/form_pemeriksaan_bahan/get/${sjph_id}`, 'GET')

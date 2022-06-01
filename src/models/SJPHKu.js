@@ -8,6 +8,9 @@ export default class SJPHKu {
     getAll = async () => {
         return await ApiRequest.set(`/sjph`, "GET")
     }
+    getSelectedSJPH = async () => {
+        return await ApiRequest.set(`/sjph/selected/get/${sessionStorage.sjph_id}`, "GET")
+    }
 
     getNamaPerusahaan = async (id) => {
         return await ApiRequest.set(`/sjph/nama_perusahaan/${id}`, "GET")
@@ -19,6 +22,9 @@ export default class SJPHKu {
 
     deleteSJPH = async (id) => {
         return await ApiRequest.set(`/sjph/${id}`, 'DELETE')
+    }
+    editTempatTanggalKeputusanSJPH = async (sjph_id,body) =>{
+        return await ApiRequest.set(`/sjph/tempat_tanggal_keputusan/edit/${sjph_id}`, 'PUT',body)
     }
 
 }

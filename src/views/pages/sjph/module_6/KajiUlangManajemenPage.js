@@ -29,10 +29,10 @@ const KajiUlangManajemenPage = () => {
                     setIsFinish(true)
                     return 100;
                 }
-                const diff = 10 * 10;
+                const diff = 9 * 10;
                 return Math.min(oldProgress + diff, 100);
             });
-        }, 500);
+        }, 200);
 
         return () => {
             clearInterval(timer);

@@ -63,11 +63,11 @@ const KepentinganProduksiDistribusiProdukPage = () => {
                 setProgress((oldProgress) => {
                     // oldProgress = {...progress}
                     oldProgress = 64
-                    if (oldProgress === 67.2) {
-                        return 67.2;
+                    if (oldProgress === 68) {
+                        return 68;
                     }
                     const diff = 6 * 10;
-                    return Math.min(oldProgress + diff, 67.2);
+                    return Math.min(oldProgress + diff, 68);
                 });
             }, 200);
 
@@ -78,12 +78,12 @@ const KepentinganProduksiDistribusiProdukPage = () => {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
                     // oldProgress = {...progress}
-                    oldProgress = 67.2
-                    if (oldProgress === 70.4) {
-                        return 70.4;
+                    oldProgress = 68
+                    if (oldProgress === 72) {
+                        return 72;
                     }
                     const diff = 6 * 10;
-                    return Math.min(oldProgress + diff, 70.4);
+                    return Math.min(oldProgress + diff, 72);
                 });
             }, 200);
 
@@ -93,38 +93,22 @@ const KepentinganProduksiDistribusiProdukPage = () => {
         } else if (checkpoint === 2) {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 70.4
-                    if (oldProgress === 73.6) {
-                        return 73.6;
-                    }
-                    const diff = 6 * 10;
-                    return Math.min(oldProgress + diff, 73.6);
-                });
-            }, 200);
-
-            return () => {
-                clearInterval(timer);
-            }
-        } else if (checkpoint === 3) {
-            const timer = setInterval(() => {
-                setProgress((oldProgress) => {
-                    oldProgress = 73.6
-                    if (oldProgress === 76.8) {
-                        return 76.8;
+                    oldProgress = 72
+                    if (oldProgress === 76) {
+                        return 76;
                     }
                     const diff = 7 * 10;
-                    return Math.min(oldProgress + diff, 76.8);
+                    return Math.min(oldProgress + diff, 76);
                 });
             }, 200);
 
             return () => {
                 clearInterval(timer);
             }
-
         } else {
             const timer = setInterval(() => {
                 setProgress((oldProgress) => {
-                    oldProgress = 76.8
+                    oldProgress = 76
                     if (oldProgress === 80) {
                         return 80;
                     }
@@ -136,6 +120,7 @@ const KepentinganProduksiDistribusiProdukPage = () => {
             return () => {
                 clearInterval(timer);
             }
+
         }
     }, [checkpoint]);
 

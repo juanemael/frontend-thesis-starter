@@ -10,14 +10,25 @@ import {
     Button,
     ModalHeader,
     ModalBody,
-    Row, Label, Input, FormFeedback, Modal
+    Row, Label, Input, FormFeedback, Modal, Card, CardHeader, Alert, CardBody
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, useEffect, forwardRef} from "react";
 import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {ArrowLeft, ArrowRight, Check, ChevronDown, Edit, FileText, MoreVertical, Trash, X} from "react-feather";
+import {
+    ArrowDown,
+    ArrowLeft,
+    ArrowRight,
+    Check,
+    ChevronDown,
+    Edit,
+    FileText,
+    MoreVertical,
+    Trash,
+    X
+} from "react-feather";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 // ** Utils
@@ -31,6 +42,7 @@ import DataTable from "react-data-table-component";
 import ReactPaginate from "react-paginate";
 import Swal from "sweetalert2";
 import Flatpickr from "react-flatpickr";
+import SJPHKuModels from "../../../../models/SJPHKu";
 
 
 const defaultValues = {
@@ -39,7 +51,7 @@ const defaultValues = {
     username: 'bob.dev'
 }
 
-const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
+const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setCheckpoint}) => {
 
     const [currentPage, setCurrentPage] = useState(0)
     const [searchValue, setSearchValue] = useState('')
@@ -48,8 +60,10 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
     const [jumlah, setJumlah] = useState("")
     const [tanggalPembelian, setTanggalPembelian] = useState("")
     const [details, setDetails] = useState([])
+    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
 
-
+    const sjphKuModel = new SJPHKuModels()
     const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
 
     const navigate = useNavigate()
@@ -76,7 +90,6 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
 
     useEffect(()=>{
         getCatatanPembelianBahanBySJPHID(sessionStorage.sjph_id)
-        console.log(details.jumlah)
     },[])
 
 
@@ -272,6 +285,27 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
         }
     }
 
+    const submitTempatTanggal = async () => {
+        const body = {
+            tempat_persetujuan_catatan_pembelian_halal: tempatPersetujuan? tempatPersetujuan : detailsSJPH.tempat_persetujuan_catatan_pembelian_halal,
+            tanggal_persetujuan_catatan_pembelian_halal: tanggalPersetujuan? tanggalPersetujuan : detailsSJPH.tanggal_persetujuan_catatan_pembelian_halal
+        }
+        try {
+            const result = await sjphKuModel.editTempatTanggalKeputusanSJPH(sessionStorage.sjph_id,body)
+            if ((result.success)) {
+                await swal.fire('','Data berhasil di simpan','success')
+                    .then(()=>{
+                        getSJPHInfo(sessionStorage.sjph_id)
+                    })
+            } else {
+                await swal.fire('','Data gagal disimpan', 'error')
+            }
+        } catch (e) {
+            console.error(e)
+            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        }
+    }
+
     return (
         <Fragment>
             <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
@@ -287,8 +321,8 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
                                 Tanggal Pembelian
                             </Label>
                             <Flatpickr
-                                // value={tanggalSosialisasi}
-                                defaultValue={new Date()}
+                                value={details.id && details.tanggal_pembelian}
+                                defaultValue={details.id && details.tanggal_pembelian}
                                 id='tanggalPembelian'
                                 className='form-control'
                                 onChange={date => setTanggalPembelian(date)}
@@ -329,6 +363,57 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
                 <h3 className='mb-0'>Halaman 3</h3>
                 <small className='text-muted'>Catatan Pembelian Bahan</small>
             </div>
+            <Card>
+                <CardHeader>
+                    <div>
+                        <h4>Isi Tempat Dan Tanggal Persetujuan</h4>
+                        <Alert color='info'>
+                            <div className='alert-body'>
+                                Info: Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.
+                            </div>
+                        </Alert>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <Row>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tanggalPersetujuan'>
+                                Tempat Persetujuan
+                            </Label>
+                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_catatan_pembelian_halal} placeholder='Tempat Isi Persetujuan (Cth: Jakarta)'
+                                   onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
+                        </Col>
+                        <Col md={6} xs={12}>
+                            <Label className='form-label' for='tempatPersetujuan'>
+                                Tanggal Persetujuan
+                            </Label>
+                            <Flatpickr
+                                value={detailsSJPH.sjph_id && detailsSJPH.tanggal_persetujuan_catatan_pembelian_halal}
+                                id='tanggal'
+                                className='form-control'
+                                onChange={date => setTanggalPersetujuan(date)}
+                                options={{
+                                    altInput: true,
+                                    altFormat: 'F j, Y',
+                                    defaultDate: "today",
+                                    dateFormat: 'Y-m-d',
+                                }}
+                            />
+                        </Col>
+                        &nbsp;
+                        <Col sm='12'>
+                            <div className='d-flex justify-content-center'>
+                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
+                                    Simpan
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+            <div className='divider divider-dashed'>
+                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
+            </div>
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
                     <Label className='me-1' for='search-input'>
@@ -346,7 +431,6 @@ const CatatanPembelianBahanTable = ({stepper, setCheckpoint}) => {
             </Row>
             <div className={'react-dataTable'}>
                 <DataTable
-
                     noHeader
                     pagination
                     // selectableRows
