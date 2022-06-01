@@ -431,7 +431,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
                             <Label className='form-label' for='tanggalPersetujuan'>
                                 Tempat Persetujuan
                             </Label>
-                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_layout_denah_ruang_produksi} placeholder='Tempat Isi Persetujuan (Cth: Jakarta)'
+                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat__persetujuan_catatan_penyimpanan_bahan_produk} placeholder='Isi Kota untuk Tempat Persetujuan (Cth: Jakarta)'
                                    onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
                         </Col>
                         <Col md={6} xs={12}>

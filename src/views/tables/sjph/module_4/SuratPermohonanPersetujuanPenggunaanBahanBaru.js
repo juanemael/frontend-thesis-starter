@@ -401,7 +401,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                             <Label className='form-label' for='tanggalPersetujuan'>
                                 Tempat Persetujuan
                             </Label>
-                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_surat_permohonan_persetujuan_barang_baru} placeholder='Tempat Isi Persetujuan (Cth: Jakarta)'
+                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_surat_permohonan_persetujuan_barang_baru} placeholder='Isi Kota untuk Tempat Persetujuan (Cth: Jakarta)'
                                    onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
                         </Col>
                         <Col md={6} xs={12}>
