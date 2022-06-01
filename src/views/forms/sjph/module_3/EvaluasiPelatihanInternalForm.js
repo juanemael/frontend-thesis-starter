@@ -27,7 +27,7 @@ const EvaluasiPelatihanInternalForm = ({stepper,setCheckpoint}) => {
     const getSJPHBySJPHID = async (id) => {
         try {
             const result = await kebijakanEdukasiHalalModel.getEvaluasiPelatihanInternal(id)
-            setSoal(EditorState.createWithContent(convertFromRaw(result[0].soal_evaluasi_pelatihan_internal)))
+            setSoal(EditorState.createWithContent(convertFromRaw(JSON.parse(result[0].soal_evaluasi_pelatihan_internal))))
         } catch (e) {
             console.error(e)
         }

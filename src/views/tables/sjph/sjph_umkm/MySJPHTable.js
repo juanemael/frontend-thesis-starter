@@ -514,14 +514,16 @@ const MySJPHTable = () => {
         window.location.reload()
     }
 
-    const selectSJPH = async (id,perusahaan_id,surat_keputusan_ptmp_halal_id,name) =>{
+    const selectSJPH = async (id,perusahaan_id,surat_keputusan_ptmp_halal_id,kaji_ulang_manajemen_id,
+                              surat_pernyataan_bebas_babi_id,name) =>{
         try {
             setIsSelected(true)
             sessionStorage.sjph_id = id
             sessionStorage.nama_sjph = name
             sessionStorage.perusahaan_id = perusahaan_id
             sessionStorage.surat_keputusan_ptmp_halal_id = surat_keputusan_ptmp_halal_id
-            getSuratKeputusanBySuratKeputusanID(sessionStorage.surat_keputusan_ptmp_halal_id)
+            sessionStorage.kaji_ulang_manajemen_id = kaji_ulang_manajemen_id
+            sessionStorage.surat_pernyataan_bebas_babi_id = surat_pernyataan_bebas_babi_id
             // await reload()
             toast.success(`Anda telah memilih SJPH ${name}`)
         } catch (e) {
@@ -574,7 +576,11 @@ const MySJPHTable = () => {
                 return (
                     <Button className='me-1' disabled={sessionStorage.sjph_id === row.sjph_id? disable: false}
                             color='primary' id='buttonPilihan'
-                            onClick={()=>{ selectSJPH(row.sjph_id,row.perusahaan_id,row.surat_keputusan_ptmp_halal_id,row.nama_sjph) }}>
+                            onClick={()=>{
+                                selectSJPH(row.sjph_id,row.perusahaan_id,
+                                row.surat_keputusan_ptmp_halal_id,row.kaji_ulang_manajemen_id,
+                                row.surat_pernyataan_bebas_babi_id,row.nama_sjph) 
+}}>
                         Pilih
                     </Button>
                 )

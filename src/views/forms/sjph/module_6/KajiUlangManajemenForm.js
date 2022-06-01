@@ -1,98 +1,76 @@
 // ** Reactstrap Imports
 import {
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    UncontrolledDropdown,
-    Badge,
-    Table,
     Col,
     Button,
-    ModalHeader,
-    ModalBody,
-    Row, Label, Input, FormFeedback, Modal, Form
+    Row, Label, Input, Form
 } from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
-import {useState, Fragment} from "react";
-import CompanyProfileModels from "../../../../models/CompanyProfile";
+import {useState, Fragment, useEffect} from "react";
+import AuditKajiUlangManajemenModels from "../../../../models/AuditKajiUlangManajemen";
 import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
-import {ArrowLeft, ArrowRight, Check, Edit, MoreVertical, Trash, X} from "react-feather";
-import {Controller, useForm} from "react-hook-form";
-import Select from "react-select";
 // ** Utils
 import { selectThemeColors } from '@utils'
 
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
+import '@styles/react/libs/flatpickr/flatpickr.scss'
 import classnames from "classnames";
-
-const defaultValues = {
-    firstName: 'Bob',
-    lastName: 'Barton',
-    username: 'bob.dev'
-}
+import Flatpickr from "react-flatpickr";
 
 const KajiUlangManajemenTable = () => {
-
-    const [namaPerusahaan, setNamaPerusahaan] = useState("")
-    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
-    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
     const [komitmenManajemen, setKomitmenManajemen] = useState("")
     const [bahan, setBahan] = useState("")
     const [prosesProdukHalal, setProsesProdukHalal] = useState("")
+    const [pemantauanEvaluasi, setPemantauanEvaluasi] = useState("")
     const [produk, setProduk] = useState("")
-    const [pemantauanEvaluasi, setPemantauaanEvaluasi] = useState("")
-
-    const [details, setDetails] = useState([
-        {
-            id: 1,
-            nama_dan_merek: 'Tepung beras Rosebrand',
-            jumlah: 'Tepung',
-            waktu_pembelian: '09-11-2018'
-        }
-    ])
+    const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
+    const [tempatPersetujuan, setTempatPersetujuan] = useState("")
+    const [showAlert, setShowAlert] = useState(false)
 
 
-    const companyProfileModel = new CompanyProfileModels()
+    const [details, setDetails] = useState([])
+
+
+    const auditKajiUlangManajemenModel = new AuditKajiUlangManajemenModels()
 
     const navigate = useNavigate()
 
     // ** States
     const [show, setShow] = useState(false)
 
-    // ** Hooks
-    const {
-        control,
-        setError,
-        handleSubmit,
-        formState: { errors }
-    } = useForm({ defaultValues })
-
-    const onSubmitModal = data => {
-        if (Object.values(data).every(field => field.length > 0)) {
-            return null
-        } else {
-            for (const key in data) {
-                if (data[key].length === 0) {
-                    setError(key, {
-                        type: 'manual'
-                    })
-                }
+    const getKajiUlangManajemenID = async (id) => {
+        try {
+            if (!sessionStorage.kaji_ulang_manajemen_id || sessionStorage.kaji_ulang_manajemen_id === 'null') {
+                setShowAlert(true)
+                console.log("ALERT",showAlert)
+            } else {
+                const result = await auditKajiUlangManajemenModel.getKajiUlangManajemenByID(id)
+                setDetails(result)
+                console.log(details)
             }
+        } catch (e) {
+            console.error(e)
         }
     }
 
     const submit = async () => {
         const body = {
-            nama_perusahaan: namaPerusahaan,
+            komitmen_dan_manajemen: komitmenManajemen,
+            bahan,
+            proses_produk_halal: prosesProdukHalal,
+            produk,
+            pemantauan_dan_evaluasi: pemantauanEvaluasi,
+            tempat_persetujuan: tempatPersetujuan,
+            tanggal_persetujuan: tanggalPersetujuan
         }
         try {
-            const result = await companyProfileModel.createCompanyProfile(body)
-            if ((result.id)||(result.success)) {
+            const result = await auditKajiUlangManajemenModel.createKajiUlangManajemen(sessionStorage.sjph_id,body)
+            if ((result.kaji_ulang_manajemen_id)||(result.success)) {
+                sessionStorage.kaji_ulang_manajemen_id = result.kaji_ulang_manajemen_id
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        navigate('/sjph/company_profile')
+                        getKajiUlangManajemenID(sessionStorage.kaji_ulang_manajemen_id)
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
@@ -102,6 +80,10 @@ const KajiUlangManajemenTable = () => {
             await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
         }
     }
+
+    useEffect(()=>{
+        getKajiUlangManajemenID(sessionStorage.kaji_ulang_manajemen_id)
+    },[])
 
     return (
         <Fragment>
@@ -122,7 +104,7 @@ const KajiUlangManajemenTable = () => {
                             placeholder='Komitmen dan Manajemen'
                             style={{ minHeight: '100px' }}
                             onChange={e => setKomitmenManajemen(e.target.value)}
-                            defaultValue={ details.id && details.nama_dan_merek }
+                            defaultValue={ details.id && details.komitmen_dan_manajemen }
                             className={classnames({ 'text-danger': komitmenManajemen.length > 120 })}
                         />
                         <span
@@ -135,7 +117,7 @@ const KajiUlangManajemenTable = () => {
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
                         <Label className='form-label' for='EmailMulti'>
-                            Komitmen dan Manajemen
+                            Bahan
                         </Label>
                         <Input
                             name='bahan'
@@ -144,7 +126,7 @@ const KajiUlangManajemenTable = () => {
                             placeholder='Bahan'
                             style={{ minHeight: '100px' }}
                             onChange={e => setBahan(e.target.value)}
-                            defaultValue={ details.id && details.nama_dan_merek }
+                            defaultValue={ details.id && details.bahan }
                             className={classnames({ 'text-danger': bahan.length > 120 })}
                         />
                         <span
@@ -164,9 +146,10 @@ const KajiUlangManajemenTable = () => {
                             type='textarea'
                             id='prosesProdukHalal'
                             placeholder='Proses dan Produk Halal'
+                            value={details.proses_produk_halal}
                             style={{ minHeight: '100px' }}
                             onChange={e => setProsesProdukHalal(e.target.value)}
-                            defaultValue={ details.id && details.nama_dan_merek }
+                            defaultValue={ details.id && details.proses_produk_halal }
                             className={classnames({ 'text-danger': prosesProdukHalal.length > 120 })}
                         />
                         <span
@@ -188,7 +171,7 @@ const KajiUlangManajemenTable = () => {
                             placeholder='Produk'
                             style={{ minHeight: '100px' }}
                             onChange={e => setProduk(e.target.value)}
-                            defaultValue={ details.id && details.nama_dan_merek }
+                            defaultValue={ details.id && details.produk }
                             className={classnames({ 'text-danger': produk.length > 120 })}
                         />
                         <span
@@ -209,8 +192,8 @@ const KajiUlangManajemenTable = () => {
                             id='pemantauanEvaluasi'
                             placeholder='Pemantauan dan Evaluasi '
                             style={{ minHeight: '100px' }}
-                            onChange={e => setPemantauaanEvaluasi(e.target.value)}
-                            defaultValue={ details.id && details.nama_dan_merek }
+                            onChange={e => setPemantauanEvaluasi(e.target.value)}
+                            defaultValue={ details.id && details.pemantauan_dan_evaluasi }
                             className={classnames({ 'text-danger': pemantauanEvaluasi.length > 120 })}
                         />
                         <span
@@ -221,12 +204,39 @@ const KajiUlangManajemenTable = () => {
                             {`${pemantauanEvaluasi.length}/120`}
                         </span>
                     </Col>
+                    <Col md={3} xs={6}>
+                        <Label className='form-label' for='tanggal'>
+                            Tanggal
+                        </Label>
+                        <Flatpickr
+                            value={details.id && details.tanggal_persetujuan}
+                            defaultValue={details.id && details.tanggal}
+                            // defaultValue={cont}
+                            id='tanggal'
+                            className='form-control align-bottom'
+                            style={{ minHeight: '100px' }}
+                            onChange={date => setTanggalPersetujuan(date)}
+                            options={{
+                                altInput: true,
+                                altFormat: 'F j, Y',
+                                dateFormat: 'Y-m-d',
+                            }}
+                        />
+                    </Col>
+                    <Col md='3' sm='6' className='mb-1'>
+                        <Label className='form-label' for='tempatPersetujuan'>
+                            Tempat Persetujuan
+                        </Label>
+                        <Input type='text' defaultValue={details.id && details.tempat_persetujuan} name='tempatPersetujuan' id='tempatPersetujuan' onChange={(e)=>{
+                            setTempatPersetujuan(e.target.value)
+                        }} placeholder='Tempat pengisian sekarang(Cth: Jakarta)' />
+                    </Col>
                     <Col sm='12'>
                         <div className='d-flex justify-content-center'>
                             <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kepentingan_produksi_dan_distribusi_produk')} outline>
                                 Kembali
                             </Button>
-                            <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
+                            <Button className='me-1' color='primary' onClick={submit}>
                                 Tambah
                             </Button>
                             <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>

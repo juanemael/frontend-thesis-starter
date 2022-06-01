@@ -21,7 +21,7 @@ export default class BahanKepentinganHalal {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan_setiap_produk/create/${sjph_id}`, 'POST', body)
     }
     editSuratPernyataanBebasBabi = async (surat_pernyataan_bebas_babi_id, body) => {
-        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_pernyataan_bebas_babi/edit/${surat_pernyataan_bebas_babi_id}`, 'POST', body)
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_pernyataan_bebas_babi/edit/${surat_pernyataan_bebas_babi_id}`, 'PUT', body)
     }
     getDaftarBahanAll = async () => {
         return await ApiRequest.set(`/sjph/kriteria_sjph/media_komunikasi`, 'GET')

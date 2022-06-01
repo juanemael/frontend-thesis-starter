@@ -10,6 +10,7 @@ import swal from 'sweetalert2'
 import {useNavigate} from "react-router-dom";
 import {ArrowLeft, ArrowRight} from "react-feather";
 import Flatpickr from "react-flatpickr";
+import '@styles/react/libs/flatpickr/flatpickr.scss'
 
 const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
 
@@ -19,6 +20,7 @@ const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
     const [tanggal, setTanggal] = useState("")
     const [tempat, setTempat] = useState("")
     const [details, setDetails] = useState([])
+    const [showAlert, setShowAlert] = useState(false)
 
 
     const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
@@ -27,8 +29,14 @@ const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
 
     const getSuratPernyataanBebasBabiID = async (id) => {
         try {
-            const result = await bahanKepentinganHalalModel.getSuratPernyataanBebasBabiByID(id)
-            setDetails(result)
+            if (!sessionStorage.surat_pernyataan_bebas_babi_id || sessionStorage.surat_pernyataan_bebas_babi_id === 'null') {
+                setShowAlert(true)
+                console.log("ALERT",showAlert)
+            } else {
+                const result = await bahanKepentinganHalalModel.getSuratPernyataanBebasBabiByID(id)
+                setDetails(result)
+                console.log(details)
+            }
         } catch (e) {
             console.error(e)
         }
@@ -44,10 +52,11 @@ const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
         }
         try {
             const result = await bahanKepentinganHalalModel.createSuratPernyataanBebasBabi(sessionStorage.sjph_id,body)
-            if ((result.id)||(result.success)) {
+            if ((result.surat_pernyataan_bebas_babi_id)||(result.success)) {
+                sessionStorage.surat_pernyataan_bebas_babi_id = result.surat_pernyataan_bebas_babi_id
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        getSuratPernyataanBebasBabiID(sessionStorage.sjph_id)
+                        getSuratPernyataanBebasBabiID(sessionStorage.surat_pernyataan_bebas_babi_id)
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
@@ -60,7 +69,7 @@ const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
 
 
     useEffect(()=>{
-        getSuratPernyataanBebasBabiID(sessionStorage.sjph_id)
+        getSuratPernyataanBebasBabiID(sessionStorage.surat_pernyataan_bebas_babi_id)
     },[])
 
     return (
@@ -117,7 +126,7 @@ const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
                             Tanggal
                         </Label>
                         <Flatpickr
-                            // value={tanggalSosialisasi}
+                            value={details.id && details.tanggal}
                             // defaultValue={cont}
                             id='tanggal'
                             defaultValue={details.id && details.tanggal}
