@@ -29,11 +29,6 @@ import {
     Trash,
     X
 } from "react-feather";
-import {Controller, useForm} from "react-hook-form";
-import Select from "react-select";
-// ** Utils
-import { selectThemeColors } from '@utils'
-
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
 import '@styles/react/libs/tables/react-dataTable-component.scss'
@@ -43,22 +38,15 @@ import ReactPaginate from "react-paginate";
 import Swal from "sweetalert2";
 import Flatpickr from "react-flatpickr";
 import SJPHKuModels from "../../../../models/SJPHKu";
-
-
-const defaultValues = {
-    firstName: 'Bob',
-    lastName: 'Barton',
-    username: 'bob.dev'
-}
+import CatatanPembelianBahanModal from "../../../modals/sjph/module_4/CatatanPembelianBahanModal";
 
 const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setCheckpoint}) => {
 
-    const [currentPage, setCurrentPage] = useState(0)
-    const [searchValue, setSearchValue] = useState('')
-    const [filteredData, setFilteredData] = useState([])
-    const [namaMerek, setNamaMerek] = useState("")
-    const [jumlah, setJumlah] = useState("")
-    const [tanggalPembelian, setTanggalPembelian] = useState("")
+    const [currentPageGroup, setCurrentPageGroup] = useState(0)
+    const [searchValueGroup, setSearchValueGroup] = useState('')
+    const [filteredDataGroup, setFilteredDataGroup] = useState([])
+    const [nama, setNama] = useState("")
+    const [groupID, setGroupID] = useState(null)
     const [details, setDetails] = useState([])
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
@@ -70,37 +58,51 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
 
     // ** States
     const [show, setShow] = useState(false)
+    const [show2, setShow2] = useState(false)
 
-    // ** Hooks
-    const {
-        control,
-        setError,
-        handleSubmit,
-        formState: { errors }
-    } = useForm({ defaultValues })
-
-    const getCatatanPembelianBahanBySJPHID = async (id) => {
+    const getCatatanPembelianBahanGroupBySJPHID = async (id) => {
         try {
-            const result = await bahanKepentinganHalalModel.getCatatanPembelianBahanBySJPHID(id)
+            const result = await bahanKepentinganHalalModel.getCatatanPembelianBahanGroupBySJPHID(id)
             setDetails(result)
         } catch (e) {
             console.error(e)
         }
     }
-
     useEffect(()=>{
-        getCatatanPembelianBahanBySJPHID(sessionStorage.sjph_id)
+        getCatatanPembelianBahanGroupBySJPHID(sessionStorage.sjph_id)
     },[])
 
 
-    const handlePagination = page => {
-        setCurrentPage(page.selected)
+    const handlePaginationGroup = page => {
+        setCurrentPageGroup(page.selected)
     }
+    const CustomPaginationGroup = () => (
+        <ReactPaginate
+            previousLabel=''
+            nextLabel=''
+            forcePage={currentPageGroup}
+            onPageChange={page => handlePaginationGroup(page)}
+            pageCount={searchValueGroup.length ? Math.ceil(filteredDataGroup.length / 7) : Math.ceil(details.length / 7) || 1}
+            breakLabel='...'
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={2}
+            activeClassName='active'
+            pageClassName='page-item'
+            breakClassName='page-item'
+            nextLinkClassName='page-link'
+            pageLinkClassName='page-link'
+            breakLinkClassName='page-link'
+            previousLinkClassName='page-link'
+            nextClassName='page-item next-item'
+            previousClassName='page-item prev-item'
+            containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1'
+        />
+    )
 
-    const handleFilter = e => {
+    const handleFilterGroup = e => {
         const value = e.target.value
         let updatedData = []
-        setSearchValue(value)
+        setSearchValueGroup(value)
 
         const status = {
             1: { title: 'Current', color: 'light-primary' },
@@ -128,88 +130,12 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
                     return includes
                 } else return null
             })
-            setFilteredData(updatedData)
-            setSearchValue(value)
+            setFilteredDataGroup(updatedData)
+            setSearchValueGroup(value)
         }
     }
 
-    const CustomPagination = () => (
-        <ReactPaginate
-            previousLabel=''
-            nextLabel=''
-            forcePage={currentPage}
-            onPageChange={page => handlePagination(page)}
-            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(details.length / 7) || 1}
-            breakLabel='...'
-            pageRangeDisplayed={2}
-            marginPagesDisplayed={2}
-            activeClassName='active'
-            pageClassName='page-item'
-            breakClassName='page-item'
-            nextLinkClassName='page-link'
-            pageLinkClassName='page-link'
-            breakLinkClassName='page-link'
-            previousLinkClassName='page-link'
-            nextClassName='page-item next-item'
-            previousClassName='page-item prev-item'
-            containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1'
-        />
-    )
-
-    const BootstrapCheckbox = forwardRef((props, ref) => (
-        <div className='form-check'>
-            <Input type='checkbox' ref={ref} {...props} />
-        </div>
-    ))
-
-    const deleteMediaKomunikas = async (id) => {
-        swal.fire({
-            title: "Peringatan!",
-            text: "Apakah kamu yakin ingin menghapus data ini?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButton: "Iya, tentu saja",
-            cancelButton: "Tidak",
-            customClass: {
-                confirmButton: 'btn btn-primary',
-                cancelButton: 'btn btn-danger ms-1'
-            },
-            buttonsStyling: false
-            // dangerMode: true,
-        }).then(async (res) => {
-            if (res.isConfirmed) {
-                try {
-                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
-
-                    if (result.id || result.success) {
-                        await Swal.fire({
-                            icon: "success",
-                            title: "Sukses menghapus!",
-                            text: 'Data kamu telah dihapus.',
-                            customClass: {
-                                confirmButton: 'btn btn-success'
-                            }
-                        }).then(()=>{
-                            getCatatanPembelianBahanBySJPHID(sessionStorage.sjph_id)
-                        })
-                    } else {
-                        await Swal.fire({
-                            title: 'Failed',
-                            text: 'Failed to delete',
-                            icon: 'error',
-                            customClass: {
-                                confirmButton: 'btn btn-success'
-                            }})
-                    }
-                } catch (e) {
-                    console.error(e)
-                    await Swal.fire('', e.error_message ? e.error_message : "Something Wrong", 'error')
-                }
-            }
-        })
-    }
-
-    const columns = [
+    const columnsGroup = [
         {
             name: 'ID',
             // minWidth: '150px',
@@ -217,22 +143,26 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
             sortable: row => row.id
         },
         {
-            name: 'Nama Bahan - Merk Bahan',
+            name: 'Nama Tabel Catatan Pembelian Bahan',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.nama_dan_merek
+            selector: row => row.nama
         },
         {
-            name: 'Jumlah',
-            sortable: true,
-            // minWidth: '150px',
-            selector: row => row.jumlah
-        },
-        {
-            name: 'Waktu Pembelian',
-            sortable: true,
-            // minWidth: '150px',
-            selector: row => row.tanggal_pembelian
+            name:  'Konten Isi',
+            cell:  (row) => {
+                return (
+                    <Button className='me-1'
+                            color='primary' id='buttonLihat'
+                            onClick={()=>{
+                                setGroupID(row.id)
+                                console.log(groupID)
+                                setShow2(true)
+                            }}>
+                        Isi Tabel
+                    </Button>
+                )
+            }
         },
         {
             name: 'Tindakan',
@@ -245,9 +175,17 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
                                 <MoreVertical size={15} />
                             </DropdownToggle>
                             <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                <DropdownItem tag='a' className='w-100' onClick={() =>{
+                                    setGroupID(row.id)
+                                    setNama(row.nama)
+                                    setTanggalPersetujuan(row.tanggal_persetujuan_catatan_pembelian_halal)
+                                    console.log(tanggalPersetujuan)
+                                    setTempatPersetujuan(row.tempat_persetujuan_catatan_pembelian_halal)
+                                    console.log(tempatPersetujuan)
+                                    setShow(true)
+                                }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Details</span>
+                                    <span className='align-middle ms-50'>Edit</span>
                                 </DropdownItem>
                                 <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
                                     <Trash size={15} />
@@ -264,89 +202,118 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
 
     const submit = async () => {
         const body = {
-            nama_dan_merek: namaMerek,
-            jumlah,
-            tanggal_pembelian: tanggalPembelian,
-        }
-        try {
-            const result = await bahanKepentinganHalalModel.createCatatanPembelianBahan(sessionStorage.sjph_id,body)
-            if ((result.id)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getCatatanPembelianBahanBySJPHID(sessionStorage.sjph_id)
-                        setShow(false)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
-            }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
-        }
-    }
-
-    const submitTempatTanggal = async () => {
-        const body = {
+            nama: nama? nama : details.nama,
             tempat_persetujuan_catatan_pembelian_halal: tempatPersetujuan? tempatPersetujuan : detailsSJPH.tempat_persetujuan_catatan_pembelian_halal,
             tanggal_persetujuan_catatan_pembelian_halal: tanggalPersetujuan? tanggalPersetujuan : detailsSJPH.tanggal_persetujuan_catatan_pembelian_halal
         }
-        try {
-            const result = await sjphKuModel.editTempatTanggalKeputusanSJPH(sessionStorage.sjph_id,body)
-            if ((result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getSJPHInfo(sessionStorage.sjph_id)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        console.log("INI BODY GROUP", body)
+        if (groupID !== null) {
+            try {
+                const result = await bahanKepentinganHalalModel.editCatatanPembelianGroup(groupID,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di edit','success')
+                        .then(()=>{
+                            setTempatPersetujuan(result.tempat_persetujuan_catatan_pembelian_halal)
+                            setTanggalPersetujuan(result.tanggal_persetujuan_catatan_pembelian_halal)
+                            setNama(result.nama)
+                            getCatatanPembelianBahanGroupBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        } else {
+            try {
+                const result = await bahanKepentinganHalalModel.createCatatanPembelianBahanGroup(sessionStorage.sjph_id,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getCatatanPembelianBahanGroupBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
+
         }
+        setGroupID(null)
     }
 
     return (
         <Fragment>
-            <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
-                <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+            <CatatanPembelianBahanModal setGroupID={setGroupID} groupID={groupID} detailsSJPH={detailsSJPH} setShow2={setShow2} show2={show2} />
+            <Modal isOpen={show} toggle={() => {
+                setGroupID(null)
+                setShow(!show)
+            }} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => {
+                    setGroupID(null)
+                    setShow(!show)
+                }}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     <div className='text-center mb-2'>
                         <h1 className='mb-1'>Tambah Data Tabel</h1>
                         <p>Tambah data tabelmu sekarang</p>
                     </div>
+                    <Card>
+                        <CardHeader>
+                            <div>
+                                <h4>Isi Tempat Dan Tanggal Persetujuan</h4>
+                                <Alert color='info'>
+                                    <div className='alert-body'>
+                                        Info: Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.
+                                    </div>
+                                </Alert>
+                            </div>
+                        </CardHeader>
+                        <CardBody>
+                            <Row>
+                                <Col md={6} xs={12}>
+                                    <Label className='form-label' for='tanggalPersetujuan'>
+                                        Tempat Persetujuan
+                                    </Label>
+                                    <Input id='tanggalPersetujuan' defaultValue={tempatPersetujuan} placeholder='Isi Kota untuk Tempat Persetujuan (Cth: Jakarta)'
+                                           onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    <Label className='form-label' for='tempatPersetujuan'>
+                                        Tanggal Persetujuan
+                                    </Label>
+                                    <Flatpickr
+                                        value={tanggalPersetujuan}
+                                        id='tanggal'
+                                        className='form-control'
+                                        onChange={date => setTanggalPersetujuan(date)}
+                                        options={{
+                                            altInput: true,
+                                            altFormat: 'F j, Y',
+                                            defaultDate: "today",
+                                            dateFormat: 'Y-m-d',
+                                        }}
+                                    />
+                                </Col>
+                                &nbsp;
+                            </Row>
+                        </CardBody>
+                    </Card>
+                    <div className='divider divider-dashed'>
+                        <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
+                    </div>
                     <Row tag='form' className='gy-1 pt-75' >
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='tanggalPembelian'>
-                                Tanggal Pembelian
+                        <Col md={12} xs={12}>
+                            <Label className='form-label' for='nama'>
+                                Nama Catatan Pembelian Bahan
                             </Label>
-                            <Flatpickr
-                                value={details.id && details.tanggal_pembelian}
-                                defaultValue={details.id && details.tanggal_pembelian}
-                                id='tanggalPembelian'
-                                className='form-control'
-                                onChange={date => setTanggalPembelian(date)}
-                                options={{
-                                    altInput: true,
-                                    altFormat: 'F j, Y',
-                                    dateFormat: 'Y-m-d',
-                                }}
-                            />
-                            {errors.firstName && <FormFeedback>Please enter a valid First Name</FormFeedback>}
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='namaMerek'>
-                                Nama dan Merek
-                            </Label>
-                            <Input id='namaMerek' placeholder='Kegiatan' onChange={(e)=>{ setNamaMerek(e.target.value) }}  invalid={errors.judulKegiatan && true} />
-                            {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
-                        </Col>
-                        <Col xs={12}>
-                            <Label className='form-label' for='jumlah'>
-                                Jumlah
-                            </Label>
-                            <Input id='jumlah' placeholder='(Dalam KG)' onChange={(e)=>{ setJumlah(e.target.value) }} invalid={errors.peserta && true} />
-                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
+                            <Input id='nama' defaultValue={nama} placeholder='Tabel Catatan Pembelian Bahan Juni 2022'
+                                   onChange={(e)=>{ setNama(e.target.value) }} />
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
                             <Button onClick={submit} className='me-1' color='primary'>
@@ -363,57 +330,6 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
                 <h3 className='mb-0'>Halaman 3</h3>
                 <small className='text-muted'>Catatan Pembelian Bahan</small>
             </div>
-            <Card>
-                <CardHeader>
-                    <div>
-                        <h4>Isi Tempat Dan Tanggal Persetujuan</h4>
-                        <Alert color='info'>
-                            <div className='alert-body'>
-                                Info: Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.
-                            </div>
-                        </Alert>
-                    </div>
-                </CardHeader>
-                <CardBody>
-                    <Row>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='tanggalPersetujuan'>
-                                Tempat Persetujuan
-                            </Label>
-                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_catatan_pembelian_halal} placeholder='Isi Kota untuk Tempat Persetujuan (Cth: Jakarta)'
-                                   onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='tempatPersetujuan'>
-                                Tanggal Persetujuan
-                            </Label>
-                            <Flatpickr
-                                value={detailsSJPH.sjph_id && detailsSJPH.tanggal_persetujuan_catatan_pembelian_halal}
-                                id='tanggal'
-                                className='form-control'
-                                onChange={date => setTanggalPersetujuan(date)}
-                                options={{
-                                    altInput: true,
-                                    altFormat: 'F j, Y',
-                                    defaultDate: "today",
-                                    dateFormat: 'Y-m-d',
-                                }}
-                            />
-                        </Col>
-                        &nbsp;
-                        <Col sm='12'>
-                            <div className='d-flex justify-content-center'>
-                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
-                                    Simpan
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </CardBody>
-            </Card>
-            <div className='divider divider-dashed'>
-                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
-            </div>
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
                     <Label className='me-1' for='search-input'>
@@ -424,8 +340,8 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
                         type='text'
                         bsSize='sm'
                         id='search-input'
-                        value={searchValue}
-                        onChange={handleFilter}
+                        value={searchValueGroup}
+                        onChange={handleFilterGroup}
                     />
                 </Col>
             </Row>
@@ -434,13 +350,13 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
                     noHeader
                     pagination
                     // selectableRows
-                    columns={columns}
+                    columns={columnsGroup}
                     paginationPerPage={7}
                     className='react-dataTable'
                     sortIcon={<ChevronDown size={10} />}
-                    paginationDefaultPage={currentPage + 1}
-                    paginationComponent={CustomPagination}
-                    data={searchValue.length ? filteredData : details}
+                    paginationDefaultPage={currentPageGroup + 1}
+                    paginationComponent={CustomPaginationGroup}
+                    data={searchValueGroup.length ? filteredDataGroup : details}
                     // selectableRowsComponent={BootstrapCheckbox}
                 />
             </div>
