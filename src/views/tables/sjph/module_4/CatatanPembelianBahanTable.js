@@ -143,7 +143,7 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
             sortable: row => row.id
         },
         {
-            name: 'Nama Tabel Catatan Pembelian Bahan',
+            name: 'Nama Dokumen',
             sortable: true,
             // minWidth: '150px',
             selector: row => row.nama
@@ -203,8 +203,8 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
     const submit = async () => {
         const body = {
             nama: nama? nama : details.nama,
-            tempat_persetujuan_catatan_pembelian_halal: tempatPersetujuan? tempatPersetujuan : detailsSJPH.tempat_persetujuan_catatan_pembelian_halal,
-            tanggal_persetujuan_catatan_pembelian_halal: tanggalPersetujuan? tanggalPersetujuan : detailsSJPH.tanggal_persetujuan_catatan_pembelian_halal
+            tempat_persetujuan_catatan_pembelian_halal: tempatPersetujuan? tempatPersetujuan : details.tempat_persetujuan_catatan_pembelian_halal,
+            tanggal_persetujuan_catatan_pembelian_halal: tanggalPersetujuan? tanggalPersetujuan : details.tanggal_persetujuan_catatan_pembelian_halal
         }
         console.log("INI BODY GROUP", body)
         if (groupID !== null) {
@@ -234,6 +234,9 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
                         .then(()=>{
                             getCatatanPembelianBahanGroupBySJPHID(sessionStorage.sjph_id)
                             setShow(false)
+                            setTanggalPersetujuan("")
+                            setNama("")
+                            setTempatPersetujuan("")
                         })
                 } else {
                     await swal.fire('','Data gagal disimpan', 'error')

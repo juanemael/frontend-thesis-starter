@@ -33,23 +33,18 @@ import Flatpickr from "react-flatpickr";
 import KepentinganProduksiDistribusiProdukModels from "../../../../models/KepentinganProduksiDistribusiProduk";
 import moment from "moment";
 import SJPHKuModels from "../../../../models/SJPHKu";
+import CatatanHasilProduksiModal from "../../../modals/sjph/module_5/CatatanHasilProduksiModal";
+import CatatanDistribusiPenjualanProdukModal from "../../../modals/sjph/module_5/CatatanDistribusiPenjualanProdukModal";
 
-const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
-
-
-    const [currentPage, setCurrentPage] = useState(0)
-    const [searchValue, setSearchValue] = useState('')
-    const [filteredData, setFilteredData] = useState([])
-    const [tanggal, setTanggal] = useState("")
-    const [namaVarianMerekProduk, setNamaVarianMerekProduk] = useState("")
-    const [jumlah, setJumlah] = useState(0)
-    const [tujuan, setTujuan] = useState("")
+const CatatanDistribusiPenjualanProdukTable = ({stepper, detailsSJPH, setCheckpoint}) => {
+    const [currentPageGroup, setCurrentPageGroup] = useState(0)
+    const [searchValueGroup, setSearchValueGroup] = useState('')
+    const [filteredDataGroup, setFilteredDataGroup] = useState([])
+    const [groupID, setGroupID] = useState(null)
+    const [nama, setNama] = useState("")
     const [details, setDetails] = useState([])
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
-    const [detailsSJPH,setDetailsSJPH] = useState([])
-
-    const sjphKuModel = new SJPHKuModels()
 
 
     const kepentinganProduksiDistribusiProdukModel = new KepentinganProduksiDistribusiProdukModels()
@@ -58,41 +53,25 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
 
     // ** States
     const [show, setShow] = useState(false)
+    const [show2, setShow2] = useState(false)
 
-
-    const getCatatanDistribusiPenjualanProdukBySJPHID = async (id) => {
+    const getAllCatatanDistribusiPenjualanProdukGroupBySJPHID = async (id) => {
         try {
-            const result = await kepentinganProduksiDistribusiProdukModel.getCatatanDistribusiPenjualanProdukBySJPHID(id)
+            const result = await kepentinganProduksiDistribusiProdukModel.getAllCatatanDistribusiPenjualanProdukGroupBySJPHID(id)
             setDetails(result)
         } catch (e) {
             console.error(e)
         }
     }
 
-    const getSJPHInfo= async (id) => {
-        try {
-            const result = await sjphKuModel.getSelectedSJPH(id)
-            console.log(result)
-            setDetailsSJPH(result)
-        } catch (e) {
-            console.error(e)
-        }
+    const handlePaginationGroup = page => {
+        setCurrentPageGroup(page.selected)
     }
 
-    useEffect(()=>{
-        getCatatanDistribusiPenjualanProdukBySJPHID(sessionStorage.sjph_id)
-        getSJPHInfo(sessionStorage.sjph_id)
-    },[])
-
-
-    const handlePagination = page => {
-        setCurrentPage(page.selected)
-    }
-
-    const handleFilter = e => {
+    const handleFilterGroup = e => {
         const value = e.target.value
         let updatedData = []
-        setSearchValue(value)
+        setSearchValueGroup(value)
 
         const status = {
             1: { title: 'Current', color: 'light-primary' },
@@ -105,12 +84,12 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
         if (value.length) {
             updatedData = details.filter(item => {
                 const startsWith =
-                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 
                 const includes =
-                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama_dan_merek.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 
@@ -120,18 +99,18 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
                     return includes
                 } else return null
             })
-            setFilteredData(updatedData)
-            setSearchValue(value)
+            setFilteredDataGroup(updatedData)
+            setSearchValueGroup(value)
         }
     }
 
-    const CustomPagination = () => (
+    const CustomPaginationGroup = () => (
         <ReactPaginate
             previousLabel=''
             nextLabel=''
-            forcePage={currentPage}
-            onPageChange={page => handlePagination(page)}
-            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(details.length / 7) || 1}
+            forcePage={currentPageGroup}
+            onPageChange={page => handlePaginationGroup(page)}
+            pageCount={searchValueGroup.length ? Math.ceil(filteredDataGroup.length / 7) : Math.ceil(details.length / 7) || 1}
             breakLabel='...'
             pageRangeDisplayed={2}
             marginPagesDisplayed={2}
@@ -147,6 +126,9 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
             containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1'
         />
     )
+    useEffect(()=>{
+        getAllCatatanDistribusiPenjualanProdukGroupBySJPHID(sessionStorage.sjph_id)
+    },[])
 
     const BootstrapCheckbox = forwardRef((props, ref) => (
         <div className='form-check'>
@@ -182,7 +164,7 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
                                 confirmButton: 'btn btn-success'
                             }
                         }).then(()=>{
-                            getCatatanDistribusiPenjualanProdukBySJPHID(sessionStorage.sjph_id)
+                            getAllCatatanDistribusiPenjualanProdukGroupBySJPHID(sessionStorage.sjph_id)
                         })
                     } else {
                         await Swal.fire({
@@ -201,7 +183,7 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
         })
     }
 
-    const columns = [
+    const columnsGroup = [
         {
             name: 'ID',
             // minWidth: '150px',
@@ -209,28 +191,25 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
             sortable: row => row.id
         },
         {
-            name: 'Tanggal',
+            name: 'Nama Dokumen',
             sortable: true,
             // minWidth: '150px',
-            selector: row => <>{moment(row.tanggal).format('DD-MM-YYYY')}</>
+            selector: row => row.nama
         },
         {
-            name: 'Nama Produk/Varian/Merek',
-            sortable: true,
-            // minWidth: '150px',
-            selector: row => row.nama_varian_merek_produk
-        },
-        {
-            name: 'Jumlah',
-            sortable: true,
-            // minWidth: '150px',
-            selector: row => row.jumlah
-        },
-        {
-            name: 'Tujuan',
-            sortable: true,
-            // minWidth: '150px',
-            selector: row => row.tujuan
+            name:  'Konten Isi',
+            cell:  (row) => {
+                return (
+                    <Button className='me-1'
+                            color='primary' id='buttonLihat'
+                            onClick={()=>{
+                                setGroupID(row.id)
+                                setShow2(true)
+                            }}>
+                        Isi Tabel
+                    </Button>
+                )
+            }
         },
         {
             name: 'Tindakan',
@@ -243,9 +222,17 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
                                 <MoreVertical size={15} />
                             </DropdownToggle>
                             <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                <DropdownItem tag='a' className='w-100' onClick={() =>{
+                                    setGroupID(row.id)
+                                    setNama(row.nama)
+                                    setTanggalPersetujuan(row.tanggal_persetujuan_catatan_distribusi_penjualan_produk)
+                                    console.log(tanggalPersetujuan)
+                                    setTempatPersetujuan(row.tempat_persetujuan_catatan_distribusi_penjualan_produk)
+                                    console.log(tempatPersetujuan)
+                                    setShow(true)
+                                }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Details</span>
+                                    <span className='align-middle ms-50'>Edit</span>
                                 </DropdownItem>
                                 <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
                                     <Trash size={15} />
@@ -262,100 +249,121 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
 
     const submit = async () => {
         const body = {
-            tanggal,
-            nama_varian_merek_produk: namaVarianMerekProduk,
-            jumlah,
-            tujuan
+            nama: nama? nama : details.nama,
+            tempat_persetujuan_catatan_distribusi_penjualan_produk: tempatPersetujuan? tempatPersetujuan : details.tempat_persetujuan_catatan_distribusi_penjualan_produk,
+            tanggal_persetujuan_catatan_distribusi_penjualan_produk: tanggalPersetujuan? tanggalPersetujuan : details.tanggal_persetujuan_catatan_distribusi_penjualan_produk
         }
-        try {
-            const result = await kepentinganProduksiDistribusiProdukModel.createCatatanDistribusiPenjualanProduk(sessionStorage.sjph_id,body)
-            if ((result.id)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getCatatanDistribusiPenjualanProdukBySJPHID(sessionStorage.sjph_id)
-                        setShow(false)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        console.log("INI BODY GROUP", body)
+        if (groupID !== null) {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.editCatatanHasilProduksiGroupByGroupID(groupID,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di edit','success')
+                        .then(()=>{
+                            setTempatPersetujuan(result.tempat_persetujuan_catatan_distribusi_penjualan_produk)
+                            setTanggalPersetujuan(result.tanggal_persetujuan_catatan_distribusi_penjualan_produk)
+                            setNama(result.nama)
+                            getAllCatatanDistribusiPenjualanProdukGroupBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
-        }
-    }
+        } else {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.createCatatanDistribusiPenjualanProdukGroupBySJPHID(sessionStorage.sjph_id,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getAllCatatanDistribusiPenjualanProdukGroupBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                            setTanggalPersetujuan("")
+                            setNama("")
+                            setTempatPersetujuan("")
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
 
-    const submitTempatTanggal = async () => {
-        const body = {
-            tempat_persetujuan_catatan_distribusi_penjualan_produk: tempatPersetujuan,
-            tanggal_persetujuan_catatan_distribusi_penjualan_produk: tanggalPersetujuan
         }
-        try {
-            const result = await sjphKuModel.editTempatTanggalKeputusanSJPH(sessionStorage.sjph_id,body)
-            if ((result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getSJPHInfo(sessionStorage.sjph_id)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
-            }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
-        }
+        setGroupID(null)
     }
 
     return (
         <Fragment>
-            <div className='content-header'>
-                <h3 className='mb-0'>Halaman 3</h3>
-                <small className='text-muted'>Catatan Distribusi/Penjualan Produk</small>
-            </div>
-            <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
-                <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+            <CatatanDistribusiPenjualanProdukModal setGroupID={setGroupID} groupID={groupID} detailsSJPH={detailsSJPH} setShow2={setShow2} show2={show2} />
+            <Modal isOpen={show} toggle={() => {
+                setGroupID(null)
+                setShow(!show)
+            }} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => {
+                    setGroupID(null)
+                    setShow(!show)
+                }}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     <div className='text-center mb-2'>
                         <h1 className='mb-1'>Tambah Data Tabel</h1>
                         <p>Tambah data tabelmu sekarang</p>
                     </div>
+                    <Card>
+                        <CardHeader>
+                            <div>
+                                <h4>Isi Tempat Dan Tanggal Persetujuan</h4>
+                                <Alert color='info'>
+                                    <div className='alert-body'>
+                                        Info: Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.
+                                    </div>
+                                </Alert>
+                            </div>
+                        </CardHeader>
+                        <CardBody>
+                            <Row>
+                                <Col md={6} xs={12}>
+                                    <Label className='form-label' for='tanggalPersetujuan'>
+                                        Tempat Persetujuan
+                                    </Label>
+                                    <Input id='tanggalPersetujuan' defaultValue={tempatPersetujuan} placeholder='Isi Kota untuk Tempat Persetujuan (Cth: Jakarta)'
+                                           onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    <Label className='form-label' for='tempatPersetujuan'>
+                                        Tanggal Persetujuan
+                                    </Label>
+                                    <Flatpickr
+                                        value={tanggalPersetujuan}
+                                        id='tanggal'
+                                        className='form-control'
+                                        onChange={date => setTanggalPersetujuan(date)}
+                                        options={{
+                                            altInput: true,
+                                            altFormat: 'F j, Y',
+                                            defaultDate: "today",
+                                            dateFormat: 'Y-m-d',
+                                        }}
+                                    />
+                                </Col>
+                                &nbsp;
+                            </Row>
+                        </CardBody>
+                    </Card>
+                    <div className='divider divider-dashed'>
+                        <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
+                    </div>
                     <Row tag='form' className='gy-1 pt-75' >
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='namaVarianMerekProduk'>
-                                Nama Produk/Varian/Merek
+                        <Col md={12} xs={12}>
+                            <Label className='form-label' for='nama'>
+                                Nama Dokumen Catatan Hasil Produksi
                             </Label>
-                            <Input id='namaVarianMerekProduk' placeholder='Nama Produk/Varian/Merek' onChange={(e)=>{ setNamaVarianMerekProduk(e.target.value) }} />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='tanggal'>
-                                Tanggal
-                            </Label>
-                            <Flatpickr
-                                // value={tanggalSosialisasi}
-                                // defaultValue={cont}
-                                id='tanggal'
-                                className='form-control'
-                                onChange={date => setTanggal(date)}
-                                options={{
-                                    altInput: true,
-                                    altFormat: 'F j, Y',
-                                    dateFormat: 'Y-m-d',
-                                }}
-                            />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='jumlah'>
-                                Jumlah
-                            </Label>
-                            <InputGroup>
-                                <Input type='number' step='0.01' id='jumlah' placeholder='100' onChange={(e)=>{ setJumlah(e.target.value) }}  />
-                                <InputGroupText>KG</InputGroupText>
-                            </InputGroup>
-                          </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='Tujuan'>
-                                Tujuan
-                            </Label>
-                            <Input id='Tujuan' placeholder='Tujuan' onChange={(e)=>{ setTujuan(e.target.value) }} />
+                            <Input id='nama' defaultValue={nama} placeholder='Tabel Catatan Hasil Produksi Juni 2022'
+                                   onChange={(e)=>{ setNama(e.target.value) }} />
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
                             <Button onClick={submit} className='me-1' color='primary'>
@@ -368,56 +376,9 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
                     </Row>
                 </ModalBody>
             </Modal>
-            <Card>
-                <CardHeader>
-                    <div>
-                        <h4>Isi Tempat Dan Tanggal Persetujuan</h4>
-                        <Alert color='info'>
-                            <div className='alert-body'>
-                                Info: Kamu bisa mengganti tanggal dan tempat sesuai waktu dan tempat pengisian.
-                            </div>
-                        </Alert>
-                    </div>
-                </CardHeader>
-                <CardBody>
-                    <Row>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='tanggalPersetujuan'>
-                                Tempat Persetujuan
-                            </Label>
-                            <Input id='tanggalPersetujuan' defaultValue={detailsSJPH.sjph_id && detailsSJPH.tempat_persetujuan_catatan_distribusi_penjualan_produk} placeholder='Tempat Isi Persetujuan (Cth: Jakarta)'
-                                   onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
-                        </Col>
-                        <Col md={6} xs={12}>
-                            <Label className='form-label' for='tempatPersetujuan'>
-                                Tanggal Persetujuan
-                            </Label>
-                            <Flatpickr
-                                value={detailsSJPH.sjph_id && detailsSJPH.tanggal_persetujuan_catatan_distribusi_penjualan_produk}
-                                id='tanggal'
-                                className='form-control'
-                                onChange={date => setTanggalPersetujuan(date)}
-                                options={{
-                                    altInput: true,
-                                    altFormat: 'F j, Y',
-                                    defaultDate: "today",
-                                    dateFormat: 'Y-m-d',
-                                }}
-                            />
-                        </Col>
-                        &nbsp;
-                        <Col sm='12'>
-                            <div className='d-flex justify-content-center'>
-                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
-                                    Simpan
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </CardBody>
-            </Card>
-            <div className='divider divider-dashed'>
-                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
+            <div className='content-header'>
+                <h3 className='mb-0'>Halaman 3</h3>
+                <small className='text-muted'>Catatan Distribusi/Penjualan Produk</small>
             </div>
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
@@ -429,24 +390,23 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
                         type='text'
                         bsSize='sm'
                         id='search-input'
-                        value={searchValue}
-                        onChange={handleFilter}
+                        value={searchValueGroup}
+                        onChange={handleFilterGroup}
                     />
                 </Col>
             </Row>
             <div className={'react-dataTable'}>
                 <DataTable
-
                     noHeader
                     pagination
                     // selectableRows
-                    columns={columns}
+                    columns={columnsGroup}
                     paginationPerPage={7}
                     className='react-dataTable'
                     sortIcon={<ChevronDown size={10} />}
-                    paginationDefaultPage={currentPage + 1}
-                    paginationComponent={CustomPagination}
-                    data={searchValue.length ? filteredData : details}
+                    paginationDefaultPage={currentPageGroup + 1}
+                    paginationComponent={CustomPaginationGroup}
+                    data={searchValueGroup.length ? filteredDataGroup : details}
                     // selectableRowsComponent={BootstrapCheckbox}
                 />
             </div>
@@ -460,7 +420,10 @@ const CatatanDistribusiPenjualanProdukTable = ({stepper, setCheckpoint}) => {
                         <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                         <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                     </Button>
-                    <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
+                    <Button className='me-1' color='primary' onClick={()=> {
+                        setShow(true)
+                        console.log(tanggalPersetujuan)
+                    }}>
                         Tambah
                     </Button>
                     <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kaji_ulang_manajemen')}>

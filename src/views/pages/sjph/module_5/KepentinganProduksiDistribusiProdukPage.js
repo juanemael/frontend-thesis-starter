@@ -1,25 +1,32 @@
-import KriteriaSistemJaminanProdukHalalForm from "../../../forms/sjph/module_2/KriteriaSistemJaminanProdukHalalForm";
-import MediaKomunikasiTable from "../../../tables/sjph/module_2/MediaKomunikasiTable";
 import {FileText, Link as LinkIcon, MapPin, User} from "react-feather";
 import Wizard from '@components/wizard'
 import {useEffect, useRef, useState} from "react";
-import SuratPernyataanBebasBabiForm from "../../../forms/sjph/module_4/SuratPernyataanBebasBabiForm";
-import DaftarBahanTable from "../../../tables/sjph/module_4/DaftarBahanTable";
-import DaftarBahanDigunakanSetiapProdukForm from "../../../forms/sjph/module_4/DaftarBahanDigunakanSetiapProdukForm";
-import CatatanPembelianBahanTable from "../../../tables/sjph/module_4/CatatanPembelianBahanTable";
-import FormPemeriksaanBahanTable from "../../../tables/sjph/module_4/FormPemeriksaanBahanTable";
-import CatatanPenyimpananBahanProdukTable from "../../../tables/sjph/module_4/CatatanPenyimpananBahanProdukTable";
 import LayoutDenahRuangProduksiForm from "../../../forms/sjph/module_5/LayoutDenahRuangProduksiForm";
 import DiagramAlirProsesProduksiForm from "../../../forms/sjph/module_5/DiagramAlirProsesProduksiForm";
 import CatatanDistribusiPenjualanProdukTable from "../../../tables/sjph/module_5/CatatanDistribusiPenjualanProdukTable";
 import CatatanHasilProduksiTable from "../../../tables/sjph/module_5/CatatanHasilProduksiTable";
 import {Badge, Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, CardTitle, Progress} from "reactstrap";
 import {Link} from "react-router-dom";
+import SJPHKuModels from "../../../../models/SJPHKu";
 
 const KepentinganProduksiDistribusiProdukPage = () => {
     const ref = useRef(null)
     const [stepper, setStepper] = useState(null)
     const [checkpoint, setCheckpoint] = useState(0);
+    const [detailsSJPH,setDetailsSJPH] = useState([])
+    const sjphKuModel = new SJPHKuModels()
+
+    const getSJPHInfo= async (id) => {
+        try {
+            const result = await sjphKuModel.getSelectedSJPH(id)
+            setDetailsSJPH(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+    useEffect(()=>{
+        getSJPHInfo(sessionStorage.sjph_id)
+    },[])
     const steps = [
         {
             id: 'hal1',
@@ -43,7 +50,7 @@ const KepentinganProduksiDistribusiProdukPage = () => {
             subtitle: 'Catatan Hasil Produksi',
             icon: <MapPin size={18} />,
             content: <CatatanHasilProduksiTable
-                setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
+                detailsSJPH={detailsSJPH} setCheckpoint={setCheckpoint} stepper={stepper} type='wizard-modern' />
         },
         {
             id: 'catatanDistribusiPenjualanProduk',

@@ -94,7 +94,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
         if (value.length) {
             updatedData = details.filter(item => {
                 const startsWith =
-                    item.nama_bahan.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 
@@ -198,7 +198,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
             sortable: row => row.id
         },
         {
-            name: 'Nama Catatan Penyimpanan Bahan Produk',
+            name: 'Nama Dokumen',
             sortable: true,
             // minWidth: '150px',
             selector: row => row.nama
@@ -257,8 +257,8 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
     const submit = async () => {
         const body = {
             nama: nama? nama : details.nama,
-            tempat_persetujuan_catatan_penyimpanan_bahan_produk: tempatPersetujuan? tempatPersetujuan : detailsSJPH.tempat_persetujuan_catatan_pembelian_halal,
-            tanggal_persetujuan_catatan_penyimpanan_bahan_produk: tanggalPersetujuan? tanggalPersetujuan : detailsSJPH.tanggal_persetujuan_catatan_pembelian_halal
+            tempat_persetujuan_catatan_penyimpanan_bahan_produk: tempatPersetujuan? tempatPersetujuan : details.tempat_persetujuan_catatan_pembelian_halal,
+            tanggal_persetujuan_catatan_penyimpanan_bahan_produk: tanggalPersetujuan? tanggalPersetujuan : details.tanggal_persetujuan_catatan_pembelian_halal
         }
         console.log("INI BODY GROUP", body)
         if (groupID !== null) {
@@ -288,6 +288,9 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
                         .then(()=>{
                             getAllCatatanPenyimpananBahanProdukGroupBySJPHID(sessionStorage.sjph_id)
                             setShow(false)
+                            setTanggalPersetujuan("")
+                            setNama("")
+                            setTempatPersetujuan("")
                         })
                 } else {
                     await swal.fire('','Data gagal disimpan', 'error')
