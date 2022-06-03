@@ -1,5 +1,18 @@
 // ** Reactstrap Imports
-import {Row, Col, Input, Form, Button, Label, Card, CardHeader, Alert, CardBody} from 'reactstrap'
+import {
+    Row,
+    Col,
+    Input,
+    Form,
+    Button,
+    Label,
+    Card,
+    CardHeader,
+    Alert,
+    CardBody,
+    UncontrolledDropdown,
+    DropdownToggle, DropdownMenu, DropdownItem
+} from 'reactstrap'
 import '@styles/react/libs/editor/editor.scss'
 import {useState, Fragment, useEffect} from "react";
 import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
@@ -8,9 +21,12 @@ import {useNavigate} from "react-router-dom";
 import Select from "react-select";
 import { selectThemeColors } from '@utils'
 import makeAnimated from 'react-select/animated'
-import {ArrowDown, ArrowLeft, ArrowRight} from "react-feather";
+import {ArrowDown, ArrowLeft, ArrowRight, ChevronDown, Edit, FileText, MoreVertical, Trash} from "react-feather";
 import Flatpickr from "react-flatpickr";
 import SJPHKuModels from "../../../../models/SJPHKu";
+import DataTable from "react-data-table-component";
+import ReactPaginate from "react-paginate";
+import moment from "moment";
 
 const colorOptions = [
     { value: 1, label: 'Ocean', color: '#00B8D9', isFixed: true },
@@ -23,6 +39,11 @@ const colorOptions = [
 
 const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH, setCheckpoint}) => {
 
+    const [currentPage, setCurrentPage] = useState(0)
+    const [searchValue, setSearchValue] = useState('')
+    const [filteredData, setFilteredData] = useState([])
+    const [details, setDetails] = useState([])
+    const [detailsOptions, setDetailsOptions] = useState([])
     const [tanggalDaftarBahanSetiapProduk, setTanggalDaftarBahanSetiapProduk] = useState("")
     const [tempatDaftarBahanSetiapProduk, setTempatDaftarBahanSetiapProduk] = useState("")
     const [namaProduk, setNamaProduk] = useState("")
@@ -36,14 +57,155 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
 
     const navigate = useNavigate()
 
+    const getAllDaftarBahanBySJPHID = async (id) => {
+        try {
+            const result = await bahanKepentinganHalalModel.getAllDaftarBahanBySJPHID(id)
+            // setMediaKomunikasi(result)
+            result.map((value)=>{
+                detailsOptions.push({label: value.nama_dan_merek, value: value.id})
+            })
+            console.log("WOY JALAN DONG ", detailsOptions)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const getDaftarBahanProdukBySJPHID = async (id) => {
+        try {
+            const result = await bahanKepentinganHalalModel.getDaftarBahanProdukBySJPHID(id)
+            setDetails(result)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    useEffect(()=>{
+        getDaftarBahanProdukBySJPHID(sessionStorage.sjph_id)
+        getAllDaftarBahanBySJPHID(sessionStorage.sjph_id)
+    },[])
+
+    const handlePagination = page => {
+        setCurrentPage(page.selected)
+    }
+
+    const handleFilter = e => {
+        const value = e.target.value
+        let updatedData = []
+        setSearchValue(value)
+
+        const status = {
+            1: { title: 'Current', color: 'light-primary' },
+            2: { title: 'Professional', color: 'light-success' },
+            3: { title: 'Rejected', color: 'light-danger' },
+            4: { title: 'Resigned', color: 'light-warning' },
+            5: { title: 'Applied', color: 'light-info' }
+        }
+
+        if (value.length) {
+            updatedData = details.filter(item => {
+                const startsWith =
+                    item.nama_dan_merek.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                const includes =
+                    item.nama_dan_merek.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+
+                if (startsWith) {
+                    return startsWith
+                } else if (!startsWith && includes) {
+                    return includes
+                } else return null
+            })
+            setFilteredData(updatedData)
+            setSearchValue(value)
+        }
+    }
+
+    const CustomPagination = () => (
+        <ReactPaginate
+            previousLabel=''
+            nextLabel=''
+            forcePage={currentPage}
+            onPageChange={page => handlePagination(page)}
+            pageCount={searchValue.length ? Math.ceil(filteredData.length / 7) : Math.ceil(details.length / 7) || 1}
+            breakLabel='...'
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={2}
+            activeClassName='active'
+            pageClassName='page-item'
+            breakClassName='page-item'
+            nextLinkClassName='page-link'
+            pageLinkClassName='page-link'
+            breakLinkClassName='page-link'
+            previousLinkClassName='page-link'
+            nextClassName='page-item next-item'
+            previousClassName='page-item prev-item'
+            containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1'
+        />
+    )
+
+    const columns = [
+        {
+            name: 'Nama Produk',
+            // minWidth: '150px',
+            selector: row => row.nama_produk,
+            sortable: row => row.nama_produk
+        },
+        {
+            name: 'Nama Bahan',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.nama_dan_merek
+        },
+        {
+            name: 'No. Sert. Halal',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.no_sert_halal
+        },
+        {
+            name: 'Masa Berlaku Sert. Halal',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.masa_berlaku_sert_halal
+        },
+        {
+            name: 'Tindakan',
+            allowOverflow: false,
+            cell: (row) => {
+                return (
+                    <div className='d-flex'>
+                        <UncontrolledDropdown>
+                            <DropdownToggle className='cursor-pointer pe-1' tag='span' >
+                                <MoreVertical size={15} />
+                            </DropdownToggle>
+                            <DropdownMenu container={'body'} end>
+                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                    <FileText size={15} />
+                                    <span className='align-middle ms-50'>Edit</span>
+                                </DropdownItem>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                    <Trash size={15} />
+                                    <span className='align-middle ms-50'>Delete</span>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <Edit size={15} />
+                    </div>
+                )
+            }
+        }
+    ]
+
     const submit = async () => {
-        console.log(daftarBahan)
         const daftar_bahan_id = daftarBahan.map((
             value => ({
                 daftar_bahan_id: value,
             })
         ))
-        console.log(daftar_bahan_id)
         const body = {
             daftar_bahan_id,
             nama_produk: namaProduk,
@@ -51,11 +213,10 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
         try {
             console.log(daftarBahan)
             const result = await bahanKepentinganHalalModel.createProduk(sessionStorage.sjph_id,body)
-            if ((result.produk_bahan_id)||(result.success)) {
+            if ((result)||(result.success)) {
                 await swal.fire('','Data berhasil di simpan','success')
                     .then(()=>{
-                        // navigate('/sjph/company_profile')
-                        console.log(result)
+                        getDaftarBahanProdukBySJPHID(sessionStorage.sjph_id)
                     })
             } else {
                 await swal.fire('','Data gagal disimpan', 'error')
@@ -141,9 +302,6 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
                     </Row>
                 </CardBody>
             </Card>
-            <div className='divider divider-dashed'>
-                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
-            </div>
             <Form>
                 <Row>
                     <Col md='6' sm='12' className='mb-1'>
@@ -164,7 +322,7 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
                             components={animatedComponents}
                             // defaultValue={[colorOptions[4], colorOptions[5]]}
                             isMulti
-                            options={colorOptions}
+                            options={detailsOptions}
                             className='react-select'
                             classNamePrefix='select'
                             onChange={(opt)=>{
@@ -174,54 +332,67 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
                             }}
                         />
                     </Col>
-                    <Col md='6' sm='12' className='mb-1'>
-                        <Label className='form-label' for='lastNameMulti'>
-                            Tempat Penetapan
-                        </Label>
-                        <Input type='text' name='jabatan' id='jabatan' onChange={(e)=>{
-                            setTempatDaftarBahanSetiapProduk(e.target.value)
-                        }} placeholder='Jabatan' />
-                    </Col>
-                    <Col md='6' sm='12' className='mb-1'>
-                        <Label className='form-label' for='lastNameMulti'>
-                            Tanggal Penetapan
-                        </Label>
-                        <Flatpickr
-                            // value={tanggalSosialisasi}
-                            // defaultValue={cont}
-                            id='tanggal'
-                            className='form-control'
-                            onChange={date => setTanggalDaftarBahanSetiapProduk(date)}
-                            options={{
-                                altInput: true,
-                                altFormat: 'F j, Y',
-                                dateFormat: 'Y-m-d',
-                            }}
-                        />
-                    </Col>
                     <Col sm='12'>
                         <div className='d-flex justify-content-center'>
-                            <Button className='me-1 ms-1' color='primary' onClick={() => {
-                                stepper.previous()
-                                setCheckpoint(0)
-                            }} outline>
-                                <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
-                                <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
-                            </Button>
                             <Button className='me-1' color='primary' onClick={submit}>
                                 Submit
-                            </Button>
-                            <Button className='me-1' color='primary' onClick={()=>{
-                                stepper.next()
-                                setCheckpoint(2)
-                            }}>
-                                <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
-                                <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                             </Button>
                         </div>
                     </Col>
                 </Row>
             </Form>
+            <div className='divider divider-dashed'>
+                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
+            </div>
+            <Row className='justify-content-end mx-0'>
+                <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>
+                    <Label className='me-1' for='search-input'>
+                        Cari
+                    </Label>
+                    <Input
+                        className='dataTable-filter mb-50'
+                        type='text'
+                        bsSize='sm'
+                        id='search-input'
+                        value={searchValue}
+                        onChange={handleFilter}
+                    />
+                </Col>
+            </Row>
+            <div className={'react-dataTable'}>
+                <DataTable
+                    noHeader
+                    pagination
+                    // selectableRows
+                    columns={columns}
+                    paginationPerPage={7}
+                    className='react-dataTable'
+                    sortIcon={<ChevronDown size={10} />}
+                    paginationDefaultPage={currentPage + 1}
+                    paginationComponent={CustomPagination}
+                    data={searchValue.length ? filteredData : details}
+                    // selectableRowsComponent={BootstrapCheckbox}
+                />
+            </div>
+            &nbsp;
+            <Col sm='12'>
+                <div className='d-flex justify-content-center'>
+                    <Button className='me-1 ms-1' color='primary' onClick={() => {
+                        stepper.previous()
+                        setCheckpoint(0)
+                    }} outline>
+                        <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
+                        <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
+                    </Button>
+                    <Button className='me-1' color='primary' onClick={()=>{
+                        stepper.next()
+                        setCheckpoint(2)
+                    }}>
+                        <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
+                        <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
+                    </Button>
+                </div>
+            </Col>
         </Fragment>
     )
 

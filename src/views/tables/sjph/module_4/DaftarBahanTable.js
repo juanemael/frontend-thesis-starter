@@ -65,15 +65,6 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
     const [show, setShow] = useState(false)
     const [show2, setShow2] = useState(false)
 
-    const getDaftarBahanAll = async () => {
-        try {
-            const result = await bahanKepentinganHalalModel.getDaftarBahanAll()
-            // setMediaKomunikasi(result)
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
     const getAllDaftarBahanGroupBySJPHID = async (id) => {
         try {
             const result = await bahanKepentinganHalalModel.getAllDaftarBahanGroupBySJPHID(id)

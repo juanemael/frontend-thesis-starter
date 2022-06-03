@@ -64,7 +64,6 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
         try {
             const result = await bahanKepentinganHalalModel.getAllCatatanPenyimpananBahanProdukGroupBySJPHID(id)
             setDetails(result)
-            console.log("TES", result)
         } catch (e) {
             console.error(e)
         }
@@ -233,9 +232,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
                                     setGroupID(row.id)
                                     setNama(row.nama)
                                     setTanggalPersetujuan(row.tanggal_persetujuan_catatan_penyimpanan_bahan_produk)
-                                    console.log(tanggalPersetujuan)
                                     setTempatPersetujuan(row.tempat_persetujuan_catatan_penyimpanan_bahan_produk)
-                                    console.log(tempatPersetujuan)
                                     setShow(true)
                                 }}>
                                     <FileText size={15} />
@@ -260,7 +257,6 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
             tempat_persetujuan_catatan_penyimpanan_bahan_produk: tempatPersetujuan? tempatPersetujuan : details.tempat_persetujuan_catatan_pembelian_halal,
             tanggal_persetujuan_catatan_penyimpanan_bahan_produk: tanggalPersetujuan? tanggalPersetujuan : details.tanggal_persetujuan_catatan_pembelian_halal
         }
-        console.log("INI BODY GROUP", body)
         if (groupID !== null) {
             try {
                 const result = await bahanKepentinganHalalModel.editCatatanPenyimpananBahanProdukGroupByGroupID(groupID,body)
