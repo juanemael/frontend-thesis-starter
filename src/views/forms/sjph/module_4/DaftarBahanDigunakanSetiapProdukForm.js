@@ -169,7 +169,7 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
         {
             name: 'Masa Berlaku Sert. Halal',
             sortable: true,
-            // minWidth: '150px',
+            minWidth: '270px',
             selector: row => row.masa_berlaku_sert_halal
         },
         {
@@ -302,6 +302,12 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
                     </Row>
                 </CardBody>
             </Card>
+            <div className='divider divider-dashed'>
+                <div className='divider-text'>Form Daftar Bahan Setiap Produk <ArrowDown size={15} /></div>
+            </div>
+            <div className='content-header'>
+                <h4 className='mb-0'>Isi Form Daftar Bahan Setiap Produk</h4>
+            </div>
             <Form>
                 <Row>
                     <Col md='6' sm='12' className='mb-1'>
@@ -343,6 +349,9 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
             </Form>
             <div className='divider divider-dashed'>
                 <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
+            </div>
+            <div className='content-header'>
+                <h4 className='mb-0'>Tabel Form Daftar Bahan Setiap Produk</h4>
             </div>
             <Row className='justify-content-end mx-0'>
                 <Col className='d-flex align-items-center justify-content-end mt-1' md='6' sm='12'>

@@ -23,6 +23,8 @@ import Swal from "sweetalert2";
 import SJPHKuModels from "../../../../models/SJPHKu";
 import BahanKepentinganHalalModels from "../../../../models/BahanKepentinganHalal";
 import moment from "moment";
+import FileUploaderSingle from "../../../forms/form-elements/FileUploaderSingle";
+import Upload from "../../../../models/Upload";
 
 const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
     const [currentPage, setCurrentPage] = useState(0)
@@ -234,7 +236,12 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
             name: 'Dokumen Pendukung',
             sortable: true,
             // minWidth: '150px',
-            selector: row => row.dokumen_pendukung
+            selector: row => {
+                return (
+                    row.dokumen_pendukung ? <>{<a href={row.dokumen_pendukung}>Lihat Dokumen</a>}</> : <>Kosong</>
+                )
+            }
+
         },
         {
             name: 'Tindakan',
@@ -263,6 +270,23 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
             }
         }
     ]
+    const handleUploadFile = async (event) =>{
+        try {
+            console.log(event.target.files[0])
+            const upload = new Upload()
+            const formData = new FormData()
+            formData.append("upload", event.target.files[0],event.target.files[0].name)
+
+            const result = await upload.uploadImage(formData)
+            console.log(result)
+            setDokumenPendukung(result.location)
+            console.log(dokumenPendukung)
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
 
     const submit = async () => {
         const body = {
@@ -368,7 +392,8 @@ return (
                         <Label className='form-label' for='dokumenPendukung'>
                             Dokumen Pendukung
                         </Label>
-                        <Input type='file' id='dokumenPendukung' name='dokumenPendukung' />
+                        <Input type='file' onChange={handleUploadFile} defaultValue={dokumenPendukung} id='dokumenPendukung' name='dokumenPendukung' />
+                        {/*<FileUploaderSingle  imageURL={dokumenPendukung} setImageURL={setDokumenPendukung} />*/}
                         {/*<Input id='dokumenPendukung' placeholder='Isi Nomor Sertifikasi Halal'*/}
                         {/*       onChange={(e)=>{ setDokumenPendukung(e.target.value) }} invalid={errors.peserta && true} />*/}
                     </Col>

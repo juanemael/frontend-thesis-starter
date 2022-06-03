@@ -7,15 +7,40 @@ import { Card, CardHeader, CardTitle, CardBody, Button, ListGroup, ListGroupItem
 // ** Third Party Imports
 import { useDropzone } from 'react-dropzone'
 import { FileText, X, DownloadCloud } from 'react-feather'
+import Upload from "../../../models/Upload";
 
-const FileUploaderSingle = () => {
+const FileUploaderSingle = ({setImageURL, createFunc, imageURL}) => {
   // ** State
   const [files, setFiles] = useState([])
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState("");
+
+  const handleUploadFile = async (event) =>{
+    try {
+      console.log(event)
+      const upload = new Upload()
+      const formData = new FormData()
+      formData.append("upload", event[0],event.name)
+      // formData.append("fileName", fileName)
+      // console.log("ETF", event.target.files[0])
+
+      const result = await upload.uploadImage(formData)
+      console.log(result)
+      setImageURL(result.location)
+      console.log(imageURL)
+
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
     onDrop: acceptedFiles => {
-      setFiles([...files, ...acceptedFiles.map(file => Object.assign(file))])
+      console.log(acceptedFiles)
+      // setFiles([...files, ...acceptedFiles.map(file => Object.assign(file))])
+      setFiles([...acceptedFiles.map(file => Object.assign(file))])
+      handleUploadFile(acceptedFiles)
     }
   })
 
@@ -32,6 +57,12 @@ const FileUploaderSingle = () => {
     const filtered = uploadedFiles.filter(i => i.name !== file.name)
     setFiles([...filtered])
   }
+
+  const saveFile = e => {
+    setFile(e.target.files[0])
+    setFileName(e.target.files[0].name)
+  }
+
 
   const renderFileSize = size => {
     if (Math.round(size / 100) / 10 > 1000) {
@@ -58,6 +89,7 @@ const FileUploaderSingle = () => {
 
   const handleRemoveAllFiles = () => {
     setFiles([])
+    setImageURL("")
   }
 
   return (
@@ -66,6 +98,7 @@ const FileUploaderSingle = () => {
         <CardTitle tag='h4'>Single Upload</CardTitle>
       </CardHeader>
       <CardBody>
+        Tarik dan lepas atau upload langsung dengan klik tombol dibawah ini
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
           <div className='d-flex align-items-center justify-content-center flex-column'>
@@ -73,7 +106,7 @@ const FileUploaderSingle = () => {
             <h5>Tarik dan lepas atau upload langsung dengan klik tombol ini</h5>
             <p className='text-secondary'>
               Tarik file kamu disini atau klik{' '}
-              <a href='/' onClick={e => e.preventDefault()}>
+              <a href={'/sjph/kepentingan_produksi_dan_distribusi_produk'} onClick={handleUploadFile}>
                 jelajahi
               </a>{' '}
               melalui komputer anda
@@ -87,7 +120,7 @@ const FileUploaderSingle = () => {
               <Button className='me-1' color='danger' outline onClick={handleRemoveAllFiles}>
                 Remove All
               </Button>
-              <Button color='primary'>Upload Files</Button>
+              <Button color='primary' onClick={createFunc}>Upload Files</Button>
             </div>
           </Fragment>
         ) : null}
