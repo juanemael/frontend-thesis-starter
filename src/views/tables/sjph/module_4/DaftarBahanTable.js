@@ -283,6 +283,12 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
         }
     }
 
+    const reset = async ()=>{
+        setNama("")
+        setTempatPersetujuan("")
+        setTanggalPersetujuan("")
+    }
+
     return (
         <Fragment>
             <DaftarBahanModal setGroupID={setGroupID} groupID={groupID} detailsSJPH={detailsSJPH} setShow2={setShow2} show2={show2} />
@@ -403,7 +409,9 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
                         <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                         <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                     </Button>
-                    <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
+                    <Button className='me-1' color='primary' onClick={()=> {
+                        reset().then(r => setShow(true))
+                    }}>
                         Tambah
                     </Button>
                     <Button className='me-1' color='primary' onClick={()=>{

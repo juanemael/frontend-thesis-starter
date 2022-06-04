@@ -36,6 +36,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
     const [jumlah, setJumlah] = useState(0)
     const [penanggungJawab, setPenanggungJawab] = useState('')
     const [selectedGroupID, setSelectedGroupID] = useState(null)
+    const [selfID, setSelfID] = useState(null)
     const [details, setDetails] = useState([])
 
     const sjphKuModel = new SJPHKuModels()
@@ -125,7 +126,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
         </div>
     ))
 
-    const deleteMediaKomunikas = async (id) => {
+    const deleteCatatanPenyimpananBahanProdukBySelfID = async (id) => {
         swal.fire({
             title: "Peringatan!",
             text: "Apakah kamu yakin ingin menghapus data ini?",
@@ -142,7 +143,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
+                    const result = await bahanKepentinganHalalModel.deleteCatatanPenyimpananBahanProdukBySelfID(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -231,12 +232,22 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
                             <DropdownToggle className='cursor-pointer pe-1' tag='span' >
                                 <MoreVertical size={15} />
                             </DropdownToggle>
-                            <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                            <DropdownMenu className={'position-fixed'} end>
+                                <DropdownItem tag='a'  className='w-100' onClick={()=>{
+                                    setSelfID(row.id)
+                                    setNamaBahan(row.nama_bahan)
+                                    setJumlah(row.jumlah)
+                                    setMerekProdusen(row.merek_dan_produsen)
+                                    setTanggalMasuk(row.tanggal_masuk)
+                                    setTanggalKeluar(row.tanggal_keluar)
+                                    setPenanggungJawab(row.penanggung_jawab)
+                                    setNamaProduk(row.nama_produk)
+                                    setShow(true)
+                                }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Details</span>
+                                    <span className='align-middle ms-50'>Edit</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteCatatanPenyimpananBahanProdukBySelfID(row.id) }}>
                                     <Trash size={15} />
                                     <span className='align-middle ms-50'>Delete</span>
                                 </DropdownItem>
@@ -259,31 +270,60 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
             jumlah,
             penanggung_jawab: penanggungJawab
         }
-        try {
-            const result = await bahanKepentinganHalalModel.createCatatanPenyimpananBahanProdukByGroupID(groupID,body)
-            if ((result.id)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getAllCatatanPenyimpananBahanProdukByGroupID(groupID)
-                        setShow(false)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        if (selfID !== null) {
+            try {
+                console.log(selfID)
+                const result = await bahanKepentinganHalalModel.editCatatanPenyimpananBahanProdukBySelfID(selfID,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di edit','success')
+                        .then(()=>{
+                            getAllCatatanPenyimpananBahanProdukByGroupID(groupID)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        } else {
+            try {
+                const result = await bahanKepentinganHalalModel.createCatatanPenyimpananBahanProdukByGroupID(groupID,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getAllCatatanPenyimpananBahanProdukByGroupID(groupID)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
         }
+
     }
-return (
+    const reset = async () => {
+        setSelfID(null)
+        setNamaBahan("")
+        setJumlah(0)
+        setMerekProdusen("")
+        setTanggalMasuk("")
+        setTanggalKeluar("")
+        setPenanggungJawab("")
+        setNamaProduk("")
+    }
+
+    return (
     <Fragment>
         <Modal isOpen={show} toggle={() =>{
             setShow(!show)
-            setGroupID(null)
         }} className='modal-dialog-centered modal-lg'>
             <ModalHeader className='bg-transparent' toggle={() =>{
                 setShow(!show)
-                setGroupID(null)
             }}></ModalHeader>
             <ModalBody className='px-sm-5 mx-50 pb-5'>
                 <div className='text-center mb-2'>
@@ -295,32 +335,43 @@ return (
                         <Label className='form-label' for='namaBahan'>
                             Nama Bahan
                         </Label>
-                        <Input id='namaBahan' placeholder='Madu Alami' onChange={(e)=>{ setNamaBahan(e.target.value) }}  />
+                        <Input id='namaBahan'
+                               defaultValue={namaBahan}
+                               placeholder='Madu Alami' onChange={(e)=>{ setNamaBahan(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
                         <Label className='form-label' for='namaProduk'>
                             Nama Produk
                         </Label>
-                        <Input id='namaProduk' placeholder='Madu Asam Manis' onChange={(e)=>{ setNamaProduk(e.target.value) }}  />
+                        <Input id='namaProduk'
+                               defaultValue={namaProduk}
+                               placeholder='Madu Asam Manis' onChange={(e)=>{ setNamaProduk(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
                         <Label className='form-label' for='merekProdusen'>
                             Merek dan Produsen
                         </Label>
-                        <Input id='merekProdusen' placeholder='Madu Asam Manis' onChange={(e)=>{ setMerekProdusen(e.target.value) }}  />
+                        <Input id='merekProdusen'
+                               defaultValue={merekProdusen}
+                               placeholder='Madu Asam Manis' onChange={(e)=>{ setMerekProdusen(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
                         <Label className='form-label' for='penanggungJawab'>
                             Penanggung Jawab
                         </Label>
-                        <Input id='penanggungJawab' placeholder='Budi Santoso' onChange={(e)=>{ setPenanggungJawab(e.target.value) }}  />
+                        <Input id='penanggungJawab'
+                               defaultValue={penanggungJawab}
+                               placeholder='Budi Santoso'
+                               onChange={(e)=>{ setPenanggungJawab(e.target.value) }}  />
                     </Col>
                     <Col xs={12}>
                         <Label className='form-label' for='jumlah'>
                             Jumlah
                         </Label>
                         <InputGroup>
-                            <Input type='number' step='0.01' id='jumlah' placeholder='100' onChange={(e)=>{ setJumlah(e.target.value) }}  />
+                            <Input type='number'
+                                   defaultValue={jumlah}
+                                   step='0.01' id='jumlah' placeholder='100' onChange={(e)=>{ setJumlah(e.target.value) }}  />
                             <InputGroupText>KG</InputGroupText>
                         </InputGroup>
                     </Col>
@@ -329,8 +380,8 @@ return (
                             Tanggal Masuk
                         </Label>
                         <Flatpickr
-                            value={details.id && details.tanggal_masuk}
-                            defaultValue={details.id && details.tanggal_masuk}
+                            // value={tanggalMasuk}
+                            defaultValue={tanggalMasuk}
                             id='tanggalMasuk'
                             className='form-control'
                             onChange={date => setTanggalMasuk(date)}
@@ -347,8 +398,7 @@ return (
                             Tanggal Keluar
                         </Label>
                         <Flatpickr
-                            value={details.id && details.tanggal_keluar}
-                            defaultValue={details.id && details.tanggal_keluar}
+                            defaultValue={tanggalKeluar}
                             id='tanggalKeluar'
                             className='form-control'
                             onChange={date => setTanggalKeluar(date)}
@@ -418,7 +468,9 @@ return (
                 &nbsp;
                 <Col sm='12'>
                     <div className='d-flex justify-content-center'>
-                        <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
+                        <Button className='me-1' color='primary' onClick={() => {
+                            reset().then(r =>setShow(true))
+                        }}>
                             Tambah
                         </Button>
                     </div>

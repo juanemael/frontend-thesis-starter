@@ -17,6 +17,15 @@ export default class KepentinganProduksiDistribusiProduk {
     editCatatanHasilProduksiGroupByGroupID = async (self_id, body) => {
         return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_hasil_produksi_group/create/${self_id}`, 'PUT', body)
     }
+    editCatatanHasilProduksiBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_hasil_produksi/edit/${self_id}`, 'PUT',body)
+    }
+    deleteCatatanHasilProduksiBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_hasil_produksi/self/delete/${self_id}`, 'DELETE')
+    }
+    deleteAllCatatanHasilProduksiByGroupID = async (group_id) => {
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_hasil_produksi/all/delete/${group_id}`, 'DELETE')
+    }
 
     // <-------------------------------------------------------------------------------------->
     // <----------------------CatatanDistribusiPenjualanProdu----------------------->
@@ -34,6 +43,15 @@ export default class KepentinganProduksiDistribusiProduk {
     }
     editCatatanDistribusiPenjualanProdukGroupByGroupID = async (self_id, body) => {
         return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_distribusi_penjualan_produk_group/create/${self_id}`, 'PUT', body)
+    }
+    editCatatanDistribusiPenjualanProdukBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_distribusi_penjualan_produk/edit/${self_id}`, 'PUT',body)
+    }
+    deleteCatatanDistribusiPenjualanProdukBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_distribusi_penjualan_produk/self/delete/${self_id}`, 'DELETE')
+    }
+    deleteAllCatatanDistribusiPenjualanProdukByGroupID = async (group_id) => {
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_distribusi_penjualan_produk/all/delete/${group_id}`, 'DELETE')
     }
     // <-------------------------------------------------------------------------------------->
     // <----------------------LayoutDenahRuangProduksi----------------------->

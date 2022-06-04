@@ -39,7 +39,7 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
     const [nomorSertHalal, setNomorSertHalal] = useState("")
     const [masaBerlakuSertHalal, setMasaBerlakuSertHalal] = useState("")
     const [dokumenPendukung, setDokumenPendukung] = useState("")
-    const [selectedGroupID, setSelectedGroupID] = useState(null)
+    const [selfID, setSelfID] = useState(null)
     const [details, setDetails] = useState([])
 
     const sjphKuModel = new SJPHKuModels()
@@ -129,7 +129,7 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
         </div>
     ))
 
-    const deleteMediaKomunikas = async (id) => {
+    const deleteDaftarBahanBySelfID = async (id) => {
         swal.fire({
             title: "Peringatan!",
             text: "Apakah kamu yakin ingin menghapus data ini?",
@@ -146,7 +146,7 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
+                    const result = await bahanKepentinganHalalModel.deleteDaftarBahanBySelfID(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -253,12 +253,23 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
                             <DropdownToggle className='cursor-pointer pe-1' tag='span' >
                                 <MoreVertical size={15} />
                             </DropdownToggle>
-                            <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                            <DropdownMenu className={'position-fixed'} end>
+                                <DropdownItem tag='a' className='w-100' onClick={()=>{
+                                    setSelfID(row.id)
+                                    setNamaMerek(row.nama_dan_merek)
+                                    setJenisBahan(row.jenis_bahan)
+                                    setProdusen(row.produsen)
+                                    setNegara(row.negara)
+                                    setSupplier(row.supplier)
+                                    setLembagaPenerbitSertHalal(row.lembaga_penerbit_sert_halal)
+                                    setMasaBerlakuSertHalal(row.masa_berlaku_sert_halal)
+                                    setDokumenPendukung(row.dokumen_pendukung)
+                                    setShow(true)
+                                }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Details</span>
+                                    <span className='align-middle ms-50'>Edit</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteDaftarBahanBySelfID(row.id) }}>
                                     <Trash size={15} />
                                     <span className='align-middle ms-50'>Delete</span>
                                 </DropdownItem>
@@ -290,41 +301,68 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
 
     const submit = async () => {
         const body = {
-            nama_dan_merek: namaMerek,
-            jenis_bahan: jenisBahan,
-            produsen,
-            negara,
-            supplier,
+            nama_dan_merek: namaMerek? namaMerek : details.nama_dan_merek,
+            jenis_bahan: jenisBahan? jenisBahan : details.jenis_bahan,
+            produsen: produsen? produsen : details.produsen,
+            negara: negara? negara : negara,
+            supplier: supplier? supplier : supplier,
             lembaga_penerbit_sert_halal: lembagaPenerbitSertHalal,
             no_sert_halal: nomorSertHalal,
             masa_berlaku_sert_halal: masaBerlakuSertHalal,
             dokumen_pendukung: dokumenPendukung
         }
-        try {
-            const result = await bahanKepentinganHalalModel.createDaftarBahanByGroupID(groupID,body)
-            if ((result.id)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getAllDaftarBahanByGroupID(groupID)
-                        setShow(false)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        if (selfID !== null) {
+            try {
+                const result = await bahanKepentinganHalalModel.editDaftarBahanBySelfID(selfID,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getAllDaftarBahanByGroupID(groupID)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        } else {
+            try {
+                const result = await bahanKepentinganHalalModel.createDaftarBahanByGroupID(groupID,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getAllDaftarBahanByGroupID(groupID)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
         }
+    }
+
+    const reset = async ()=>{
+        setNamaMerek("")
+        setJenisBahan("")
+        setNegara("")
+        setSupplier("")
+        setLembagaPenerbitSertHalal("")
+        setNomorSertHalal("")
+        setMasaBerlakuSertHalal("")
+        setDokumenPendukung("")
     }
 return (
     <Fragment>
         <Modal isOpen={show} toggle={() =>{
             setShow(!show)
-            setGroupID(null)
         }} className='modal-dialog-centered modal-lg'>
             <ModalHeader className='bg-transparent' toggle={() =>{
                 setShow(!show)
-                setGroupID(null)
             }}></ModalHeader>
             <ModalBody className='px-sm-5 mx-50 pb-5'>
                 <div className='text-center mb-2'>
@@ -337,6 +375,7 @@ return (
                             Nama dan Merek
                         </Label>
                         <Input id='judulKegiatan' placeholder='Kegiatan'
+                               defaultValue={namaMerek}
                                onChange={(e)=>{ setNamaMerek(e.target.value) }}   />
                          </Col>
                     <Col md={6} xs={12}>
@@ -344,6 +383,7 @@ return (
                             Jenis Bahan
                         </Label>
                         <Input id='judulKegiatan' placeholder='Kegiatan'
+                               defaultValue={jenisBahan}
                                onChange={(e)=>{ setJenisBahan(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
@@ -351,6 +391,7 @@ return (
                             Produsen
                         </Label>
                         <Input id='peserta' placeholder='Budi Setiawan'
+                               defaultValue={produsen}
                                onChange={(e)=>{ setProdusen(e.target.value) }} />
                     </Col>
                     <Col md={6} xs={12}>
@@ -358,6 +399,7 @@ return (
                             Negara
                         </Label>
                         <Input id='peserta' placeholder='Budi Setiawan'
+                               defaultValue={negara}
                                onChange={(e)=>{ setNegara(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
@@ -365,6 +407,7 @@ return (
                             Supplier
                         </Label>
                         <Input id='peserta' placeholder='Budi Setiawan'
+                               defaultValue={supplier}
                                onChange={(e)=>{ setSupplier(e.target.value) }} />
                     </Col>
                     <Col md={6} xs={12}>
@@ -372,6 +415,7 @@ return (
                             Lembaga Penerbit Sertifikasi Halal
                         </Label>
                         <Input id='peserta' placeholder='Budi Setiawan'
+                               defaultValue={lembagaPenerbitSertHalal}
                                onChange={(e)=>{ setLembagaPenerbitSertHalal(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
@@ -379,6 +423,7 @@ return (
                             Nomor Sertifikasi Halal
                         </Label>
                         <Input id='peserta' placeholder='Budi Setiawan'
+                               defaultValue={nomorSertHalal}
                                onChange={(e)=>{ setNomorSertHalal(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
@@ -386,13 +431,14 @@ return (
                             Masa Berlaku Sertifikat Halal
                         </Label>
                         <Input id='peserta' placeholder='Budi Setiawan'
+                               defaultValue={masaBerlakuSertHalal}
                                onChange={(e)=>{ setMasaBerlakuSertHalal(e.target.value) }}  />
                     </Col>
                     <Col md={12} xs={12}>
                         <Label className='form-label' for='dokumenPendukung'>
                             Dokumen Pendukung
                         </Label>
-                        <Input type='file' onChange={handleUploadFile} defaultValue={dokumenPendukung} id='dokumenPendukung' name='dokumenPendukung' />
+                        <Input type='file' onChange={handleUploadFile} id='dokumenPendukung' name='dokumenPendukung' />
                         {/*<FileUploaderSingle  imageURL={dokumenPendukung} setImageURL={setDokumenPendukung} />*/}
                         {/*<Input id='dokumenPendukung' placeholder='Isi Nomor Sertifikasi Halal'*/}
                         {/*       onChange={(e)=>{ setDokumenPendukung(e.target.value) }} invalid={errors.peserta && true} />*/}
@@ -455,7 +501,9 @@ return (
                 <Col sm='12' style={{paddingTop: 20}}>
                     <div className='d-flex justify-content-center'>
 
-                        <Button className='me-1' color='primary' onClick={() => setShow(true)}>
+                        <Button className='me-1' color='primary' onClick={() => {
+                            reset().then(r => setShow(true))
+                        }}>
                             Tambah
                         </Button>
 

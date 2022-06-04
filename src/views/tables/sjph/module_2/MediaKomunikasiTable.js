@@ -48,7 +48,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
     const [peserta, setPeserta] = useState("")
     const [mediaKomunikasi, setMediaKomunikasi] = useState([])
     const [details, setDetails] = useState([])
-
+    const [selfID, setSelfID] = useState(null)
 
     const kriteriaSJPHKebijakanHalalModel = new KriteriaSJPHKebijakanHalalModels()
 
@@ -73,9 +73,9 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
             console.error(e)
         }
     }
-    const getMediaKomunikasiByID = async (id) => {
+    const getAllMediaKomunikasiBySJPHID = async (id) => {
         try {
-            const result = await kriteriaSJPHKebijakanHalalModel.getMediaKomunikasiBySJPHId(id)
+            const result = await kriteriaSJPHKebijakanHalalModel.getAllMediaKomunikasiBySJPHID(id)
             setMediaKomunikasi(result)
         } catch (e) {
             console.error(e)
@@ -83,7 +83,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
     }
 
     useEffect(()=>{
-        getMediaKomunikasiByID(sessionStorage.sjph_id)
+        getAllMediaKomunikasiBySJPHID(sessionStorage.sjph_id)
     },[])
 
 
@@ -156,7 +156,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
         </div>
     ))
 
-    const deleteMediaKomunikas = async (id) => {
+    const deleteMediaKomunikasiBySelfID = async (id) => {
         swal.fire({
             title: "Peringatan!",
             text: "Apakah kamu yakin ingin menghapus data ini?",
@@ -173,7 +173,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await kriteriaSJPHKebijakanHalalModel.deleteMediaKomunikasi(id);
+                    const result = await kriteriaSJPHKebijakanHalalModel.deleteMediaKomunikasiBySelfID(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -184,7 +184,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                                 confirmButton: 'btn btn-success'
                             }
                         }).then(()=>{
-                            getMediaKomunikasiByID(sessionStorage.sjph_id)
+                            getAllMediaKomunikasiBySJPHID(sessionStorage.sjph_id)
                         })
                     } else {
                         await Swal.fire({
@@ -200,6 +200,7 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                     await Swal.fire('', e.error_message ? e.error_message : "Something Wrong", 'error')
                 }
             }
+            setSelfID(null)
         })
     }
 
@@ -240,11 +241,21 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                                 <MoreVertical size={15} />
                             </DropdownToggle>
                             <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                <DropdownItem tag='a' className='w-100' onClick={() =>{
+                                    setSelfID(row.id)
+                                    setPeserta(row.peserta)
+                                    setJudulKegiatan(row.judul_kegiatan)
+                                    console.log("LOLO", peserta)
+                                    setTanggalSosialisasi(row.tanggal_sosialisasi)
+                                    setShow(true) 
+                                }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Details</span>
+                                    <span className='align-middle ms-50'>Edit</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <DropdownItem className='w-100' onClick={()=>{
+                                    setSelfID(row.id)
+                                    deleteMediaKomunikasiBySelfID(row.id)
+                                }}>
                                     <Trash size={15} />
                                     <span className='align-middle ms-50'>Delete</span>
                                 </DropdownItem>
@@ -259,25 +270,45 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
 
     const submit = async () => {
         const body = {
-            tanggal_sosialisasi: tanggalSosialisasi ? new Date(tanggalSosialisasi) : details.tanggal_sosialisasi,
+            tanggal_sosialisasi: tanggalSosialisasi ? tanggalSosialisasi : details.tanggal_sosialisasi,
             judul_kegiatan: judulKegiatan ? judulKegiatan : details.judul_kegiatan,
             peserta: peserta? peserta : details.peserta
         }
-        try {
-            const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
-            if ((result.id)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getMediaKomunikasiByID(sessionStorage.sjph_id)
-                        setShow(false)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        if (selfID !== null) {
+            try {
+                const result = await kriteriaSJPHKebijakanHalalModel.editMediaKomunikasiBySelfID(selfID,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di edit','success')
+                        .then(()=>{
+                            getAllMediaKomunikasiBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        } else {
+            try {
+                const result = await kriteriaSJPHKebijakanHalalModel.createMediaKomunikasi(sessionStorage.sjph_id,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getAllMediaKomunikasiBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
+
         }
+        setSelfID(null)
     }
 
     return (
@@ -312,14 +343,14 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                             <Label className='form-label' for='judulKegiatan'>
                                 Judul Kegiatan
                             </Label>
-                            <Input id='judulKegiatan' placeholder='Kegiatan' onChange={(e)=>{ setJudulKegiatan(e.target.value) }}  invalid={errors.judulKegiatan && true} />
+                            <Input id='judulKegiatan' placeholder='Kegiatan' defaultValue={judulKegiatan} onChange={(e)=>{ setJudulKegiatan(e.target.value) }}  />
                             {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
                         </Col>
                         <Col xs={12}>
                             <Label className='form-label' for='peserta'>
                                 Peserta
                             </Label>
-                            <Input id='peserta' placeholder='Budi Setiawan' onChange={(e)=>{ setPeserta(e.target.value) }} invalid={errors.peserta && true} />
+                            <Input id='peserta' placeholder='Budi Setiawan' defaultValue={peserta} onChange={(e)=>{ setPeserta(e.target.value) }} />
                             {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>

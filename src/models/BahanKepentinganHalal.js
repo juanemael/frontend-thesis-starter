@@ -19,6 +19,15 @@ export default class BahanKepentinganHalal {
     editCatatanPembelianGroup = async (group_id,body) =>{
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan_group/edit/${group_id}`, 'PUT',body)
     }
+    deleteCatatanPembelianBahanBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan/self/delete/${self_id}`, 'DELETE')
+    }
+    editCatatanPembelianBahanBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan/edit/${self_id}`, 'PUT',body)
+    }
+    deleteAllCatatanPembelianBahanByGroupID = async (group_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan/all/delete/${group_id}`, 'DELETE')
+    }
     // <-------------------------------------------------------------------------------------->
 
     //<----------------------Catatan Penyimpanan Bahan Produk----------------------->
@@ -36,6 +45,15 @@ export default class BahanKepentinganHalal {
     }
     editCatatanPenyimpananBahanProdukGroupByGroupID = async (group_id,body) =>{
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_penyimpanan_bahan_produk_group/edit/${group_id}`, 'PUT',body)
+    }
+    editCatatanPenyimpananBahanProdukBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_penyimpanan_bahan_produk/edit/${self_id}`, 'PUT',body)
+    }
+    deleteCatatanPenyimpananBahanProdukBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_penyimpanan_bahan_produk/self/delete/${self_id}`, 'DELETE')
+    }
+    deleteAllCatatanPenyimpananBahanProdukByGroupID = async (group_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_penyimpanan_bahan_produk/all/delete/${group_id}`, 'DELETE')
     }
 
     // <-------------------------------------------------------------------------------------->
@@ -62,6 +80,16 @@ export default class BahanKepentinganHalal {
     editDaftarBahanGroupByGroupID = async (group_id,body) =>{
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan_group/edit/${group_id}`, 'PUT',body)
     }
+    editDaftarBahanBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan/edit/${self_id}`, 'PUT',body)
+    }
+    deleteDaftarBahanBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan/self/delete/${self_id}`, 'DELETE')
+    }
+    deleteAllDaftarBahanByGroupID = async (group_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan/all/delete/${group_id}`, 'DELETE')
+    }
+
     // <-------------------------------------------------------------------------------------->
 
     getDaftarBahanProdukBySJPHID = async (sjph_id) => {

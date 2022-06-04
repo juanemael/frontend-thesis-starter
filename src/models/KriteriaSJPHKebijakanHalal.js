@@ -18,7 +18,16 @@ export default class KriteriaSJPHKebijakanHalal {
     getMediaKomunikasiAll = async () => {
         return await ApiRequest.set(`/sjph/kriteria_sjph/media_komunikasi`, 'GET')
     }
-    getMediaKomunikasiBySJPHId = async (sjph_id) => {
+    getAllMediaKomunikasiBySJPHID = async (sjph_id) => {
         return await ApiRequest.set(`/sjph/kriteria_sjph/media_komunikasi/${sjph_id}`, 'GET')
+    }
+    deleteAllMediaKomunikasiBySJPHID = async (sjph_id) => {
+        return await ApiRequest.set(`/sjph/kriteria_sjph/media_komunikasi/all/delete/${sjph_id}`, 'DELETE')
+    }
+    deleteMediaKomunikasiBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/kriteria_sjph/media_komunikasi/self/delete/${self_id}`, 'DELETE')
+    }
+    editMediaKomunikasiBySelfID = async (self_id, body) => {
+        return await ApiRequest.set(`/sjph/kriteria_sjph/media_komunikasi/edit/${self_id}`, 'PUT', body)
     }
 }

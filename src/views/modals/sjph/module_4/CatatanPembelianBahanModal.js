@@ -30,7 +30,7 @@ const CatatanPembelianBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
     const [namaMerek, setNamaMerek] = useState("")
     const [jumlah, setJumlah] = useState("")
     const [tanggalPembelian, setTanggalPembelian] = useState("")
-    const [selectedGroupID, setSelectedGroupID] = useState(null)
+    const [selfID, setSelfID] = useState(null)
     const [details, setDetails] = useState([])
 
     const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
@@ -119,7 +119,7 @@ const CatatanPembelianBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
         </div>
     ))
 
-    const deleteMediaKomunikas = async (id) => {
+    const deleteCatatanPembelianBahanProduk = async (id) => {
         swal.fire({
             title: "Peringatan!",
             text: "Apakah kamu yakin ingin menghapus data ini?",
@@ -136,7 +136,7 @@ const CatatanPembelianBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
+                    const result = await bahanKepentinganHalalModel.deleteCatatanPembelianBahanBySelfID(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -201,12 +201,18 @@ const CatatanPembelianBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
                             <DropdownToggle className='cursor-pointer pe-1' tag='span' >
                                 <MoreVertical size={15} />
                             </DropdownToggle>
-                            <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                            <DropdownMenu className={'position-fixed'} end>
+                                <DropdownItem tag='a'  className='w-100' onClick={() =>{
+                                    setSelfID(row.id)
+                                    setNamaMerek(row.nama_dan_merek)
+                                    setJumlah(row.jumlah)
+                                    setTanggalPembelian(row.tanggal_pembelian)
+                                    setShow(true)
+                                }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Details</span>
+                                    <span className='align-middle ms-50'>Edit</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteCatatanPembelianBahanProduk(row.id) }}>
                                     <Trash size={15} />
                                     <span className='align-middle ms-50'>Delete</span>
                                 </DropdownItem>
@@ -219,52 +225,55 @@ const CatatanPembelianBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
         }
     ]
 
+    const reset = async () => {
+        setNamaMerek("")
+        setJumlah("")
+        setTanggalPembelian("")
+    }
+
     const submit = async () => {
         const body = {
             nama_dan_merek: namaMerek,
             jumlah,
             tanggal_pembelian: tanggalPembelian,
         }
-        try {
-            // if (setSelectedGroupID !== null) {
-            //     console.log(groupID)
-            //     const result = await bahanKepentinganHalalModel.editCatatanPembelianGroup(groupID,body)
-            //     if ((result.id)||(result.success)) {
-            //         await swal.fire('','Data berhasil di edit','success')
-            //             .then(()=>{
-            //                 getCatatanPembelianBahanByGroupID(groupID)
-            //                 setShow(false)
-            //             })
-            //     } else {
-            //         await swal.fire('','Data gagal disimpan', 'error')
-            //     }
-            // } else {
-                const result = await bahanKepentinganHalalModel.createCatatanPembelianBahanByGroupID(groupID,body)
-                if ((result.id)||(result.success)) {
-                    await swal.fire('','Data berhasil di simpan','success')
-                        .then(()=>{
-                            getAllCatatanPembelianBahanByGroupID(groupID)
-                            setShow(false)
-                        })
-                } else {
-                    await swal.fire('','Data gagal disimpan', 'error')
+            if (selfID !== null) {
+                try {
+                console.log(selfID)
+                const result = await bahanKepentinganHalalModel.editCatatanPembelianBahanBySelfID(selfID,body)
+                    if ((result.id)||(result.success)) {
+                        await swal.fire('','Data berhasil di edit','success')
+                            .then(()=>{
+                                getAllCatatanPembelianBahanByGroupID(groupID)
+                                setShow(false)
+                            })
+                    } else {
+                        await swal.fire('','Data gagal disimpan', 'error')
+                    }
+                } catch (e) {
+                    console.error(e)
+                    await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
                 }
-            // }
-
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            } else {
+            const result = await bahanKepentinganHalalModel.createCatatanPembelianBahanByGroupID(groupID,body)
+            if ((result.id)||(result.success)) {
+                await swal.fire('','Data berhasil di simpan','success')
+                    .then(()=>{
+                        getAllCatatanPembelianBahanByGroupID(groupID)
+                        setShow(false)
+                    })
+            } else {
+                await swal.fire('','Data gagal disimpan', 'error')
+            }
         }
     }
 return (
     <Fragment>
         <Modal isOpen={show} toggle={() =>{
             setShow(!show)
-            setGroupID(null)
         }} className='modal-dialog-centered modal-lg'>
             <ModalHeader className='bg-transparent' toggle={() =>{
                 setShow(!show)
-                setGroupID(null)
             }}></ModalHeader>
             <ModalBody className='px-sm-5 mx-50 pb-5'>
                 <div className='text-center mb-2'>
@@ -278,7 +287,7 @@ return (
                         </Label>
                         <Flatpickr
                             value={details.id && details.tanggal_pembelian}
-                            defaultValue={details.id && details.tanggal_pembelian}
+                            defaultValue={tanggalPembelian}
                             id='tanggalPembelian'
                             className='form-control'
                             onChange={date => setTanggalPembelian(date)}
@@ -293,13 +302,17 @@ return (
                         <Label className='form-label' for='namaMerek'>
                             Nama dan Merek
                         </Label>
-                        <Input id='namaMerek' placeholder='Kegiatan' onChange={(e)=>{ setNamaMerek(e.target.value) }} />
+                        <Input id='namaMerek' placeholder='Kegiatan'
+                               defaultValue={namaMerek}
+                               onChange={(e)=>{ setNamaMerek(e.target.value) }} />
                         </Col>
                     <Col xs={12}>
                         <Label className='form-label' for='jumlah'>
                             Jumlah
                         </Label>
-                        <Input id='jumlah' placeholder='(Dalam KG)' onChange={(e)=>{ setJumlah(e.target.value) }} />
+                        <Input id='jumlah'
+                               defaultValue={jumlah}
+                               placeholder='(Dalam KG)' onChange={(e)=>{ setJumlah(e.target.value) }} />
                        </Col>
                     <Col xs={12} className='text-center mt-2 pt-50'>
                         <Button onClick={submit} className='me-1' color='primary'>
@@ -358,22 +371,10 @@ return (
                 &nbsp;
                 <Col sm='12'>
                     <div className='d-flex justify-content-center'>
-                        <Button className='me-1 ms-1' color='primary' onClick={() => {
-                            stepper.previous()
-                            setCheckpoint(1)
-                        }} outline>
-                            <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
-                            <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
-                        </Button>
-                        <Button className='me-1' color='primary' onClick={() => setShow(true)}>
-                            Tambah
-                        </Button>
-                        <Button className='me-1' color='primary' onClick={()=>{
-                            stepper.next()
-                            setCheckpoint(3)
+                        <Button className='me-1' color='primary' onClick={() => {
+                            reset().then(r =>setShow(true))
                         }}>
-                            <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
-                            <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
+                            Tambah
                         </Button>
                     </div>
                 </Col>
