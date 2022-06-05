@@ -75,7 +75,7 @@ const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
     return (
         <Fragment>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 5</h3>
+                <h3 className='mb-0'>Wisata 5</h3>
                 <small className='text-muted'>Surat Pernyataan Bebas Babi</small>
             </div>
             <Form>

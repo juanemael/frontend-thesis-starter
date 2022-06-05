@@ -199,11 +199,11 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
                                     setShow(true)
                                 }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Edit</span>
+                                    <span className='align-middle ms-50'>Ubah</span>
                                 </DropdownItem>
                                 <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
                                     <Trash size={15} />
-                                    <span className='align-middle ms-50'>Delete</span>
+                                    <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
@@ -293,7 +293,7 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
         <Fragment>
             <DaftarBahanModal setGroupID={setGroupID} groupID={groupID} detailsSJPH={detailsSJPH} setShow2={setShow2} show2={show2} />
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 1</h3>
+                <h3 className='mb-0'>Wisata 1</h3>
                 <small className='text-muted'>Daftar Bahan</small>
             </div>
             <Modal isOpen={show} toggle={() => {

@@ -236,11 +236,11 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
                                     setShow(true)
                                 }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Edit</span>
+                                    <span className='align-middle ms-50'>Ubah</span>
                                 </DropdownItem>
                                 <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
                                     <Trash size={15} />
-                                    <span className='align-middle ms-50'>Delete</span>
+                                    <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
@@ -401,7 +401,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
                 </ModalBody>
             </Modal>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 6</h3>
+                <h3 className='mb-0'>Wisata 6</h3>
                 <small className='text-muted'>Catatan Penyimpanan Bahan Produk</small>
             </div>
             <Row className='justify-content-end mx-0'>
@@ -456,10 +456,6 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
                     </Button>
                 </div>
             </Col>
-            <div className='divider divider-dashed'>
-                <div className='divider-text'>Tabel Data <ArrowDown size={15} /></div>
-            </div>
-
         </Fragment>
     )
 

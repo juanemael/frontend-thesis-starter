@@ -210,11 +210,11 @@ const CatatanPembelianBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
                                     setShow(true)
                                 }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Edit</span>
+                                    <span className='align-middle ms-50'>Ubah</span>
                                 </DropdownItem>
                                 <DropdownItem className='w-100' onClick={()=>{ deleteCatatanPembelianBahanProduk(row.id) }}>
                                     <Trash size={15} />
-                                    <span className='align-middle ms-50'>Delete</span>
+                                    <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>

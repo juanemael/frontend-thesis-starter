@@ -253,11 +253,11 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                             <DropdownMenu container={'body'} end>
                                 <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Details</span>
+                                    <span className='align-middle ms-50'>Edit</span>
                                 </DropdownItem>
                                 <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
                                     <Trash size={15} />
-                                    <span className='align-middle ms-50'>Delete</span>
+                                    <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
@@ -318,7 +318,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
     return (
         <Fragment>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 6</h3>
+                <h3 className='mb-0'>Wisata 7</h3>
                 <small className='text-muted'>Surat Permohonan Persetujuan Penggunaan Bahan Baru</small>
             </div>
 

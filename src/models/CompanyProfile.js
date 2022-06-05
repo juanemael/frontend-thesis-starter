@@ -20,5 +20,4 @@ export default class CompanyProfile {
     editCompanyProfile = async (sjph_id,company_profile_id,body) => {
         return await ApiRequest.set(`/sjph/company_profile/${sjph_id}/${company_profile_id}`, 'PUT', body)
     }
-
 }

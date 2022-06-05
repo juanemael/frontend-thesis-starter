@@ -89,7 +89,8 @@ const CompanyForm = () => {
             nama_perusahaan: namaPerusahaan? namaPerusahaan : details.nama_perusahaan,
             nomor_induk_berusaha: nib? nib : details.nomor_induk_berusaha,
             skala_usaha: skalaUsaha? skalaUsaha : details.skala_usaha,
-            nama_pimpinan: namaPimpinan? namaPimpinan: details.nama_pimpinan,
+            nama_pimpinan: namaPimpinan? namaPimpinan : details.nama_pimpinan,
+            nama_penyelia_halal: namaPenyelia? namaPenyelia : details.nama_penyelia_halal,
             alamat_perusahaan: alamatPerusahaan? alamatPerusahaan : details.alamat_perusahaan,
             telp_fax_perusahaan: telpFaxPerusahaan? telpFaxPerusahaan : details.telp_fax_perusahaan,
             alamat_fasilitas_produksi: alamatFasilitasProduksi? alamatFasilitasProduksi : details.alamat_fasilitas_produksi,
@@ -395,7 +396,7 @@ const CompanyForm = () => {
                                 </Button>
                                 <Button className='me-1' color='success' onClick={submit}>
                                 {/*<Button className='me-1' color='primary' onClick={()=>setProgressValue(100)}>*/}
-                                    Save
+                                    Simpan
                                 </Button>
                                 <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kriteria_sistem_jaminan_produk_halal')}>
                                     <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>

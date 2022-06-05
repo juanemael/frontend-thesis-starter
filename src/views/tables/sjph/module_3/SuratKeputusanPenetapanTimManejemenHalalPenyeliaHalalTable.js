@@ -113,7 +113,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             selector: row => row.posisi_di_tim
         },
         {
-            name: 'Menu',
+            name: 'Tindakan',
             allowOverflow: false,
             cell: (row) => {
                 return (
@@ -125,11 +125,11 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                             <DropdownMenu container={'body'} end>
                                 <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Details</span>
+                                    <span className='align-middle ms-50'>Ubah</span>
                                 </DropdownItem>
                                 <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
                                     <Trash size={15} />
-                                    <span className='align-middle ms-50'>Delete</span>
+                                    <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>

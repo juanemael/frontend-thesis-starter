@@ -293,10 +293,10 @@ const DaftarHadirPelatihanInternalTable = ({stepper, setCheckpoint}) => {
                             </DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
+                                    <Edit className='me-50' size={15} /> <span className='align-middle'>Ubah</span>
                                 </DropdownItem>
                                 <DropdownItem href='/' onClick={e => e.preventDefault()}>
-                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Delete</span>
+                                    <Trash className='me-50' size={15} /> <span className='align-middle'>Hapus</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>

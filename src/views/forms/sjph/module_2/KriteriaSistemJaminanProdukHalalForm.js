@@ -144,7 +144,6 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                             <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
                             <ModalBody className='px-sm-5 mx-50 pb-5'>
                                 <div className='text-center mb-2'>
-                                    <h1 className='mb-1'>Tambah Data Tabel</h1>
                                     <p> KEBIJAKAN HALAL <br/>
                                         [NAMA PERUSAHAAN]<br/>
                                         Kami berkomitmen dan bertanggung jawab untuk menghasilkan produk halal
@@ -155,7 +154,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                                         4.	Mensosialisasikan dan mengkomunikasikan kebijakan halal pada seluruh
                                         pihak terkait untuk memastikan semua personel menjaga integritas halal di perusahaan.<br/>
 
-                                        …................, .........................................<br/>
+                                        [TEMPAT PERSETUJUAN], [TANGGAL PERSETUJUAN]<br/>
                                         Pimpinan Perusahaan,<br/>
 
                                         ( ........................................................)

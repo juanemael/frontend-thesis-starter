@@ -251,7 +251,7 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
     return (
         <Fragment>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 2</h3>
+                <h3 className='mb-0'>Wisata 2</h3>
                 <small className='text-muted'>Daftar Bahan yang Digunakan Setiap Produk</small>
             </div>
             <Card>
