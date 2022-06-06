@@ -25,14 +25,15 @@ const DiagramAlirProsesProduksiForm = ({stepper, setCheckpoint}) => {
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
     const [details, setDetails] = useState([])
+    const [selectedID,setSelectedID] = useState(null)
 
     const kepentinganProduksiDistribusiProdukModel = new KepentinganProduksiDistribusiProdukModels()
 
 
     const getDiagramAlirProsesProduksiBySJPHID = async (id) => {
         try {
-            console.log("TESTESTES", sessionStorage.sjph_id)
             const result = await kepentinganProduksiDistribusiProdukModel.getDiagramAlirProsesProduksiBySJPHID(id)
+            setSelectedID(result.id)
             setDetails(result)
             console.log(details)
         } catch (e) {
@@ -45,23 +46,76 @@ const DiagramAlirProsesProduksiForm = ({stepper, setCheckpoint}) => {
     },[])
     const upload = async ()=>{
         const body = {
-            tanggal_persetujuan_diagram_alir_proses_produksi: tanggalPersetujuan? tanggalPersetujuan : details.tanggal_persetujuan_diagram_alir_proses_produksi,
-            tempat_persetujuan_diagram_alir_proses_produksi: tempatPersetujuan? tempatPersetujuan : details.tempat_persetujuan_diagram_alir_proses_produksi,
             url: imageUrl ? imageUrl : details.url
         }
-        try {
-            const result = await kepentinganProduksiDistribusiProdukModel.createDiagramAlirProsesProduksiBySJPHID(sessionStorage.sjph_id,body)
-            if ((result)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getDiagramAlirProsesProduksiBySJPHID(sessionStorage.sjph_id)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        if (selectedID !== null) {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.editDiagramAlirProsesProduksiBySelfID(selectedID,body)
+                if ((result.id)||(result.success)||(result)) {
+                    await swal.fire('','Data berhasil di edit','success')
+                        .then(()=>{
+                            getDiagramAlirProsesProduksiBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        } else {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.createDiagramAlirProsesProduksiBySJPHID(sessionStorage.sjph_id,body)
+                if ((result)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getDiagramAlirProsesProduksiBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
+        }
+    }
+    const submitTempatTanggal = async () => {
+        const body = {
+            tanggal_persetujuan_diagram_alir_proses_produksi: tanggalPersetujuan? tanggalPersetujuan : details.tanggal_persetujuan_diagram_alir_proses_produksi,
+            tempat_persetujuan_diagram_alir_proses_produksi: tempatPersetujuan? tempatPersetujuan : details.tempat_persetujuan_diagram_alir_proses_produksi,
+        }
+        if (selectedID !== null) {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.editDiagramAlirProsesProduksiBySelfID(selectedID, body)
+                if ((result.id) || (result.success) || (result)) {
+                    await swal.fire('', 'Data berhasil di edit', 'success')
+                        .then(() => {
+                            getDiagramAlirProsesProduksiBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('', 'Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
+        } else {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.createDiagramAlirProsesProduksiBySJPHID(sessionStorage.sjph_id, body)
+                if ((result.id) || (result.success) || (result)) {
+                    setSelectedID(result.id)
+                    await swal.fire('', 'Data berhasil di simpan', 'success')
+                        .then(() => {
+                            getDiagramAlirProsesProduksiBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('', 'Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
         }
     }
     return (
@@ -108,6 +162,13 @@ const DiagramAlirProsesProduksiForm = ({stepper, setCheckpoint}) => {
                             />
                         </Col>
                         &nbsp;
+                        <Col sm='12'>
+                            <div className='d-flex justify-content-center'>
+                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
+                                    Simpan
+                                </Button>
+                            </div>
+                        </Col>
                     </Row>
                 </CardBody>
             </Card>

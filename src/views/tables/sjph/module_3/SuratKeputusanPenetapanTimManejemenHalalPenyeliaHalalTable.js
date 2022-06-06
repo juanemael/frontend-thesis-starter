@@ -44,6 +44,7 @@ import '@styles/react/libs/tables/react-dataTable-component.scss'
 import DataTable from "react-data-table-component";
 import ReactPaginate from "react-paginate";
 import Flatpickr from "react-flatpickr";
+import Swal from "sweetalert2";
 
 const defaultValues = {
     firstName: 'Bob',
@@ -63,6 +64,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
     const [posisiDiTim, setPosisiDiTim] = useState("")
     const [details,setDetails] = useState([])
     const [detailsSJPH,setDetailsSJPH] = useState([])
+    const [selectedID,setSelectedID] = useState(null)
 
 
     const kebijakanEdukasiHalalModel = new KebijakanEdukasiHalalModels()
@@ -81,64 +83,6 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
         formState: { errors }
     } = useForm({ defaultValues })
 
-    const columns = [
-        {
-            name: 'ID',
-            // minWidth: '150px',
-            selector: row => row.id,
-            sortable: row => row.id
-        },
-        {
-            name: 'Nama',
-            sortable: true,
-            // minWidth: '150px',
-            selector: row => row.nama
-        },
-        {
-            name: 'Jabatan',
-            sortable: true,
-            // minWidth: '150px',
-            selector: (row) => {
-                return (<Badge color='light-success' pill>
-                    {row.jabatan}
-                </Badge>)
-
-            }
-        },
-
-        {
-            name: 'Posisi di Tim',
-            sortable: true,
-            // minWidth: '150px',
-            selector: row => row.posisi_di_tim
-        },
-        {
-            name: 'Tindakan',
-            allowOverflow: false,
-            cell: (row) => {
-                return (
-                    <div className='d-flex'>
-                        <UncontrolledDropdown>
-                            <DropdownToggle className='cursor-pointer pe-1' tag='span' >
-                                <MoreVertical size={15} />
-                            </DropdownToggle>
-                            <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                                    <FileText size={15} />
-                                    <span className='align-middle ms-50'>Ubah</span>
-                                </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
-                                    <Trash size={15} />
-                                    <span className='align-middle ms-50'>Hapus</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                        <Edit size={15} />
-                    </div>
-                )
-            }
-        }
-    ]
 
     const handlePagination = page => {
         setCurrentPage(page.selected)
@@ -220,6 +164,52 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             console.error(e)
         }
     }
+    const deleteSuratKeputusanPTMP = async (id) => {
+        swal.fire({
+            title: "Peringatan!",
+            text: "Apakah kamu yakin ingin menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButton: "Iya, tentu saja",
+            cancelButton: "Tidak",
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+            // dangerMode: true,
+        }).then(async (res) => {
+            if (res.isConfirmed) {
+                try {
+                    const result = await kebijakanEdukasiHalalModel.deleteSuratKeputusanBySelfID(id);
+
+                    if (result.id || result.success) {
+                        await Swal.fire({
+                            icon: "success",
+                            title: "Sukses menghapus!",
+                            text: 'Data kamu telah dihapus.',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }
+                        }).then(()=>{
+                            getSuratKeputusanBySJPHID(sessionStorage.sjph_id)
+                        })
+                    } else {
+                        await Swal.fire({
+                            title: 'Failed',
+                            text: 'Failed to delete',
+                            icon: 'error',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }})
+                    }
+                } catch (e) {
+                    console.error(e)
+                    await Swal.fire('', e.error_message ? e.error_message : "Something Wrong", 'error')
+                }
+            }
+        })
+    }
 
     const submit = async () => {
         const body = {
@@ -227,20 +217,41 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             jabatan,
             posisi_di_tim: posisiDiTim
         }
-        try {
-            const result = await kebijakanEdukasiHalalModel.createSuratKeputusan(sessionStorage.sjph_id,body)
-            if ((result.surat_keputusan_ptmp_halal_id)||(result.success)) {
-                sessionStorage.surat_keputusan_ptmp_halal_id = result.surat_keputusan_ptmp_halal_id
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getSuratKeputusanBySJPHID(sessionStorage.sjph_id)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        if (selectedID !== null) {
+            try {
+                const result = await kebijakanEdukasiHalalModel.editSuratKeputusanBySelfID(selectedID,body)
+                if ((result.id)||(result.success)||(result)) {
+                    await swal.fire('','Data berhasil di edit','success')
+                        .then(()=>{
+                            setTempatPersetujuan(result.tempat_persetujuan_catatan_pembelian_halal)
+                            setTanggalPersetujuan(result.tanggal_persetujuan_catatan_pembelian_halal)
+                            setNama(result.nama)
+                            getSuratKeputusanBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        } else {
+            try {
+                const result = await kebijakanEdukasiHalalModel.createSuratKeputusan(sessionStorage.sjph_id,body)
+                if ((result.surat_keputusan_ptmp_halal_id)||(result.success)) {
+                    sessionStorage.surat_keputusan_ptmp_halal_id = result.surat_keputusan_ptmp_halal_id
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getSuratKeputusanBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
         }
     }
 
@@ -264,17 +275,91 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
             await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
         }
     }
+    const columns = [
+        {
+            name: 'ID',
+            // minWidth: '150px',
+            selector: row => row.id,
+            sortable: row => row.id
+        },
+        {
+            name: 'Nama',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.nama
+        },
+        {
+            name: 'Jabatan',
+            sortable: true,
+            // minWidth: '150px',
+            selector: (row) => {
+                return (<Badge color='light-success' pill>
+                    {row.jabatan}
+                </Badge>)
+
+            }
+        },
+
+        {
+            name: 'Posisi di Tim',
+            sortable: true,
+            // minWidth: '150px',
+            selector: row => row.posisi_di_tim
+        },
+        {
+            name: 'Tindakan',
+            allowOverflow: false,
+            cell: (row) => {
+                return (
+                    <div className='d-flex'>
+                        <UncontrolledDropdown>
+                            <DropdownToggle className='cursor-pointer pe-1' tag='span' >
+                                <MoreVertical size={15} />
+                            </DropdownToggle>
+                            <DropdownMenu container={'body'} end>
+                                <DropdownItem tag='a' className='w-100' onClick={()=>{
+                                    setSelectedID(row.id)
+                                    setNama(row.nama)
+                                    setJabatan(row.jabatan)
+                                    setPosisiDiTim(row.posisi_di_tim)
+                                    setShow(true)
+                                }}>
+                                    <FileText size={15} />
+                                    <span className='align-middle ms-50'>Ubah</span>
+                                </DropdownItem>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteSuratKeputusanPTMP(row.id) }}>
+                                    <Trash size={15} />
+                                    <span className='align-middle ms-50'>Hapus</span>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <Edit size={15} />
+                    </div>
+                )
+            }
+        }
+    ]
 
     useEffect(()=>{
         getSuratKeputusanBySJPHID(sessionStorage.sjph_id)
         getSJPHInfo(sessionStorage.sjph_id)
     },[])
 
-
+    const reset = async () => {
+        setNama("")
+        setJabatan("")
+        setPosisiDiTim("")
+    }
     return (
         <Fragment>
-            <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
-                <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+            <Modal isOpen={show} toggle={() => {
+                setSelectedID(null)
+                setShow(!show)
+            }} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => {
+                    setSelectedID(null)
+                    setShow(!show)
+                }}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     <div className='text-center mb-2'>
                         <h1 className='mb-1'>Tambah Data Tabel</h1>
@@ -288,7 +373,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                             <Input
                                 id='nama'
                                 placeholder='Budi'
-                                value={nama}
+                                defaultValue={nama}
                                 onChange={(e)=>{ setNama(e.target.value) }}
                             />
                         </Col>
@@ -297,7 +382,8 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                                 Jabatan
                             </Label>
                             <Input id='jabatan' placeholder='Pimpinan Perusahaan/CEO/CTO'
-                                   onChange={(e)=>{ setJabatan(e.target.value) }} invalid={errors.jabatan && true} />
+                                   defaultValue={jabatan}
+                                   onChange={(e)=>{ setJabatan(e.target.value) }}  />
 
                              </Col>
                         <Col xs={12}>
@@ -306,7 +392,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                             </Label>
                             <Input id='posisi_di_tim' placeholder='Ketua/Anggota'
                                    onChange={(e)=>{ setPosisiDiTim(e.target.value) }}
-                                   invalid={errors.username && true} />
+                                   defaultValue={posisiDiTim}/>
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
                             <Button onClick={submit} className='me-1' color='primary'>
@@ -418,7 +504,9 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                         <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                         <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                     </Button>
-                    <Button className='me-1' color='primary' onClick={() => setShow(true)}>
+                    <Button className='me-1' color='primary' onClick={() => {
+                        reset().then(r =>setShow(true))
+                    }}>
                         Tambah
                     </Button>
                     <Button className='me-1' color='primary' onClick={()=>{

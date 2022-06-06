@@ -61,6 +61,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
     const [details, setDetails] = useState([])
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
+    const [selectedID,setSelectedID] = useState(null)
 
     const sjphKuModel = new SJPHKuModels()
 
@@ -156,7 +157,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
         </div>
     ))
 
-    const deleteMediaKomunikas = async (id) => {
+    const deleteSuratPermohonanPersetujuanPenggunaanBahanBaru = async (id) => {
         swal.fire({
             title: "Peringatan!",
             text: "Apakah kamu yakin ingin menghapus data ini?",
@@ -173,7 +174,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
+                    const result = await bahanKepentinganHalalModel.deleteSuratPermohonanPersetujuanPenggunaanBahanBaruBySelfID(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -251,11 +252,19 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                                 <MoreVertical size={15} />
                             </DropdownToggle>
                             <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                <DropdownItem tag='a' className='w-100' onClick={()=>{
+                                    setSelectedID(row.id)
+                                    setNamaBahan(row.nama_bahan)
+                                    setMerek(row.merek)
+                                    setProdusen(row.produsen)
+                                    setNomorSH(row.nomor_sh)
+                                    setMasaBerlakuSertHalal(row.masa_berlaku_sert_halal)
+                                    setShow(true)
+                                }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Edit</span>
+                                    <span className='align-middle ms-50'>Ubah</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteSuratPermohonanPersetujuanPenggunaanBahanBaru(row.id) }}>
                                     <Trash size={15} />
                                     <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>
@@ -276,20 +285,38 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
             nomor_sh: nomorSH,
             masa_berlaku_sert_halal: masaBerlakuSertHalal
         }
-        try {
-            const result = await bahanKepentinganHalalModel.createSuratPermohonanPersetujuanPenggunaanBahanBaru(sessionStorage.sjph_id,body)
-            if ((result.id)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID(sessionStorage.sjph_id)
-                        setShow(false)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        if (selectedID !== null) {
+            try {
+                const result = await bahanKepentinganHalalModel.editSuratPermohonanPersetujuanPenggunaanBahanBaruBySelfID(selectedID,body)
+                if ((result.id)||(result.success)||(result)) {
+                    await swal.fire('','Data berhasil di edit','success')
+                        .then(()=>{
+                            getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        } else {
+            try {
+                const result = await bahanKepentinganHalalModel.createSuratPermohonanPersetujuanPenggunaanBahanBaru(sessionStorage.sjph_id,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
         }
     }
 
@@ -314,6 +341,15 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
         }
     }
 
+    const reset = async () => {
+        setSelectedID(null)
+        setNamaBahan("")
+        setProdusen("")
+        setMerek("")
+        setNomorSH("")
+        setMerek("")
+        setMasaBerlakuSertHalal("")
+    }
 
     return (
         <Fragment>
@@ -322,8 +358,14 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                 <small className='text-muted'>Surat Permohonan Persetujuan Penggunaan Bahan Baru</small>
             </div>
 
-            <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
-                <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+            <Modal isOpen={show} toggle={() => {
+                setSelectedID(null)
+                setShow(!show)
+            }} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => {
+                    setSelectedID(null)
+                    setShow(!show)
+                }}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     <div className='text-center mb-2'>
                         <h1 className='mb-1'>Tambah Data Tabel</h1>
@@ -334,26 +376,34 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                             <Label className='form-label' for='peserta'>
                                 Nama Bahan
                             </Label>
-                            <Input id='peserta' placeholder='Budi Setiawan' onChange={(e)=>{ setNamaBahan(e.target.value) }} />
+                            <Input id='peserta'
+                                   defaultValue={namaBahan}
+                                   placeholder='Gandum' onChange={(e)=>{ setNamaBahan(e.target.value) }} />
                             </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='tanggalDatangBeli'>
+                            <Label className='form-label' for='merek'>
                                 Merek
                             </Label>
-                            <Input id='tanggalDatangBeli' placeholder='Kegiatan' onChange={(e)=>{ setMerek(e.target.value) }}  />
+                            <Input id='merek'
+                                   defaultValue={merek}
+                                   placeholder='Segitiga Biru' onChange={(e)=>{ setMerek(e.target.value) }}  />
                         </Col>
                         <Col md={6} xs={12}>
-                            <Label className='form-label' for='tanggalDatangBeli'>
+                            <Label className='form-label' for='produsen'>
                                 Produsen
                             </Label>
-                            <Input id='tanggalDatangBeli' placeholder='Kegiatan' onChange={(e)=>{ setProdusen(e.target.value) }} />
+                            <Input id='produsen'
+                                   defaultValue={produsen}
+                                   placeholder='PT. Contohkarya' onChange={(e)=>{ setProdusen(e.target.value) }} />
 
                         </Col>
                         <Col md={6} xs={12}>
                             <Label className='form-label' for='tanggalDatangBeli'>
                                 Nomor Sertifikat Halal
                             </Label>
-                            <Input id='tanggalDatangBeli' placeholder='Kegiatan' onChange={(e)=>{ setNomorSH(e.target.value) }}  />
+                            <Input id='tanggalDatangBeli'
+                                   defaultValue={nomorSH}
+                                   placeholder='106515165' onChange={(e)=>{ setNomorSH(e.target.value) }}  />
 
                         </Col>
                         <Col md={6} xs={12}>
@@ -362,7 +412,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                             </Label>
                             <Flatpickr
                                 // value={tanggalSosialisasi}
-                                // defaultValue={cont}
+                                defaultValue={masaBerlakuSertHalal}
                                 id='tanggalPersetujuan'
                                 className='form-control'
                                 onChange={date => setMasaBerlakuSertHalal(date)}
@@ -377,8 +427,10 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                             <Button onClick={submit} className='me-1' color='primary'>
                                 Submit
                             </Button>
-                            <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                                Discard
+                            <Button type='reset' color='secondary' outlineonClick={() => {
+                                reset().then(r =>setShow(true))
+                            }}>
+                                Kembali
                             </Button>
                         </Col>
                     </Row>
@@ -477,7 +529,9 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                         <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                         <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                     </Button>
-                    <Button className='me-1' color='primary' onClick={() => setShow(true)}>
+                    <Button className='me-1' color='primary' onClick={() => {
+                        reset().then(r =>setShow(true))
+                    }}>
                         Tambah
                     </Button>
                     <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kepentingan_produksi_dan_distribusi_produk')}>

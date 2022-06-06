@@ -33,7 +33,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
     const [merekProdusen, setMerekProdusen] = useState('')
     const [tanggalMasuk, setTanggalMasuk] = useState('')
     const [tanggalKeluar, setTanggalKeluar] = useState('')
-    const [jumlah, setJumlah] = useState(0)
+    const [jumlah, setJumlah] = useState("")
     const [penanggungJawab, setPenanggungJawab] = useState('')
     const [selectedGroupID, setSelectedGroupID] = useState(null)
     const [selfID, setSelfID] = useState(null)
@@ -337,7 +337,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
                         </Label>
                         <Input id='namaBahan'
                                defaultValue={namaBahan}
-                               placeholder='Madu Alami' onChange={(e)=>{ setNamaBahan(e.target.value) }}  />
+                               placeholder='Contoh: Madu Alami' onChange={(e)=>{ setNamaBahan(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
                         <Label className='form-label' for='namaProduk'>
@@ -345,7 +345,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
                         </Label>
                         <Input id='namaProduk'
                                defaultValue={namaProduk}
-                               placeholder='Madu Asam Manis' onChange={(e)=>{ setNamaProduk(e.target.value) }}  />
+                               placeholder='Contoh: Madu Rasa Asam Manis' onChange={(e)=>{ setNamaProduk(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
                         <Label className='form-label' for='merekProdusen'>
@@ -353,7 +353,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
                         </Label>
                         <Input id='merekProdusen'
                                defaultValue={merekProdusen}
-                               placeholder='Madu Asam Manis' onChange={(e)=>{ setMerekProdusen(e.target.value) }}  />
+                               placeholder='Contoh: Madu Tedjo, PT. Abdi' onChange={(e)=>{ setMerekProdusen(e.target.value) }}  />
                     </Col>
                     <Col md={6} xs={12}>
                         <Label className='form-label' for='penanggungJawab'>
@@ -361,7 +361,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
                         </Label>
                         <Input id='penanggungJawab'
                                defaultValue={penanggungJawab}
-                               placeholder='Budi Santoso'
+                               placeholder='Contoh: Budi Santoso'
                                onChange={(e)=>{ setPenanggungJawab(e.target.value) }}  />
                     </Col>
                     <Col xs={12}>
@@ -371,7 +371,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
                         <InputGroup>
                             <Input type='number'
                                    defaultValue={jumlah}
-                                   step='0.01' id='jumlah' placeholder='100' onChange={(e)=>{ setJumlah(e.target.value) }}  />
+                                   step='0.01' id='jumlah' placeholder='Contoh: 100 (Dalam KG)' onChange={(e)=>{ setJumlah(e.target.value) }}  />
                             <InputGroupText>KG</InputGroupText>
                         </InputGroup>
                     </Col>

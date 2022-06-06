@@ -32,7 +32,12 @@ export default class KebijakanEdukasiHalal {
     getSuratKeputusanBySJPHID = async (id) => {
         return await ApiRequest.set(`/sjph/kebijakan_edukasi_halal/surat_keputusan/${id}`, 'GET')
     }
-
+    editSuratKeputusanBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/kebijakan_edukasi_halal/surat_keputusan/edit/${self_id}`, 'PUT',body)
+    }
+    deleteSuratKeputusanBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/kebijakan_edukasi_halal/surat_keputusan/self/delete/${self_id}`, 'DELETE')
+    }
     getEvaluasiPelatihanInternal = async (sjph_id) => {
         return await ApiRequest.set(`/sjph/kebijakan_edukasi_halal/soal_evaluasi_pelatihan_internal/get/${sjph_id}`, 'GET')
     }

@@ -26,7 +26,9 @@ export default class KepentinganProduksiDistribusiProduk {
     deleteAllCatatanHasilProduksiByGroupID = async (group_id) => {
         return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_hasil_produksi/all/delete/${group_id}`, 'DELETE')
     }
-
+    deleteCatatanHasilProduksiGroupBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_hasil_produksi_group/self/delete/${self_id}`, 'DELETE')
+    }
     // <-------------------------------------------------------------------------------------->
     // <----------------------CatatanDistribusiPenjualanProdu----------------------->
     createCatatanDistribusiPenjualanProdukByGroupID = async (group_id, body) => {
@@ -53,6 +55,9 @@ export default class KepentinganProduksiDistribusiProduk {
     deleteAllCatatanDistribusiPenjualanProdukByGroupID = async (group_id) => {
         return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_distribusi_penjualan_produk/all/delete/${group_id}`, 'DELETE')
     }
+    deleteCatatanDistribusiPenjualanProdukGroupBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/catatan_distribusi_penjualan_produk_group/self/delete/${self_id}`, 'DELETE')
+    }
     // <-------------------------------------------------------------------------------------->
     // <----------------------LayoutDenahRuangProduksi----------------------->
     getLayoutDenahRuangProduksiBySJPHID = async (sjph_id) => {
@@ -60,6 +65,9 @@ export default class KepentinganProduksiDistribusiProduk {
     }
     createLayoutDenahRuangProduksiBySJPHID = async (sjph_id, body) => {
         return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/layout_denah_ruang_produksi/create/${sjph_id}`, 'POST', body)
+    }
+    editLayoutDenahRuangProduksiBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/layout_denah_ruang_produksi/edit/${self_id}`, 'PUT',body)
     }
     // <-------------------------------------------------------------------------------------->
     // <----------------------DiagramAlirProsesProduksi----------------------->
@@ -69,5 +77,8 @@ export default class KepentinganProduksiDistribusiProduk {
     }
     createDiagramAlirProsesProduksiBySJPHID = async (sjph_id, body) => {
         return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/diagram_alir_proses_produksi/create/${sjph_id}`, 'POST', body)
+    }
+    editDiagramAlirProsesProduksiBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/kepentingan_produksi_distribusi_produk/diagram_alir_proses_produksi/edit/${self_id}`, 'PUT',body)
     }
 }

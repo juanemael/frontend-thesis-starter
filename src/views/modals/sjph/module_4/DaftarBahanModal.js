@@ -370,19 +370,19 @@ return (
                     <p>Tambah data tabelmu sekarang</p>
                 </div>
                 <Row tag='form' className='gy-1 pt-75' >
-                    <Col md={6} xs={12}>
+                    <Col md={12} xs={12}>
                         <Label className='form-label' for='tanggalPersetujuan'>
                             Nama dan Merek
                         </Label>
-                        <Input id='judulKegiatan' placeholder='Kegiatan'
+                        <Input id='judulKegiatan' placeholder='Contoh: Tepung, Tiga Roda'
                                defaultValue={namaMerek}
                                onChange={(e)=>{ setNamaMerek(e.target.value) }}   />
                          </Col>
-                    <Col md={6} xs={12}>
+                    <Col md={12} xs={12}>
                         <Label className='form-label' for='judulKegiatan'>
                             Jenis Bahan
                         </Label>
-                        <Input id='judulKegiatan' placeholder='Kegiatan'
+                        <Input id='judulKegiatan' placeholder='Contoh: Bahan Baku/ Bahan Tambahan / Bahan Penolong'
                                defaultValue={jenisBahan}
                                onChange={(e)=>{ setJenisBahan(e.target.value) }}  />
                     </Col>
@@ -390,7 +390,7 @@ return (
                         <Label className='form-label' for='peserta'>
                             Produsen
                         </Label>
-                        <Input id='peserta' placeholder='Budi Setiawan'
+                        <Input id='peserta' placeholder='Contoh: PT. Industri'
                                defaultValue={produsen}
                                onChange={(e)=>{ setProdusen(e.target.value) }} />
                     </Col>
@@ -398,7 +398,7 @@ return (
                         <Label className='form-label' for='peserta'>
                             Negara
                         </Label>
-                        <Input id='peserta' placeholder='Budi Setiawan'
+                        <Input id='peserta' placeholder='Contoh: Indonesia'
                                defaultValue={negara}
                                onChange={(e)=>{ setNegara(e.target.value) }}  />
                     </Col>
@@ -406,7 +406,7 @@ return (
                         <Label className='form-label' for='peserta'>
                             Supplier
                         </Label>
-                        <Input id='peserta' placeholder='Budi Setiawan'
+                        <Input id='peserta' placeholder='Contoh: PT. Abdi'
                                defaultValue={supplier}
                                onChange={(e)=>{ setSupplier(e.target.value) }} />
                     </Col>
@@ -414,7 +414,7 @@ return (
                         <Label className='form-label' for='peserta'>
                             Lembaga Penerbit Sertifikasi Halal
                         </Label>
-                        <Input id='peserta' placeholder='Budi Setiawan'
+                        <Input id='peserta' placeholder='Contoh: MUI'
                                defaultValue={lembagaPenerbitSertHalal}
                                onChange={(e)=>{ setLembagaPenerbitSertHalal(e.target.value) }}  />
                     </Col>
@@ -422,7 +422,7 @@ return (
                         <Label className='form-label' for='peserta'>
                             Nomor Sertifikasi Halal
                         </Label>
-                        <Input id='peserta' placeholder='Budi Setiawan'
+                        <Input id='peserta' placeholder='Contoh: 878615321'
                                defaultValue={nomorSertHalal}
                                onChange={(e)=>{ setNomorSertHalal(e.target.value) }}  />
                     </Col>
@@ -430,7 +430,7 @@ return (
                         <Label className='form-label' for='peserta'>
                             Masa Berlaku Sertifikat Halal
                         </Label>
-                        <Input id='peserta' placeholder='Budi Setiawan'
+                        <Input id='peserta' placeholder='Contoh: 11 Juni 2024'
                                defaultValue={masaBerlakuSertHalal}
                                onChange={(e)=>{ setMasaBerlakuSertHalal(e.target.value) }}  />
                     </Col>
@@ -445,10 +445,10 @@ return (
                     </Col>
                     <Col xs={12} className='text-center mt-2 pt-50'>
                         <Button onClick={submit} className='me-1' color='primary'>
-                            Submit
+                            Simpan
                         </Button>
                         <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                            Discard
+                            Kembali
                         </Button>
                     </Col>
                 </Row>

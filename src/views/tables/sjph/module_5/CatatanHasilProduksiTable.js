@@ -195,6 +195,53 @@ const CatatanHasilProduksiTable = ({stepper, setCheckpoint,detailsSJPH}) => {
         })
     }
 
+    const deleteCatatanHasilProduksiGroupBySelfID = async (id) => {
+        swal.fire({
+            title: "Peringatan!",
+            text: "Apakah kamu yakin ingin menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButton: "Iya, tentu saja",
+            cancelButton: "Tidak",
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+            // dangerMode: true,
+        }).then(async (res) => {
+            if (res.isConfirmed) {
+                try {
+                    const result = await kepentinganProduksiDistribusiProdukModel.deleteCatatanHasilProduksiGroupBySelfID(id);
+
+                    if (result.id || result.success) {
+                        await Swal.fire({
+                            icon: "success",
+                            title: "Sukses menghapus!",
+                            text: 'Data kamu telah dihapus.',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }
+                        }).then(()=>{
+                            getAllCatatanHasilProduksiGroupBySJPHID(sessionStorage.sjph_id)
+                        })
+                    } else {
+                        await Swal.fire({
+                            title: 'Failed',
+                            text: 'Failed to delete',
+                            icon: 'error',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }})
+                    }
+                } catch (e) {
+                    console.error(e)
+                    await Swal.fire('', e.error_message ? e.error_message : "Something Wrong", 'error')
+                }
+            }
+        })
+    }
+
     const columnsGroup = [
         {
             name: 'ID',
@@ -218,7 +265,7 @@ const CatatanHasilProduksiTable = ({stepper, setCheckpoint,detailsSJPH}) => {
                                 setGroupID(row.id)
                                 setShow2(true)
                             }}>
-                        Isi Tabel
+                        Isi
                     </Button>
                 )
             }
@@ -246,7 +293,7 @@ const CatatanHasilProduksiTable = ({stepper, setCheckpoint,detailsSJPH}) => {
                                     <FileText size={15} />
                                     <span className='align-middle ms-50'>Ubah</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteCatatanHasilProduksiGroupBySelfID(row.id) }}>
                                     <Trash size={15} />
                                     <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>

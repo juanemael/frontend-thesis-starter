@@ -36,14 +36,15 @@ const LayoutDenahRuangProduksiForm = ({stepper,setCheckpoint}) => {
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
     const [details, setDetails] = useState([])
+    const [selectedID,setSelectedID] = useState(null)
 
     const kepentinganProduksiDistribusiProdukModel = new KepentinganProduksiDistribusiProdukModels()
 
 
     const getLayoutDenahRuangProduksiBySJPHID = async (id) => {
         try {
-            console.log("TESTESTES", sessionStorage.sjph_id)
             const result = await kepentinganProduksiDistribusiProdukModel.getLayoutDenahRuangProduksiBySJPHID(id)
+            setSelectedID(result.id)
             setDetails(result)
             console.log(details)
         } catch (e) {
@@ -56,23 +57,76 @@ const LayoutDenahRuangProduksiForm = ({stepper,setCheckpoint}) => {
     },[])
     const upload = async ()=>{
         const body = {
-            tanggal_persetujuan_layout_denah_ruang_produksi: tanggalPersetujuan? tanggalPersetujuan : details.tanggal_persetujuan_layout_denah_ruang_produksi,
-            tempat_persetujuan_layout_denah_ruang_produksi: tempatPersetujuan? tempatPersetujuan : details.tempat_persetujuan_layout_denah_ruang_produksi,
             url: imageUrl ? imageUrl : details.url
         }
-        try {
-            const result = await kepentinganProduksiDistribusiProdukModel.createLayoutDenahRuangProduksiBySJPHID(sessionStorage.sjph_id,body)
-            if ((result)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getLayoutDenahRuangProduksiBySJPHID(sessionStorage.sjph_id)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
+        if (selectedID !== null) {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.editLayoutDenahRuangProduksiBySelfID(selectedID, body)
+                if ((result.id) || (result.success) || (result)) {
+                    await swal.fire('', 'Data berhasil di edit', 'success')
+                        .then(() => {
+                            getLayoutDenahRuangProduksiBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('', 'Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
             }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        } else {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.createLayoutDenahRuangProduksiBySJPHID(sessionStorage.sjph_id,body)
+                if ((result)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getLayoutDenahRuangProduksiBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
+        }
+    }
+    const submitTempatTanggal = async () => {
+        const body = {
+            tanggal_persetujuan_layout_denah_ruang_produksi: tanggalPersetujuan ? tanggalPersetujuan : details.tanggal_persetujuan_layout_denah_ruang_produksi,
+            tempat_persetujuan_layout_denah_ruang_produksi: tempatPersetujuan ? tempatPersetujuan : details.tempat_persetujuan_layout_denah_ruang_produksi,
+        }
+        if (selectedID !== null) {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.editLayoutDenahRuangProduksiBySelfID(selectedID, body)
+                if ((result.id) || (result.success) || (result)) {
+                    await swal.fire('', 'Data berhasil di edit', 'success')
+                        .then(() => {
+                            getLayoutDenahRuangProduksiBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('', 'Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
+        } else {
+            try {
+                const result = await kepentinganProduksiDistribusiProdukModel.createLayoutDenahRuangProduksiBySJPHID(sessionStorage.sjph_id, body)
+                if ((result.id) || (result.success) || (result)) {
+                    setSelectedID(result.id)
+                    await swal.fire('', 'Data berhasil di simpan', 'success')
+                        .then(() => {
+                            getLayoutDenahRuangProduksiBySJPHID(sessionStorage.sjph_id)
+                        })
+                } else {
+                    await swal.fire('', 'Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
         }
     }
     return (
@@ -98,7 +152,7 @@ const LayoutDenahRuangProduksiForm = ({stepper,setCheckpoint}) => {
                             <Label className='form-label' for='tempatlPersetujuan'>
                                 Tempat Persetujuan
                             </Label>
-                            <Input id='tempatPersetujuan' defaultValue={tempatPersetujuan? tempatPersetujuan : details.tanggal_persetujuan_layout_denah_ruang_produksi} placeholder='Isi Kota untuk Tempat Persetujuan (Cth: Jakarta)'
+                            <Input id='tempatPersetujuan' defaultValue={tempatPersetujuan? tempatPersetujuan : details.tempat_persetujuan_layout_denah_ruang_produksi} placeholder='Isi Kota untuk Tempat Persetujuan (Cth: Jakarta)'
                                    onChange={(e)=>{ setTempatPersetujuan(e.target.value) }}  />
                         </Col>
                         <Col md={6} xs={12}>
@@ -119,6 +173,13 @@ const LayoutDenahRuangProduksiForm = ({stepper,setCheckpoint}) => {
                             />
                         </Col>
                         &nbsp;
+                        <Col sm='12'>
+                            <div className='d-flex justify-content-center'>
+                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
+                                    Simpan
+                                </Button>
+                            </div>
+                        </Col>
                     </Row>
                 </CardBody>
             </Card>
@@ -127,7 +188,7 @@ const LayoutDenahRuangProduksiForm = ({stepper,setCheckpoint}) => {
             </div>
             <Row>
                 <Col sm='12'>
-                    <FileUploaderSingle createFunc={upload} imageURL={imageUrl} setImageURL={setImageUrl} />
+                    <FileUploaderSingle createFunc={upload} selectedID={selectedID} imageURL={imageUrl} setImageURL={setImageUrl} />
                 </Col>
             </Row>
             <div className='divider divider-dashed'>

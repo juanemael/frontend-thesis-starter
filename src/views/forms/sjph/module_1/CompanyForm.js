@@ -240,7 +240,8 @@ const CompanyForm = () => {
                             <Label className='form-label' for='CompanyMulti'>
                                 Nama Penyelia Halal
                             </Label>
-                            <Input type='text' name='namaPenyeliaHalal' id='namaPenyeliaHalal'
+                            <Input type='text'
+                                   defaultValue={details.id && details.nama_penyelia_halal } name='namaPenyeliaHalal' id='namaPenyeliaHalal'
                                     onChange={(e)=>{
                                 setNamaPenyelia(e.target.value)
                             }} placeholder='Nama Penyelia Halal' />

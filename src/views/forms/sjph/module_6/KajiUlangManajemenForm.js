@@ -94,9 +94,11 @@ const KajiUlangManajemenTable = () => {
             <Form>
                 <Row>
                     <Col md='6' sm='12' className='mb-1'>
+                        <h5>Materi:</h5>
                         <Label className='form-label' for='EmailMulti'>
                             Komitmen dan Manajemen
                         </Label>
+                        <h5>Hasil Pembahasan:</h5>
                         <Input
                             name='komitmenManajemen'
                             type='textarea'
@@ -116,9 +118,11 @@ const KajiUlangManajemenTable = () => {
                         </span>
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
+                        <h5>Materi:</h5>
                         <Label className='form-label' for='EmailMulti'>
                             Bahan
                         </Label>
+                        <h5>Hasil Pembahasan:</h5>
                         <Input
                             name='bahan'
                             type='textarea'
@@ -138,9 +142,11 @@ const KajiUlangManajemenTable = () => {
                         </span>
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
+                        <h5>Materi:</h5>
                         <Label className='form-label' for='EmailMulti'>
                             Proses dan Produk Halal
                         </Label>
+                        <h5>Hasil Pembahasan:</h5>
                         <Input
                             name='prosesProdukHalal'
                             type='textarea'
@@ -161,9 +167,11 @@ const KajiUlangManajemenTable = () => {
                         </span>
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
+                        <h5>Materi:</h5>
                         <Label className='form-label' for='EmailMulti'>
                             Produk
                         </Label>
+                        <h5>Hasil Pembahasan:</h5>
                         <Input
                             name='produk'
                             type='textarea'
@@ -183,9 +191,11 @@ const KajiUlangManajemenTable = () => {
                         </span>
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
+                        <h5>Materi:</h5>
                         <Label className='form-label' for='EmailMulti'>
                             Pemantauan dan Evaluasi
                         </Label>
+                        <h5>Hasil Pembahasan:</h5>
                         <Input
                             name='pemantauanEvaluasi'
                             type='textarea'
@@ -204,9 +214,9 @@ const KajiUlangManajemenTable = () => {
                             {`${pemantauanEvaluasi.length}/120`}
                         </span>
                     </Col>
-                    <Col md={3} xs={6}>
+                    <Col md={3} xs={6} className={'align-items-end'}>
                         <Label className='form-label' for='tanggal'>
-                            Tanggal
+                            Tanggal Persetujuan
                         </Label>
                         <Flatpickr
                             value={details.id && details.tanggal_persetujuan}
@@ -229,7 +239,7 @@ const KajiUlangManajemenTable = () => {
                         </Label>
                         <Input type='text' defaultValue={details.id && details.tempat_persetujuan} name='tempatPersetujuan' id='tempatPersetujuan' onChange={(e)=>{
                             setTempatPersetujuan(e.target.value)
-                        }} placeholder='Tempat pengisian sekarang(Cth: Jakarta)' />
+                        }} placeholder='Contoh: Jakarta' />
                     </Col>
                     <Col sm='12'>
                         <div className='d-flex justify-content-center'>

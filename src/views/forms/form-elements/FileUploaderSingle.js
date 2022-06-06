@@ -9,7 +9,7 @@ import { useDropzone } from 'react-dropzone'
 import { FileText, X, DownloadCloud } from 'react-feather'
 import Upload from "../../../models/Upload";
 
-const FileUploaderSingle = ({setImageURL, createFunc, imageURL}) => {
+const FileUploaderSingle = ({setImageURL, createFunc, imageURL, selectedID}) => {
   // ** State
   const [files, setFiles] = useState([])
   const [file, setFile] = useState(null);

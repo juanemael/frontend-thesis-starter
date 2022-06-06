@@ -301,13 +301,13 @@ const CatatanHasilProduksiModal = ({setGroupID, groupID, show2, setShow2}) => {
                     <p>Tambah data tabelmu sekarang</p>
                 </div>
                 <Row tag='form' className='gy-1 pt-75' >
-                    <Col md={6} xs={12}>
+                    <Col md={12} xs={12}>
                         <Label className='form-label' for='namaVarianMerekProduk'>
                             Nama Produk/Varian/Merek
                         </Label>
                         <Input id='namaVarianMerekProduk'
                                defaultValue={namaVarianMerekProduk}
-                               placeholder='Nama Produk/Varian/Merek' onChange={(e)=>{ setNamaVarianMerekProduk(e.target.value) }} />
+                               placeholder='Keripik JOS/Keripik Kentang/Tiga Roda' onChange={(e)=>{ setNamaVarianMerekProduk(e.target.value) }} />
                     </Col>
                     <Col md={6} xs={12}>
                         <Label className='form-label' for='tanggal'>
@@ -333,10 +333,10 @@ const CatatanHasilProduksiModal = ({setGroupID, groupID, show2, setShow2}) => {
                         <InputGroup>
                             <Input type='number'
                                    defaultValue={jumlah}
-                                   step='0.01' id='jumlah' placeholder='100' onChange={(e)=>{ setJumlah(e.target.value) }}  />
+                                   step='0.01' id='jumlah' placeholder='10,5' onChange={(e)=>{ setJumlah(e.target.value) }}  />
                             <InputGroupText>KG</InputGroupText>
                         </InputGroup></Col>
-                    <Col md={6} xs={12}>
+                    <Col md={12} xs={12}>
                         <Label className='form-label' for='keterangan'>
                             Keterangan
                         </Label>

@@ -148,7 +148,51 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
         </div>
     ))
 
-    const deleteMediaKomunikas = async (id) => {
+    const deleteDaftarBahanGroupBySelfID = async (id) => {
+        swal.fire({
+            title: "Peringatan!",
+            text: "Apakah kamu yakin ingin menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButton: "Iya, tentu saja",
+            cancelButton: "Tidak",
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+            // dangerMode: true,
+        }).then(async (res) => {
+            if (res.isConfirmed) {
+                try {
+                    const result = await bahanKepentinganHalalModel.deleteDaftarBahanGroupBySelfID(id);
+
+                    if (result.id || result.success) {
+                        await Swal.fire({
+                            icon: "success",
+                            title: "Sukses menghapus!",
+                            text: 'Data kamu telah dihapus.',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }
+                        }).then(()=>{
+                            getAllDaftarBahanGroupBySJPHID(sessionStorage.sjph_id)
+                        })
+                    } else {
+                        await Swal.fire({
+                            title: 'Failed',
+                            text: 'Failed to delete',
+                            icon: 'error',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }})
+                    }
+                } catch (e) {
+                    console.error(e)
+                    await Swal.fire('', e.error_message ? e.error_message : "Something Wrong", 'error')
+                }
+            }
+        })
     }
     const columnsGroup = [
         {
@@ -173,7 +217,7 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
                                 setGroupID(row.id)
                                 setShow2(true)
                             }}>
-                        Isi Tabel
+                        Isi
                     </Button>
                 )
             }
@@ -201,7 +245,7 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
                                     <FileText size={15} />
                                     <span className='align-middle ms-50'>Ubah</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteDaftarBahanGroupBySelfID(row.id) }}>
                                     <Trash size={15} />
                                     <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>
@@ -356,9 +400,9 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
                     <Row tag='form' className='gy-1 pt-75' >
                         <Col md={12} xs={12}>
                             <Label className='form-label' for='nama'>
-                                Nama Tabel Catatan Penyimpanan Bahan dan Produk
+                                Nama Dokumen Group Daftar Bahan
                             </Label>
-                            <Input id='nama' defaultValue={nama} placeholder='Tabel Catatan Penyimpanan Bahan dan Produk Juni 2022'
+                            <Input id='nama' defaultValue={nama} placeholder='Daftar Bahan Juni 2022'
                                    onChange={(e)=>{ setNama(e.target.value) }} />
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>

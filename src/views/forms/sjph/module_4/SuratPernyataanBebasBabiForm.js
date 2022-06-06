@@ -115,15 +115,15 @@ const SuratPernyataanBebasBabiForm = ({stepper, setCheckpoint}) => {
                     </Col>
                     <Col md='6' sm='12' className='mb-1'>
                         <Label className='form-label' for='lastNameMulti'>
-                            Tempat
+                            Tempat Persetujuan
                         </Label>
                         <Input type='text' defaultValue={details.id && details.tempat} name='perusahaan' id='perusahaan' onChange={(e)=>{
                             setTempat(e.target.value)
-                        }} placeholder='Perusahaan' />
+                        }} placeholder='Contoh: Jakarta' />
                     </Col>
                     <Col md={6} xs={12}>
                         <Label className='form-label' for='tanggal'>
-                            Tanggal
+                            Tanggal Persetujuan
                         </Label>
                         <Flatpickr
                             value={details.id && details.tanggal}

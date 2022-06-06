@@ -67,6 +67,7 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
     const [details, setDetails] = useState([])
     const [tanggalPersetujuan, setTanggalPersetujuan] = useState("")
     const [tempatPersetujuan, setTempatPersetujuan] = useState("")
+    const [selectedID,setSelectedID] = useState(null)
 
     const sjphKuModel = new SJPHKuModels()
     const bahanKepentinganHalalModel = new BahanKepentinganHalalModels()
@@ -167,7 +168,7 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
         </div>
     ))
 
-    const deleteMediaKomunikas = async (id) => {
+    const deleteFormPemeriksaanBahan = async (id) => {
         swal.fire({
             title: "Peringatan!",
             text: "Apakah kamu yakin ingin menghapus data ini?",
@@ -184,7 +185,7 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    const result = await bahanKepentinganHalalModel.deleteMediaKomunikasi(id);
+                    const result = await bahanKepentinganHalalModel.deleteFormPemeriksaanBahanBySelfID(id);
 
                     if (result.id || result.success) {
                         await Swal.fire({
@@ -212,6 +213,69 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                 }
             }
         })
+    }
+
+    const submit = async () => {
+        const body = {
+            tanggal_datang_beli: tanggalDatangBeli,
+            nama_merek_kode_bahan: namaMerekKodeBahan,
+            nama_dan_lokasi_produsen: namaLokasiProdusen,
+            sesuai
+        }
+        if (selectedID !== null) {
+            try {
+                const result = await bahanKepentinganHalalModel.editFormPemeriksaanBahanBySelfID(selectedID,body)
+                if ((result.id)||(result.success)||(result)) {
+                    await swal.fire('','Data berhasil di edit','success')
+                        .then(()=>{
+                            getFormPemeriksaanBahanBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
+        } else {
+            try {
+                const result = await bahanKepentinganHalalModel.createFormPemeriksaanBahan(sessionStorage.sjph_id,body)
+                if ((result.id)||(result.success)) {
+                    await swal.fire('','Data berhasil di simpan','success')
+                        .then(()=>{
+                            getFormPemeriksaanBahanBySJPHID(sessionStorage.sjph_id)
+                            setShow(false)
+                        })
+                } else {
+                    await swal.fire('','Data gagal disimpan', 'error')
+                }
+            } catch (e) {
+                console.error(e)
+                await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+            }
+        }
+    }
+
+    const submitTempatTanggal = async () => {
+        const body = {
+            tempat_persetujuan_form_pemeriksaan_bahan: tempatPersetujuan? tempatPersetujuan : detailsSJPH.tempat_persetujuan_form_pemeriksaan_bahan,
+            tanggal_persetujuan_form_pemeriksaan_bahan: tanggalPersetujuan? tanggalPersetujuan : detailsSJPH.tanggal_persetujuan_form_pemeriksaan_bahan
+        }
+        try {
+            const result = await sjphKuModel.editTempatTanggalKeputusanSJPH(sessionStorage.sjph_id,body)
+            if ((result.success)) {
+                await swal.fire('','Data berhasil di simpan','success')
+                    .then(()=>{
+                        getSJPHInfo(sessionStorage.sjph_id)
+                    })
+            } else {
+                await swal.fire('','Data gagal disimpan', 'error')
+            }
+        } catch (e) {
+            console.error(e)
+            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
+        }
     }
 
     const columns = [
@@ -257,11 +321,18 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                                 <MoreVertical size={15} />
                             </DropdownToggle>
                             <DropdownMenu container={'body'} end>
-                                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                                <DropdownItem tag='a' className='w-100' onClick={()=>{
+                                    setSelectedID(row.id)
+                                    setTanggalDatangBeli(row.tanggal_datang_beli)
+                                    setNamaMerekKodeBahan(row.nama_merek_kode_bahan)
+                                    setNamaLokasiProdusen(row.nama_dan_lokasi_produsen)
+                                    setSesuai(row.sesuai)
+                                    setShow(true)
+                                }}>
                                     <FileText size={15} />
-                                    <span className='align-middle ms-50'>Edit</span>
+                                    <span className='align-middle ms-50'>Ubah</span>
                                 </DropdownItem>
-                                <DropdownItem className='w-100' onClick={()=>{ deleteSJPH(row.id) }}>
+                                <DropdownItem className='w-100' onClick={()=>{ deleteFormPemeriksaanBahan(row.id) }}>
                                     <Trash size={15} />
                                     <span className='align-middle ms-50'>Hapus</span>
                                 </DropdownItem>
@@ -274,55 +345,24 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
         }
     ]
 
-    const submit = async () => {
-        const body = {
-            tanggal_datang_beli: tanggalDatangBeli,
-            nama_merek_kode_bahan: namaMerekKodeBahan,
-            nama_dan_lokasi_produsen: namaLokasiProdusen,
-            sesuai
-        }
-        try {
-            const result = await bahanKepentinganHalalModel.createFormPemeriksaanBahan(sessionStorage.sjph_id,body)
-            if ((result.id)||(result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getFormPemeriksaanBahanBySJPHID(sessionStorage.sjph_id)
-                        setShow(false)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
-            }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
-        }
-    }
-
-    const submitTempatTanggal = async () => {
-        const body = {
-            tempat_persetujuan_form_pemeriksaan_bahan: tempatPersetujuan? tempatPersetujuan : detailsSJPH.tempat_persetujuan_form_pemeriksaan_bahan,
-            tanggal_persetujuan_form_pemeriksaan_bahan: tanggalPersetujuan? tanggalPersetujuan : detailsSJPH.tanggal_persetujuan_form_pemeriksaan_bahan
-        }
-        try {
-            const result = await sjphKuModel.editTempatTanggalKeputusanSJPH(sessionStorage.sjph_id,body)
-            if ((result.success)) {
-                await swal.fire('','Data berhasil di simpan','success')
-                    .then(()=>{
-                        getSJPHInfo(sessionStorage.sjph_id)
-                    })
-            } else {
-                await swal.fire('','Data gagal disimpan', 'error')
-            }
-        } catch (e) {
-            console.error(e)
-            await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Error! Mohon kontak admin.")
-        }
+    const reset = async () => {
+        setSelectedID(null)
+        setNamaMerekKodeBahan("")
+        setNamaLokasiProdusen("")
+        setSesuai("")
+        setTanggalDatangBeli("")
     }
 
     return (
         <Fragment>
-            <Modal isOpen={show} toggle={() => setShow(!show)} className='modal-dialog-centered modal-lg'>
-                <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+            <Modal isOpen={show} toggle={() => {
+                setSelectedID(null)
+                setShow(!show)
+            }} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => {
+                    setSelectedID(null)
+                    setShow(!show)
+                }}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     <div className='text-center mb-2'>
                         <h1 className='mb-1'>Tambah Data Tabel</h1>
@@ -333,8 +373,8 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                             <Label className='form-label' for='peserta'>
                                 Nama/Merek/Kode Bahan
                             </Label>
-                            <Input id='peserta' placeholder='Budi Setiawan' onChange={(e)=>{ setNamaMerekKodeBahan(e.target.value) }} invalid={errors.peserta && true} />
-                            {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
+                            <Input id='peserta'
+                                   defaultValue={namaMerekKodeBahan} placeholder='Tepung/Tiga Roda/001' onChange={(e)=>{ setNamaMerekKodeBahan(e.target.value) }} />
                         </Col>
                         <Col md={6} xs={12}>
                             <Label className='form-label' for='tanggalPersetujuan'>
@@ -342,7 +382,7 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                             </Label>
                             <Flatpickr
                                 // value={tanggalSosialisasi}
-                                // defaultValue={cont}
+                                defaultValue={tanggalDatangBeli}
                                 id='tanggalPersetujuan'
                                 className='form-control'
                                 onChange={date => setTanggalDatangBeli(date)}
@@ -352,14 +392,14 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                                     dateFormat: 'Y-m-d',
                                 }}
                             />
-                            {errors.firstName && <FormFeedback>Please enter a valid First Name</FormFeedback>}
-                        </Col>
+                         </Col>
                         <Col md={6} xs={12}>
                             <Label className='form-label' for='tanggalDatangBeli'>
                                 Nama dan Lokasi Produsen
                             </Label>
-                            <Input id='tanggalDatangBeli' placeholder='Kegiatan' onChange={(e)=>{ setNamaLokasiProdusen(e.target.value) }}  invalid={errors.judulKegiatan && true} />
-                            {errors.lastName && <FormFeedback>Please enter a valid Last Name</FormFeedback>}
+                            <Input id='tanggalDatangBeli'
+                                   defaultValue={namaLokasiProdusen}
+                                   placeholder='PT. Abdikarya, Jakarta' onChange={(e)=>{ setNamaLokasiProdusen(e.target.value) }}  />
                         </Col>
                         <Col md={6} xs={12}>
                             <Label className='form-label' for='sesuai'>
@@ -371,8 +411,8 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                                 className='react-select'
                                 classNamePrefix='select'
                                 // value={skalaUsahaOptions}
-                                defaultValue={details.skala_usaha === 'Sesuai' ? sesuaiOptions[0] : details.skala_usaha === "Tidak Sesuai" ? sesuaiOptions[1] : null}
-                                placeholder={details.skala_usaha === 'Sesuai' ? details.sesuai : details.sesuai === 'Tidak Sesuai' ? details.sesuai : "Pilih disini"}
+                                defaultValue={sesuai === 'Sesuai' ? sesuaiOptions[0] : sesuai === "Tidak Sesuai" ? sesuaiOptions[1] : null}
+                                placeholder={sesuai === 'Sesuai' ? sesuai : sesuai === 'Tidak Sesuai' ? sesuai : "Pilih disini"}
                                 name='sesuai'
                                 options={sesuaiOptions}
                                 onChange={(opt)=>{
@@ -382,10 +422,13 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
                             <Button onClick={submit} className='me-1' color='primary'>
-                                Submit
+                                Simpan
                             </Button>
-                            <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                                Discard
+                            <Button type='reset' color='secondary' outline toggle={() => {
+                                setSelectedID(null)
+                                setShow(!show)
+                            }}>
+                                Kemblai
                             </Button>
                         </Col>
                     </Row>
@@ -486,7 +529,9 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                         <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                         <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                     </Button>
-                    <Button className='me-1' color='primary' onClick={() => setShow(true)}>
+                    <Button className='me-1' color='primary' onClick={() => {
+                        reset().then(r =>setShow(true))
+                    }}>
                         Tambah
                     </Button>
                     <Button className='me-1' color='primary' onClick={()=>{

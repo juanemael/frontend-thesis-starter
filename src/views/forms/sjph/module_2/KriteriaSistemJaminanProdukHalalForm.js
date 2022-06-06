@@ -82,8 +82,8 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
 
     const submit = async () => {
         const body = {
-            tempat_persetujuan: tempatPersetujuan,
-            tanggal_persetujuan: tanggalPersetujuan
+            tempat_persetujuan_kebijakan_halal: tempatPersetujuan,
+            tanggal_persetujuan_kebijakan_halal: tanggalPersetujuan
         }
         try {
             const result = await kriteriaSJPHKebijakanHalalModel.createKebijakanHalal(sessionStorage.sjph_id,body)
@@ -195,7 +195,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                             </Label>
                             <Input type='text' name='nib' id='nib' defaultValue={detailKebijakan.tempat_persetujuan} onChange={(e)=>{
                                 setTempatPersetujuan(e.target.value)
-                            }} placeholder='Tempat Persetujuan' />
+                            }} placeholder='Contoh: Jakarta' />
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='hf-picker'>

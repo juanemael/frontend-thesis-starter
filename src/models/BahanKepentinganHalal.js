@@ -28,6 +28,9 @@ export default class BahanKepentinganHalal {
     deleteAllCatatanPembelianBahanByGroupID = async (group_id) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan/all/delete/${group_id}`, 'DELETE')
     }
+    deleteCatatanPembelianBahanGroupBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan_group/self/delete/${self_id}`, 'DELETE')
+    }
     // <-------------------------------------------------------------------------------------->
 
     //<----------------------Catatan Penyimpanan Bahan Produk----------------------->
@@ -55,7 +58,9 @@ export default class BahanKepentinganHalal {
     deleteAllCatatanPenyimpananBahanProdukByGroupID = async (group_id) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_penyimpanan_bahan_produk/all/delete/${group_id}`, 'DELETE')
     }
-
+    deleteCatatanPenyimpananBahanProdukGroupBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_penyimpanan_bahan_produk_group/self/delete/${self_id}`, 'DELETE')
+    }
     // <-------------------------------------------------------------------------------------->
 
     //<----------------------Daftar Bahan----------------------->
@@ -89,19 +94,41 @@ export default class BahanKepentinganHalal {
     deleteAllDaftarBahanByGroupID = async (group_id) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan/all/delete/${group_id}`, 'DELETE')
     }
+    deleteDaftarBahanGroupBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan_group/self/delete/${self_id}`, 'DELETE')
+    }
 
     // <-------------------------------------------------------------------------------------->
 
-    getDaftarBahanProdukBySJPHID = async (sjph_id) => {
-        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan_setiap_produk/get/${sjph_id}`, 'GET')
-    }
 
+    getFormPemeriksaanBahanBySJPHID = async (sjph_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/form_pemeriksaan_bahan/get/${sjph_id}`, 'GET')
+    }
     createFormPemeriksaanBahan = async (sjph_id, body) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/form_pemeriksaan_bahan/create/${sjph_id}`, 'POST', body)
+    }
+    editFormPemeriksaanBahanBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/form_pemeriksaan_bahan/edit/${self_id}`, 'PUT',body)
+    }
+    deleteFormPemeriksaanBahanBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/form_pemeriksaan_bahan/self/delete/${self_id}`, 'DELETE')
+    }
+
+
+    getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID = async (surat_pernyataan_bebas_babi_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_permohonan_persetujuan_penggunaan_bahan_baru/get/${surat_pernyataan_bebas_babi_id}`, 'GET')
     }
     createSuratPermohonanPersetujuanPenggunaanBahanBaru = async (sjph_id, body) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_permohonan_persetujuan_penggunaan_bahan_baru/create/${sjph_id}`, 'POST', body)
     }
+    editSuratPermohonanPersetujuanPenggunaanBahanBaruBySelfID = async (self_id,body) =>{
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_permohonan_persetujuan_penggunaan_bahan_baru/edit/${self_id}`, 'PUT',body)
+    }
+    deleteSuratPermohonanPersetujuanPenggunaanBahanBaruBySelfID = async (self_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_permohonan_persetujuan_penggunaan_bahan_baru/self/delete/${self_id}`, 'DELETE')
+    }
+
+
     createSuratPernyataanBebasBabi = async (sjph_id, body) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_pernyataan_bebas_babi/create/${sjph_id}`, 'POST', body)
     }
@@ -111,18 +138,13 @@ export default class BahanKepentinganHalal {
     editSuratPernyataanBebasBabi = async (surat_pernyataan_bebas_babi_id, body) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_pernyataan_bebas_babi/edit/${surat_pernyataan_bebas_babi_id}`, 'PUT', body)
     }
-
+    getDaftarBahanProdukBySJPHID = async (sjph_id) => {
+        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/daftar_bahan_setiap_produk/get/${sjph_id}`, 'GET')
+    }
     // getCatatanPembelianBahanBySJPHID = async (sjph_id) => {
     //     return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/catatan_pembelian_bahan/get/${sjph_id}`, 'GET')
     // }
 
-
-    getFormPemeriksaanBahanBySJPHID = async (sjph_id) => {
-        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/form_pemeriksaan_bahan/get/${sjph_id}`, 'GET')
-    }
-    getSuratPermohonanPersetujuanPenggunaanBahanBaruBySJPHID = async (surat_pernyataan_bebas_babi_id) => {
-        return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_permohonan_persetujuan_penggunaan_bahan_baru/get/${surat_pernyataan_bebas_babi_id}`, 'GET')
-    }
     getSuratPernyataanBebasBabiByID = async (surat_pernyataan_bebas_babi_id) => {
         return await ApiRequest.set(`/sjph/bahan_kepentingan_halal/surat_pernyataan_bebas_babi/get/${surat_pernyataan_bebas_babi_id}`, 'GET')
     }

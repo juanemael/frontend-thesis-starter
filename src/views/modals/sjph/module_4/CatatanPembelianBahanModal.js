@@ -302,7 +302,7 @@ return (
                         <Label className='form-label' for='namaMerek'>
                             Nama dan Merek
                         </Label>
-                        <Input id='namaMerek' placeholder='Kegiatan'
+                        <Input id='namaMerek' placeholder='Contoh: Tiga Roda'
                                defaultValue={namaMerek}
                                onChange={(e)=>{ setNamaMerek(e.target.value) }} />
                         </Col>
@@ -312,7 +312,8 @@ return (
                         </Label>
                         <Input id='jumlah'
                                defaultValue={jumlah}
-                               placeholder='(Dalam KG)' onChange={(e)=>{ setJumlah(e.target.value) }} />
+                               type={'number'}
+                               placeholder='Contoh: 100 (Dalam KG)' onChange={(e)=>{ setJumlah(e.target.value) }} />
                        </Col>
                     <Col xs={12} className='text-center mt-2 pt-50'>
                         <Button onClick={submit} className='me-1' color='primary'>
