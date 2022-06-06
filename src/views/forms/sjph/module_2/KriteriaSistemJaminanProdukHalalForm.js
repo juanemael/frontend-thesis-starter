@@ -118,6 +118,7 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                         {/*    </div>*/}
                         {/*</Alert>*/}
                         {/*<p>Mulai dari sini, kamu akan berjalan melalui berbagai tempat wisata di setiap destinasi.</p>*/}
+                        {/*<p>Setiap tempat wisata mempunyai isi yang berbeda beda jadi jangan sampai salah ya</p>*/}
                         <p>Mulai dari sini kamu akan menemukan tanggal dan tempat persetujuan.</p>
                         <p>Sebagai gambaran, tempat dan tanggal persetujuan akan ditulis sebagai contoh berikut.</p>
                         <Row sm={8} className='justify-content-center' style={{paddingBottom: 20}}>
