@@ -107,14 +107,14 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
         if (value.length) {
             updatedData = mediaKomunikasi.filter(item => {
                 const startsWith =
-                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+                    item.judul_kegiatan.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama_perusahaan.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.peserta.toLowerCase().startsWith(value.toLowerCase())
 
                 const includes =
-                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+                    item.judul_kegiatan.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama_perusahaan.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.peserta.toLowerCase().startsWith(value.toLowerCase())
 
                 if (startsWith) {
                     return startsWith

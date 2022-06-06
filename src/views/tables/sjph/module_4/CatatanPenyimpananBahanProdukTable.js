@@ -98,7 +98,7 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 
                 const includes =
-                    item.nama_dan_merek.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 

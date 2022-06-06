@@ -108,14 +108,14 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
         if (value.length) {
             updatedData = details.filter(item => {
                 const startsWith =
-                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+                    item.nama_bahan.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.merek.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.produsen.toLowerCase().startsWith(value.toLowerCase())
 
                 const includes =
-                    item.nama_sjph.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.modified_at.toLowerCase().startsWith(value.toLowerCase())
+                    item.nama_bahan.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.merek.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.produsen.toLowerCase().startsWith(value.toLowerCase())
 
                 if (startsWith) {
                     return startsWith

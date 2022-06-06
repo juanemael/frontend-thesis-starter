@@ -101,8 +101,8 @@ const CompanyForm = () => {
             jenis_produk: jenisProduk? jenisProduk : details.jenis_produk,
             daerah_pemasaran: daerahPemasaran? daerahPemasaran : details.daerah_pemasaran,
             sistem_pemasaran: sistemPemasaran? sistemPemasaran : details.sistem_pemasaran,
-            tujuan: tujuan? tujuan : details.tujuan,
-            ruang_lingkup: ruangLingkup? ruangLingkup : details.ruang_lingkup,
+            // tujuan: tujuan? tujuan : details.tujuan,
+            // ruang_lingkup: ruangLingkup? ruangLingkup : details.ruang_lingkup,
         }
         if (sessionStorage.perusahaan_id !== 'null') {
             try {
@@ -342,52 +342,52 @@ const CompanyForm = () => {
                                 setSistemPemasaran(e.target.value)
                             }} placeholder='Retail / Non-Retail' />
                         </Col>
-                        <Col md='6' sm='12' className='mb-1'>
-                            <Label className='form-label' for='EmailMulti'>
-                                Tujuan
-                            </Label>
-                            {/*<Editor editorState={value} onEditorStateChange={data => setValue(data)} />*/}
-                            <Input
-                                name='tujuan'
-                                type='textarea'
-                                id='tujuan'
-                                placeholder='Tujuan'
-                                style={{ minHeight: '100px' }}
-                                onChange={e => setTujuan(e.target.value)}
-                                defaultValue={ details.id && details.tujuan }
-                                className={classnames({ 'text-danger': tujuan.length > 120 })}
-                            />
-                            <span
-                                className={classnames('textarea-counter-value float-end', {
-                                    'bg-danger': tujuan.length > 120
-                                })}
-                            >
-                            {`${tujuan.length}/120`}
-                            </span>
-                            {/*<Editor />*/}
-                        </Col>
-                        <Col md='6' sm='12' className='mb-1'>
-                            <Label className='form-label' for='EmailMulti'>
-                                Ruang Lingkup
-                            </Label>
-                            <Input
-                                name='ruangLingkup'
-                                type='textarea'
-                                id='ruangLingkup'
-                                placeholder='Ruang Lingkup'
-                                style={{ minHeight: '100px' }}
-                                onChange={e => setRuangLingkup(e.target.value)}
-                                defaultValue={ details.id && details.ruang_lingkup }
-                                className={classnames({ 'text-danger': ruangLingkup.length > 120 })}
-                            />
-                            <span
-                                className={classnames('textarea-counter-value float-end', {
-                                    'bg-danger': ruangLingkup.length > 120
-                                })}
-                            >
-                            {`${ruangLingkup.length}/120`}
-                            </span>
-                        </Col>
+                        {/*<Col md='6' sm='12' className='mb-1'>*/}
+                        {/*    <Label className='form-label' for='EmailMulti'>*/}
+                        {/*        Tujuan*/}
+                        {/*    </Label>*/}
+                        {/*    /!*<Editor editorState={value} onEditorStateChange={data => setValue(data)} />*!/*/}
+                        {/*    <Input*/}
+                        {/*        name='tujuan'*/}
+                        {/*        type='textarea'*/}
+                        {/*        id='tujuan'*/}
+                        {/*        placeholder='Tujuan'*/}
+                        {/*        style={{ minHeight: '100px' }}*/}
+                        {/*        onChange={e => setTujuan(e.target.value)}*/}
+                        {/*        defaultValue={ details.id && details.tujuan }*/}
+                        {/*        className={classnames({ 'text-danger': tujuan.length > 120 })}*/}
+                        {/*    />*/}
+                        {/*    <span*/}
+                        {/*        className={classnames('textarea-counter-value float-end', {*/}
+                        {/*            'bg-danger': tujuan.length > 120*/}
+                        {/*        })}*/}
+                        {/*    >*/}
+                        {/*    {`${tujuan.length}/120`}*/}
+                        {/*    </span>*/}
+                        {/*    /!*<Editor />*!/*/}
+                        {/*</Col>*/}
+                        {/*<Col md='6' sm='12' className='mb-1'>*/}
+                        {/*    <Label className='form-label' for='EmailMulti'>*/}
+                        {/*        Ruang Lingkup*/}
+                        {/*    </Label>*/}
+                        {/*    <Input*/}
+                        {/*        name='ruangLingkup'*/}
+                        {/*        type='textarea'*/}
+                        {/*        id='ruangLingkup'*/}
+                        {/*        placeholder='Ruang Lingkup'*/}
+                        {/*        style={{ minHeight: '100px' }}*/}
+                        {/*        onChange={e => setRuangLingkup(e.target.value)}*/}
+                        {/*        defaultValue={ details.id && details.ruang_lingkup }*/}
+                        {/*        className={classnames({ 'text-danger': ruangLingkup.length > 120 })}*/}
+                        {/*    />*/}
+                        {/*    <span*/}
+                        {/*        className={classnames('textarea-counter-value float-end', {*/}
+                        {/*            'bg-danger': ruangLingkup.length > 120*/}
+                        {/*        })}*/}
+                        {/*    >*/}
+                        {/*    {`${ruangLingkup.length}/120`}*/}
+                        {/*    </span>*/}
+                        {/*</Col>*/}
                         <Col sm='12'>
                             <div className='d-flex justify-content-center'>
                                 <Button className='me-1 ms-3' color='primary' onClick={()=>navigate('/sjph/sjph_ku')} outline>

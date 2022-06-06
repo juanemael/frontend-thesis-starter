@@ -77,12 +77,12 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
         if (value.length) {
             updatedData = details.filter(item => {
                 const startsWith =
-                    item.nama_dan_merek.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama_bahan.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 
                 const includes =
-                    item.nama_dan_merek.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.nama_bahan.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
                     item.modified_at.toLowerCase().startsWith(value.toLowerCase())
 

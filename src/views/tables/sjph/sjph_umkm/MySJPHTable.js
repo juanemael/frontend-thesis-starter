@@ -754,7 +754,7 @@ const MySJPHTable = () => {
                                 <span className='align-middle ms-50'>Export</span>
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem className='w-100'>
+                                <DropdownItem className='w-100' onClick={() => navigate('/coming_soon')}>
                                     <Printer size={15} />
                                     <span className='align-middle ms-50'>Print</span>
                                 </DropdownItem>

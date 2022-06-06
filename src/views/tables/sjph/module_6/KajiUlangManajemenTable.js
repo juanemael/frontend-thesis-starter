@@ -102,7 +102,7 @@ const KajiUlangManajemenTable = () => {
                     <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
                         Tambah
                     </Button>
-                    <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>
+                    <Button className='me-1' color='primary' onClick={()=>navigate('/coming_soon')}>
                         Hasil Perjalanan
                     </Button>
                 </div>
