@@ -22,7 +22,7 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
 
 import { selectThemeColors } from '@utils'
 import {ArrowLeft, ArrowRight} from "react-feather";
-import ModalPic from '@src/assets/images/illustration/travel-illu.svg';
+import ModalPic from '@src/assets/images/sjph/contoh_persetujuan.png';
 
 const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
 
@@ -117,10 +117,11 @@ const KriteriaSistemJaminanProdukHalalForm = ({ stepper, setCheckpoint }) => {
                         {/*        cupcake cupcake.*/}
                         {/*    </div>*/}
                         {/*</Alert>*/}
-                        <p>Mulai dari sini, kamu akan berjalan melalui berbagai tempat wisata di setiap destinasi.</p>
-                        <p>Setiap tempat wisata mempunyai isi yang berbeda beda jadi jangan sampai salah ya</p>
+                        {/*<p>Mulai dari sini, kamu akan berjalan melalui berbagai tempat wisata di setiap destinasi.</p>*/}
+                        <p>Mulai dari sini kamu akan menemukan tanggal dan tempat persetujuan.</p>
+                        <p>Sebagai gambaran, tempat dan tanggal persetujuan akan ditulis sebagai contoh berikut.</p>
                         <Row sm={8} className='justify-content-center' style={{paddingBottom: 20}}>
-                            <img className='company-pic' src={ModalPic} alt='company' style={{height: 300, width: 360}} />
+                            <img className='company-pic' src={ModalPic} alt='company' style={{height: "inherit", width: "inherit"}} />
                         </Row>
                     </div>
                     <Row tag='form' className='gy-1 pt-75'>
