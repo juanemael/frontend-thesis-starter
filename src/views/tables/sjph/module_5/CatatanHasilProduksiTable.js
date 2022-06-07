@@ -436,7 +436,7 @@ const CatatanHasilProduksiTable = ({stepper, setCheckpoint,detailsSJPH}) => {
                 </ModalBody>
             </Modal>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 3</h3>
+                <h3 className='mb-0'>Wisata 3</h3>
                 <small className='text-muted'>Catatan Hasil Produksi</small>
             </div>
             <Row className='justify-content-end mx-0'>

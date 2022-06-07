@@ -67,7 +67,7 @@ const EvaluasiPelatihanInternalForm = ({stepper,setCheckpoint}) => {
     return (
         <Fragment>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 1</h3>
+                <h3 className='mb-0'>Wisata 1</h3>
                 <small className='text-muted'>Cari tahu tentang kebijakan halal</small>
             </div>
             <Form>

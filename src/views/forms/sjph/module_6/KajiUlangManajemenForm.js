@@ -88,7 +88,7 @@ const KajiUlangManajemenTable = () => {
     return (
         <Fragment>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 1</h3>
+                <h3 className='mb-0'>Wisata 1</h3>
                 <small className='text-muted'>Risalah Kaji Ulang Manajemen</small>
             </div>
             <Form>
@@ -249,7 +249,7 @@ const KajiUlangManajemenTable = () => {
                             <Button className='me-1' color='primary' onClick={submit}>
                                 Tambah
                             </Button>
-                            <Button className='me-1' color='primary' onClick={(e)=> e.preventDefault()}>
+                            <Button className='me-1' color='primary' onClick={()=>navigate('/coming-soon')}>
                                 Hasil Perjalanan
                             </Button>
                         </div>

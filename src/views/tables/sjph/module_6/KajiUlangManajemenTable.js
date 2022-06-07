@@ -91,7 +91,7 @@ const KajiUlangManajemenTable = () => {
     return (
         <Fragment>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 1</h3>
+                <h3 className='mb-0'>Wisata 1</h3>
                 <small className='text-muted'>Risalah Kaji Ulang Manajemen</small>
             </div>
             <Col sm='12'>

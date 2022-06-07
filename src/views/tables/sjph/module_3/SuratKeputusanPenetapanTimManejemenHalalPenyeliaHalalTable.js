@@ -406,7 +406,7 @@ const SuratKeputusanPenetapanTimManejemenHalalPenyeliaHalalTable = ({stepper, se
                 </ModalBody>
             </Modal>
             <div className='content-header'>
-                <h3 className='mb-0'>Halaman 1</h3>
+                <h3 className='mb-0'>Wisata 1</h3>
                 <small className='text-muted'>Surat Keputusan Penetapan Tim Manajemen Halal Dan/Atau Penyelia Halal</small>
             </div>
             <Card>

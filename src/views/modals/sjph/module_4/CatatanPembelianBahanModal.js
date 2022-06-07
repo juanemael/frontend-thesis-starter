@@ -336,7 +336,7 @@ return (
             }}></ModalHeader>
             <ModalBody className='px-sm-5 mx-50 pb-5'>
                 <div className='content-header'>
-                    <h3 className='mb-0'>Halaman 3</h3>
+                    <h3 className='mb-0'>Wisata 3</h3>
                     <small className='text-muted'>Catatan Pembelian Bahan</small>
                 </div>
                 <Row className='justify-content-end mx-0'>
