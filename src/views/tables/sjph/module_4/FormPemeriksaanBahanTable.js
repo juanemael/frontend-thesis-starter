@@ -289,12 +289,14 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
             name: 'Tanggal Datang/Beli',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '250px',
             selector: row => row.tanggal_datang_beli
         },
         {
             name: 'Nama/Merek/Kode Bahan',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '300px',
             selector: row => row.nama_merek_kode_bahan
         },
 
@@ -302,17 +304,20 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
             name: 'Nama & Lokasi Produsen',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '300px',
             selector: row => row.nama_dan_lokasi_produsen
         },
         {
             name: 'Sesuai/Tidak Sesuai',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '200px',
             selector: row => row.sesuai
         },
         {
             name: 'Tindakan',
             allowOverflow: false,
+            minWidth: '150px',
             cell: (row) => {
                 return (
                     <div className='d-flex'>

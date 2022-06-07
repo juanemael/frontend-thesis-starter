@@ -239,6 +239,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
             name: 'Masa Berlaku Sert. Halal',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '300px',
             selector: row => row.masa_berlaku_sert_halal
         },
         {

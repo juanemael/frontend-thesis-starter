@@ -183,6 +183,7 @@ const CatatanDistribusiPenjualanProdukModal = ({setGroupID, groupID, show2, setS
             name: 'Nama Produk/Varian/Merek',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '300px',
             selector: row => row.nama_varian_merek_produk
         },
         {

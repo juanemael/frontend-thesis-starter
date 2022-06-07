@@ -187,6 +187,7 @@ const CatatanHasilProduksiModal = ({setGroupID, groupID, show2, setShow2}) => {
             name: 'Nama Produk/Varian/Merek',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '300px',
             selector: row => row.nama_varian_merek_produk
         },
         {

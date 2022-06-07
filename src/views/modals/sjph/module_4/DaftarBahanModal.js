@@ -186,36 +186,41 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
         {
             name: 'Nama dan Merek',
             sortable: true,
+            minWidth: '250px',
             selector: row => row.nama_dan_merek
         },
         {
             name: 'Jenis Bahan',
             sortable: true,
-
+            minWidth: '200px',
             // minWidth: '150px',
             selector: row => row.jenis_bahan
         },
         {
             name: 'Produsen',
             sortable: true,
+            minWidth: '250px',
             // minWidth: '150px',
             selector: row => row.produsen
         },
         {
             name: 'Negara',
             sortable: true,
+            minWidth: '250px',
             // minWidth: '150px',
             selector: row => row.negara
         },
         {
             name: 'Supplier',
             sortable: true,
+            minWidth: '250px',
             // minWidth: '150px',
             selector: row => row.supplier
         },
         {
             name: `Lembaga Penerbit Sert. Halal`,
             sortable: true,
+            minWidth: '350px',
             // minWidth: '150px',
 
             selector: row => row.lembaga_penerbit_sert_halal
@@ -224,18 +229,21 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
             name: 'Nomor Sertifikat Halal',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '300px',
             selector: row => row.no_sert_halal
         },
         {
             name: 'Masa Berlaku Sertifikat Halal',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '350px',
             selector: row => row.masa_berlaku_sert_halal
         },
         {
             name: 'Dokumen Pendukung',
             sortable: true,
             // minWidth: '150px',
+            minWidth: '250px',
             selector: row => {
                 return (
                     row.dokumen_pendukung ? <>{<a href={row.dokumen_pendukung}>Lihat Dokumen</a>}</> : <>Kosong</>
@@ -246,6 +254,7 @@ const DaftarBahanModal = ({setGroupID, groupID, show2, setShow2}) => {
         {
             name: 'Tindakan',
             allowOverflow: false,
+            minWidth: '250px',
             cell: (row) => {
                 return (
                     <div className='d-flex'>
