@@ -250,11 +250,11 @@ const DaftarHadirPelatihanInternalTable = ({stepper, setCheckpoint}) => {
                             </div>
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
-                            <Button type='submit' className='me-1' color='primary'>
-                                Submit
+                            <Button type='submit' className='me-1' color='success'>
+                                Simpan
                             </Button>
                             <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                                Discard
+                                Kembali
                             </Button>
                         </Col>
                     </Row>

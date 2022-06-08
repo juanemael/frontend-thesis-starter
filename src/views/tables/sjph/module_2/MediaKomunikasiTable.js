@@ -354,11 +354,11 @@ const MediaKomunikasiTable = ({stepper , setCheckpoint}) => {
                             {errors.username && <FormFeedback>Please enter a valid Username</FormFeedback>}
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
-                            <Button onClick={submit} className='me-1' color='primary'>
-                                Submit
+                            <Button onClick={submit} className='me-1' color='success'>
+                                Simpan
                             </Button>
                             <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                                Discard
+                                Kembali
                             </Button>
                         </Col>
                     </Row>

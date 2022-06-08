@@ -294,7 +294,7 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
                         &nbsp;
                         <Col sm='12'>
                             <div className='d-flex justify-content-center'>
-                                <Button onClick={submitTempatTanggal} className='me-1' color='primary'>
+                                <Button onClick={submitTempatTanggal} className='me-1' color='success'>
                                     Simpan
                                 </Button>
                             </div>
@@ -340,8 +340,8 @@ const DaftarBahanDigunakanSetiapProdukForm = ({stepper, getSJPHInfo, detailsSJPH
                     </Col>
                     <Col sm='12'>
                         <div className='d-flex justify-content-center'>
-                            <Button className='me-1' color='primary' onClick={submit}>
-                                Submit
+                            <Button className='me-1' color='success' onClick={submit}>
+                                Simpan
                             </Button>
                         </div>
                     </Col>

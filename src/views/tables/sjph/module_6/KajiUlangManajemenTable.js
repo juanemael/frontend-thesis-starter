@@ -99,8 +99,8 @@ const KajiUlangManajemenTable = () => {
                     <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/kepentingan_produksi_dan_distribusi_produk')} outline>
                         Kembali
                     </Button>
-                    <Button className='me-1' color='primary' onClick={()=> setShow(true)}>
-                        Tambah
+                    <Button className='me-1' color='success' onClick={()=> setShow(true)}>
+                        Simpan
                     </Button>
                     <Button className='me-1' color='primary' onClick={()=>navigate('/coming_soon')}>
                         Hasil Perjalanan

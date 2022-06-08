@@ -100,8 +100,8 @@ dengan produsen baru), akan meminta persetujuan penggunaan bahan tersebut ke
                                 <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
                                 <span className='align-middle d-sm-inline-block d-none'>Kembali</span>
                             </Button>
-                            <Button className='me-1' color='primary' onClick={submit}>
-                                Submit
+                            <Button className='me-1' color='success' onClick={submit}>
+                                Simpan
                             </Button>
                             <Button className='me-1' color='primary' onClick={()=>navigate('/sjph/bahan_untuk_kepentingan_halal')}>
                                 <span className='align-middle d-sm-inline-block d-none'>Selanjutnya</span>
