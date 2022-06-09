@@ -271,6 +271,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
             jumlah,
             penanggung_jawab: penanggungJawab
         }
+        console.log(body)
         if (selfID !== null) {
             try {
                 console.log(selfID)

@@ -41,6 +41,7 @@ import Swal from "sweetalert2";
 import Flatpickr from "react-flatpickr";
 import Select from "react-select";
 import SJPHKuModels from "../../../../models/SJPHKu";
+import moment from "moment";
 
 const defaultValues = {
     firstName: 'Bob',
@@ -240,7 +241,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
             sortable: true,
             // minWidth: '150px',
             minWidth: '300px',
-            selector: row => row.masa_berlaku_sert_halal
+            selector: row => <>{moment(row.masa_berlaku_sert_halal).format('DD-MM-YYYY')}</>
         },
         {
             name: 'Tindakan',
