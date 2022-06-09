@@ -207,7 +207,7 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
         {
             name: 'Jumlah',
             sortable: true,
-            // minWidth: '150px',
+            minWidth: '150px',
             selector: row => row.jumlah
         },
         {
