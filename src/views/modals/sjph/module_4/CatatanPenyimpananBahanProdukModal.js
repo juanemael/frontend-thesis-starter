@@ -183,25 +183,25 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
         {
             name: 'Nama Bahan',
             sortable: true,
-            // minWidth: '150px',
+            minWidth: '250px',
             selector: row => row.nama_bahan
         },
         {
             name: 'Nama Produk',
             sortable: true,
-            // minWidth: '150px',
+            minWidth: '250px',
             selector: row => row.nama_produk
         },
         {
             name: 'Merek dan Produsen',
             sortable: true,
-            // minWidth: '150px',
+            minWidth: '250px',
             selector: row => row.merek_dan_produsen
         },
         {
             name: 'Penanggung Jawab',
             sortable: true,
-            // minWidth: '150px',
+            minWidth: '250px',
             selector: row => row.penanggung_jawab
         },
         {
@@ -213,18 +213,19 @@ const CatatanPenyimpananBahanProdukModal = ({setGroupID, groupID, show2, setShow
         {
             name: 'Tanggal Masuk',
             sortable: true,
-            // minWidth: '150px',
+            minWidth: '250px',
             selector: row => <>{moment(row.tanggal_masuk).format('DD-MM-YYYY')}</>
         },
         {
             name: 'Tanggal Keluar',
             sortable: true,
-            // minWidth: '150px',
+            minWidth: '250px',
             selector: row => <>{moment(row.tanggal_keluar).format('DD-MM-YYYY')}</>
         },
         {
             name: 'Tindakan',
             allowOverflow: false,
+            minWidth: '150px',
             cell: (row) => {
                 return (
                     <div className='d-flex'>

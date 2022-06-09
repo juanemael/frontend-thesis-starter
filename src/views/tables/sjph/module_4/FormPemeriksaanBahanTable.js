@@ -311,7 +311,7 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
             name: 'Sesuai/Tidak Sesuai',
             sortable: true,
             // minWidth: '150px',
-            minWidth: '200px',
+            minWidth: '275px',
             selector: row => row.sesuai
         },
         {
