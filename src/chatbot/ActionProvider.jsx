@@ -9,7 +9,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     console.log(data)
     async function getChatbotResponse(data) {
       try {
-        await axios.post("http://localhost:5000/ask_chatbot", data, {
+        await axios.post("http://pasporumkm.com:5000/ask_chatbot", data, {
            headers: {
           'Content-Type': 'application/json'
         }
