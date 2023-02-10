@@ -429,12 +429,6 @@ const FormPemeriksaanBahanTable = ({stepper, getSJPHInfo, detailsSJPH, setCheckp
                             <Button onClick={submit} className='me-1' color='success'>
                                 Simpan
                             </Button>
-                            <Button type='reset' color='secondary' outline toggle={() => {
-                                setSelectedID(null)
-                                setShow(!show)
-                            }}>
-                                Kemblai
-                            </Button>
                         </Col>
                     </Row>
                 </ModalBody>

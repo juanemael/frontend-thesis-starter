@@ -27,6 +27,8 @@ const DiagramAlirProsesProduksiForm = ({stepper, setCheckpoint}) => {
     const [details, setDetails] = useState([])
     const [selectedID,setSelectedID] = useState(null)
 
+    const [caption, setCaption] = useState('');
+
     const kepentinganProduksiDistribusiProdukModel = new KepentinganProduksiDistribusiProdukModels()
 
 
@@ -178,6 +180,13 @@ const DiagramAlirProsesProduksiForm = ({stepper, setCheckpoint}) => {
             <Row>
                 <Col sm='12'>
                     <FileUploaderSingle createFunc={upload} imageURL={imageUrl} setImageURL={setImageUrl} />
+                </Col>
+                <Col sm='12'>
+                    <Label className='form-label' for='caption'>
+                        Keterangan
+                    </Label>
+                    <Input type='textarea' id='caption' defaultValue='' placeholder='Keterangan tambahan mengenai diagram alir proses produksi'
+                    onChange={(e)=>{ setCaption(e.target.value) }}  />
                 </Col>
             </Row>
             <div className='divider divider-dashed'>

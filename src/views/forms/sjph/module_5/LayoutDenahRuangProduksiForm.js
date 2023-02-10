@@ -38,6 +38,8 @@ const LayoutDenahRuangProduksiForm = ({stepper,setCheckpoint}) => {
     const [details, setDetails] = useState([])
     const [selectedID,setSelectedID] = useState(null)
 
+    const [caption, setCaption] = useState('');
+
     const kepentinganProduksiDistribusiProdukModel = new KepentinganProduksiDistribusiProdukModels()
 
 
@@ -186,11 +188,21 @@ const LayoutDenahRuangProduksiForm = ({stepper,setCheckpoint}) => {
             <div className='divider divider-dashed'>
                 <div className='divider-text'>Upload File <ArrowDown size={15} /></div>
             </div>
+
             <Row>
                 <Col sm='12'>
                     <FileUploaderSingle createFunc={upload} selectedID={selectedID} imageURL={imageUrl} setImageURL={setImageUrl} />
                 </Col>
+                <Col sm='12'>
+                    <Label className='form-label' for='caption'>
+                        Keterangan
+                    </Label>
+                    <Input type='textarea' id='caption' defaultValue='' placeholder='Keterangan tambahan mengenai denah ruang produksi'
+                    onChange={(e)=>{ setCaption(e.target.value) }}  />
+                </Col>
             </Row>
+        
+
             <div className='divider divider-dashed'>
                 <div className='divider-text'>Preview Gambar <ArrowDown size={15} /></div>
             </div>

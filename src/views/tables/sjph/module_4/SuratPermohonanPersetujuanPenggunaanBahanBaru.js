@@ -429,11 +429,7 @@ const SuratPermohonanPersetujuanPenggunaanBahanBaruTable = ({stepper, getSJPHInf
                             <Button onClick={submit} className='me-1' color='success'>
                                 Simpan
                             </Button>
-                            <Button type='reset' color='secondary' outlineonClick={() => {
-                                reset().then(r =>setShow(true))
-                            }}>
-                                Kembali
-                            </Button>
+
                         </Col>
                     </Row>
                 </ModalBody>

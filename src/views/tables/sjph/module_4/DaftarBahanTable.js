@@ -407,10 +407,7 @@ const DaftarBahanTable = ({stepper, getSJPHInfo, setCheckpoint,detailsSJPH}) => 
                         </Col>
                         <Col xs={12} className='text-center mt-2 pt-50'>
                             <Button onClick={submit} className='me-1' color='primary'>
-                                Submit
-                            </Button>
-                            <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                                Discard
+                                Simpan
                             </Button>
                         </Col>
                     </Row>

@@ -439,12 +439,6 @@ const CatatanPenyimpananBahanProdukTable = ({stepper, getSJPHInfo,  detailsSJPH,
                             <Button onClick={submit} className='me-1' color='success'>
                                 Simpan
                             </Button>
-                            <Button type='reset' color='secondary' outline toggle={() => {
-                                setGroupID(null)
-                                setShow(!show)
-                            }}>
-                                Kembali
-                            </Button>
                         </Col>
                     </Row>
                 </ModalBody>

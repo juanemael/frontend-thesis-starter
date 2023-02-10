@@ -58,6 +58,14 @@ const CompanyForm = () => {
     const [progressValue, setProgressValue] = useState(10)
     const value = 10
 
+    const [namaPerusahaanValid, setNamaPerusahaanValid] = useState(true);
+    const [nibValid, setNibValid] = useState(true);
+    const [alamatPerusahaanValid, setAlamatPerusahaanValid] = useState(true);
+    const [contactPersonValid, setContactPersonValid] = useState(true);
+    const [namaMerkProdukValid, setNamaMerekProdukValid] = useState(true);
+
+    const [formValid, setFormValid] = useState(false);
+
     const companyProfileModel = new CompanyProfileModels()
 
     const navigate = useNavigate()
@@ -83,6 +91,101 @@ const CompanyForm = () => {
         getCompanyProfile(sessionStorage.perusahaan_id)
     },[])
 
+    const validateField = (fieldName, value) => {
+        let cekNamaPerusahaan = namaPerusahaanValid;
+        let cekNib = nibValid;
+        let cekAlamatPerusahaan = alamatPerusahaanValid;
+        let cekNamaMerk = namaMerkProdukValid;
+        let cekContactPerson = contactPersonValid;
+
+        switch (fieldName) {
+            case 'namaPerusahaan':
+                if (value === null || value === '') {
+                    cekNamaPerusahaan = false;
+                } else {
+                    cekNamaPerusahaan = true;
+                }
+                console.log(cekNamaPerusahaan);
+                break;
+            case 'nib':
+                if (value === null || value === '') {
+                    cekNib = false;
+                } else {
+                    cekNib = true;
+                }
+                console.log(cekNib);
+                break;
+            case 'alamatPerusahaan':
+                if (value === null || value === '') {
+                    cekAlamatPerusahaan = false;
+                } else {
+                    cekAlamatPerusahaan = true;
+                }
+                console.log(cekNib);
+                break;
+            case 'contactPersonEmail':
+                if (value === null || value === '') {
+                    cekContactPerson = false;
+                } else {
+                    cekContactPerson = true;
+                }
+                console.log(cekNib);
+                break;
+            case 'jenisProduk':
+                if (value === null || value === '') {
+                    cekNamaMerk = false;
+                } else {
+                    cekNamaMerk = true;
+                }
+                console.log(cekNib);
+                break;
+            default:
+                break;
+        }
+
+        setNamaPerusahaanValid(cekNamaPerusahaan);
+        setNibValid(cekNib);
+        setAlamatPerusahaanValid(cekAlamatPerusahaan);
+        setContactPersonValid(cekContactPerson);
+        setNamaMerekProdukValid(cekNamaMerk);
+
+        setFormValid(cekNamaPerusahaan && cekNib && cekAlamatPerusahaan && cekContactPerson && cekNamaMerk);
+    }
+
+    const handleUserInput = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+
+        console.log(e.target.name);
+
+        switch (name) {
+            case 'namaPerusahaan':
+                console.log(name);
+                console.log(value);
+                setNamaPerusahaan(value, validateField(name, value));
+            break;
+            case 'nib':
+                console.log(name);
+                console.log(value);
+                setNib(value, validateField(name, value));
+            break;
+            case 'contactPersonEmail':
+                console.log(name);
+                console.log(value);
+                setContactPersonEmail(value, validateField(name, value));
+            break;
+            case 'alamatPerusahaan':
+                console.log(name);
+                console.log(value);
+                setAlamatPerusahaan(value, validateField(name, value));
+            break;
+            case 'jenisProduk':
+                console.log(name);
+                console.log(value);
+                setNamaMerekProduk(value, validateField(name, value));
+            break;
+        }
+    }
 
     const submit = async () => {
         const body = {
@@ -104,6 +207,17 @@ const CompanyForm = () => {
             // tujuan: tujuan? tujuan : details.tujuan,
             // ruang_lingkup: ruangLingkup? ruangLingkup : details.ruang_lingkup,
         }
+
+        if (!formValid) {
+            setNamaPerusahaanValid(false);
+            setNibValid(false);
+            setAlamatPerusahaanValid(false);
+            setContactPersonValid(false);
+            setNamaMerekProdukValid(false);
+            swal.fire('','Harap lengkapi data wajib', 'error');
+            return;
+        }
+      
         if (sessionStorage.perusahaan_id !== 'null') {
             try {
                 const editBody ={
@@ -141,6 +255,7 @@ const CompanyForm = () => {
                 await swal.fire('Error', e.error_message ? e.error_message : "Terjadi Kesalahan! Mohon kontak admin.")
             }
         }
+        
     }
     const handlePageChange = page => {
         console.log(page);
@@ -188,21 +303,19 @@ const CompanyForm = () => {
                         </div>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='nameMulti'>
-                                Nama Perusahaan
+                                Nama Perusahaan*
                             </Label>
                             <Input type='text' name='namaPerusahaan' id='namaPerusahaan'
-                                   defaultValue={ details.id && details.nama_perusahaan } onChange={(e)=>{
-                                setNamaPerusahaan(e.target.value)
-                            }} placeholder='Nama Perusahaan' />
+                                   defaultValue={ details.id && details.nama_perusahaan } onChange={handleUserInput} placeholder='Nama Perusahaan' />
+                            {namaPerusahaanValid ? '' : <Label style={{color: '#d1001f'}}>Wajib diisi</Label> }
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='lastNameMulti'>
-                                Nomor Induk Berusaha
+                                Nomor Induk Berusaha*
                             </Label>
                             <Input type='text' name='nib' id='nib'
-                                   defaultValue={ details.id && details.nomor_induk_berusaha } onChange={(e)=>{
-                                setNib(e.target.value)
-                            }} placeholder='Nomor Induk Berusaha' />
+                                   defaultValue={ details.id && details.nomor_induk_berusaha } onChange={handleUserInput} placeholder='Nomor Induk Berusaha' />
+                            {nibValid ? '' : <Label style={{color: '#d1001f'}}>Wajib diisi</Label>}
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='skalaUsaha'>
@@ -248,12 +361,13 @@ const CompanyForm = () => {
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
-                                Alamat Perusahaan
+                                Alamat Perusahaan*
                             </Label>
                             <Input type='text' name='alamatPerusahaan' id='alamatPerusahaan'
-                                   defaultValue={ details.id && details.alamat_perusahaan } onChange={(e)=>{
-                                setAlamatPerusahaan(e.target.value)
-                            }} placeholder='Alamat Perusahaan' />
+                                   defaultValue={ details.id && details.alamat_perusahaan } onChange={handleUserInput}
+                             placeholder='Alamat Perusahaan' />
+                            {alamatPerusahaanValid ? '' : <Label style={{color: '#d1001f'}}>Wajib diisi</Label>}
+
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
@@ -287,21 +401,21 @@ const CompanyForm = () => {
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
-                                Contact Person / Email
+                                Contact Person / Email*
                             </Label>
                             <Input type='text' name='contactPersonEmail' id='contactPersonEmail'
-                                   defaultValue={ details.id && details.contact_person_email } onChange={(e)=>{
-                                setContactPersonEmail(e.target.value)
-                            }} placeholder='Contact Person / Email' />
+                                   defaultValue={ details.id && details.contact_person_email } onChange={handleUserInput} placeholder='Contact Person / Email' />
+                            {contactPersonValid ? '' : <Label style={{color: '#d1001f'}}>Wajib diisi</Label>}
+
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>
-                                Nama/Merek Produk (yang akan disertifikasi)
+                                Nama/Merek Produk (yang akan disertifikasi)*
                             </Label>
                             <Input type='text' name='jenisProduk' id='jenisProduk'
-                                   defaultValue={ details.id && details.nama_merek_produk } onChange={(e)=>{
-                                setNamaMerekProduk(e.target.value)
-                            }} placeholder='Nama/Merek Produk yang akan disertifikasi' />
+                                   defaultValue={ details.id && details.nama_merek_produk } onChange={handleUserInput} placeholder='Nama/Merek Produk yang akan disertifikasi' />
+                            {namaMerkProdukValid ? '' : <Label style={{color: '#d1001f'}}>Wajib diisi</Label>}
+
                         </Col>
                         <Col md='6' sm='12' className='mb-1'>
                             <Label className='form-label' for='EmailMulti'>

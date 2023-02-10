@@ -369,9 +369,7 @@ const CatatanPembelianBahanTable = ({stepper, getSJPHInfo,  detailsSJPH, setChec
                             <Button onClick={submit} className='me-1' color='success'>
                                 Simpan
                             </Button>
-                            <Button type='reset' color='secondary' outline onClick={() => setShow(false)}>
-                                Kembali
-                            </Button>
+
                         </Col>
                     </Row>
                 </ModalBody>
