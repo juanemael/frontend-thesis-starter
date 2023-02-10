@@ -23,6 +23,7 @@ import ScrollToTop from '@components/scrolltop'
 import FooterComponent from './components/footer'
 import NavbarComponent from './components/navbar'
 import SidebarComponent from './components/menu/vertical-menu'
+import ChatbotKit from '../../views/chatbot/Chatbot'
 
 // ** Custom Hooks
 import { useRTL } from '@hooks/useRTL'
@@ -229,6 +230,8 @@ const VerticalLayout = props => {
           </ScrollToTop>
         </div>
       ) : null}
+
+    <ChatbotKit />
     </div>
   )
 }
