@@ -4,28 +4,26 @@ import axios from 'axios';
 const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   const handleQuestion = (question) => {
     const data = {
+      username: sessionStorage.username,
       sentences: question
     };
     console.log(data)
     async function getChatbotResponse(data) {
       try {
-        await axios.post("https://chatbot.pasporumkm.com/ask_chatbot", data, {
-           headers: {
-          'Content-Type': 'application/json'
-        }
-        }).then(function(response) {
-          console.log(response.data)
-          console.log(response.data.data)
-          const botMessage = createChatBotMessage(response.data.data);
-          setState((prev) => ({
-            ...prev,
-            messages: [...prev.messages, botMessage],
-          }));
-        })
+        const response = await axios.post("https://chatbot.pasporumkm.com/ask_chatbot", data, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const botMessage = createChatBotMessage(response.data.data);
+        setState((prev) => ({
+          ...prev,
+          messages: [...prev.messages, botMessage],
+        }));
       } catch (error) {
         console.log(error)
       }
-    }
+    }    
     getChatbotResponse(data);
   };
 

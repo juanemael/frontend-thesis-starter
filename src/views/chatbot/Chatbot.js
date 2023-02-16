@@ -39,7 +39,7 @@ const ChatbotKit = () => {
                     config={config}
                     messageParser={MessageParser}
                     actionProvider={ActionProvider}
-                    headerText={<text>Ask chatbot &nbsp; <div style={{float:"right", marginRight:"0"}}> <a href="" onClick={(e) => {
+                    headerText={<div>Ask chatbot &nbsp; <div style={{float:"right", marginRight:"0"}}> <a href="" onClick={(e) => {
                         e.preventDefault();
                         toggleShow((prev) => !prev);
                         if (show === false) {
@@ -49,7 +49,7 @@ const ChatbotKit = () => {
                         }
                     }}>
                     <Icon icon="akar-icons:circle-x-fill" />
-                    </a></div></text>}
+                    </a></div></div>}
                 />
                 )}
             </div>
